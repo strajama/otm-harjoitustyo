@@ -1,0 +1,124 @@
+commit eebecc968098855ab67bce81c84bc01bb189a8bb
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:51:02 2018 +0200
+
+    kommentti
+
+ hakemisto/file22 | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 432a1040b497a1850c5ea07714dbea9d2e6583dc
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:50:23 2018 +0200
+
+    "taas unohdin kommentoida"
+
+ hakemisto/file1 | 0
+ hakemisto/file2 | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 484c69daf75c3137b5730c204fae6af103f29043
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:43:53 2018 +0200
+
+    uusi hakemisto ja tiedostoja
+
+ hakemisto/file1 | 0
+ hakemisto/file2 | 0
+ hakemisto/file3 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 1bf5d2f20f789384322afe715c5bd4604e669fad
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:39:04 2018 +0200
+
+    taas muutoksia
+
+ eka.txt    | 43 +------------------------------------------
+ kolmas.txt |  1 +
+ 2 files changed, 2 insertions(+), 42 deletions(-)
+
+commit f440596d52c42217f3e5c2be25e361d882642057
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:36:58 2018 +0200
+
+    uudelleennimeäminen
+
+ eka.txt      | 394 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tiedosto.txt | 394 -----------------------------------------------------------
+ 2 files changed, 394 insertions(+), 394 deletions(-)
+
+commit 70b3d0909804c2805c27e4c80ada04645295e738
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:35:52 2018 +0200
+
+    poisto
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 10f4b7ce266f9db7e06aa83b5848625957e8652e
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:32:27 2018 +0200
+
+    tein taas muutoksia
+
+ tiedosto.txt | 187 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 187 insertions(+)
+
+commit b895003fef07a6c378ee28240df570d13e6c907f
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:31:18 2018 +0200
+
+    tiedostoon paljon tekstiä
+
+ tiedosto.txt | 206 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 206 insertions(+)
+
+commit b6954e901d82e68ccf26ffad9c95e7b02d177bb0
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:28:41 2018 +0200
+
+    taas lisään jotain käskettyä
+
+ stuff/jokutiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit f6384ad48088d271b1e16a4d63ba247d216d7cb0
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:27:31 2018 +0200
+
+    nyt muistan kommentoida tähän
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 43faabf492f00f409c1bd935af381b8c908f9c68
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:26:14 2018 +0200
+
+    "taas unohdin kommentoida valmiiksi"
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit df6e8de87f9b628803240b1dc1ec568425c4e614
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:23:38 2018 +0200
+
+    "muutos ja lisäys"
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 7b88680a9a76f36f2804f8e9584bdcd2bd34ffca
+Author: strajama <strajama@gmail.com>
+Date:   Sun Mar 18 21:21:25 2018 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
