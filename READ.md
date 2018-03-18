@@ -12,7 +12,8 @@ single best answer to a clearly defined question. Divergent thinking is associat
 This paper focuses on divergent thinking as a variety of tests have been developed to measure 
 it. 
 Divergent thinking tests are often called creativity tests, even though they do not actually 
-measure creativity. The Alternative Uses Task (AUT) is one of the most popular. In AUT examinees are asked to list as many possible uses for a common household item. Scoring is comprised of four components: **fluency**, **flexibility**,** originality** and **elaboration**. AUT is not the 
+measure creativity. The Alternative Uses Task (AUT) is one of the most popular. In AUT examinees are asked to list as many possible uses for a common household item. 
+Scoring is comprised of four components: **fluency**, **flexibility**,**originality** and **elaboration**. AUT is not the 
 most accurate and precise creativity test, but it is easy to administer and score and it does 
 not require any training. 
 Dozens of studies have examined the effect of reward on creativity. Despite a sizable literature, the question of whether rewards enhance or hinder creativity remains controversial. 
