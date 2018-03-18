@@ -1,10 +1,10 @@
-#OTM-harjoitustyö
-##Tehtävät
-###Viikko1
-[gitlog.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
-[komentorivi.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)
-#### My old thesis
-##### Creativity test and rewarding
+# OTM-harjoitustyö
+## Tehtävät
+### Viikko1
+#### [gitlog.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
+#### [komentorivi.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)
+##### My old thesis
+###### Creativity test and rewarding
 Two characteristics are usually attributed to creativity: *novelty* and *functionality.* Beyond this 
 the opinions of researchers into creativity typically differ and thus it is difficult to form a co-
 herent overall picture of the current state of research into creativity. 
