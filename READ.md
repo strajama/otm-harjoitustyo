@@ -13,8 +13,7 @@ pares them to each other. Subsequently, the thesis focuses on **divergent thinki
 initially defined in terms of *psychometric psychology* and also contrasted with its counterpart, 
 **convergent thinking**. *Divergent thinking* is a thought process used to generate creative ideas 
 by exploring many possible solutions. *Convergent thinking* is oriented towards deriving the 
-single best answer to a clearly defined question. Divergent thinking is associated with creativity as an important part of the field, although it is not sufficient for creative performance. 
-This paper focuses on divergent thinking as a variety of tests have been developed to measure 
+single best answer to a clearly defined question. Divergent thinking is associated with creativity as an important part of the field, although it is not sufficient for creative performance. This paper focuses on divergent thinking as a variety of tests have been developed to measure 
 it. 
 Divergent thinking tests are often called creativity tests, even though they do not actually 
 measure creativity. The Alternative Uses Task (AUT) is one of the most popular. In AUT examinees are asked to list as many possible uses for a common household item. 
@@ -27,8 +26,7 @@ the relationship between rewards and creativity have been inconsistent. Much ins
 derived from existing studies on rewards and creativity, although more work needs to be done 
 to further what is known about how and when rewards affect creativity. 
 In this thesis Guilford’s AUT is used to examine the effect of rewards and requests for original 
-responses on divergent thinking. The results show that rewards increased fluency and flexibility when examinees were not requested to be original. Rewards and requests for original responses decreased the level of performance to a lower than without rewards. The results of 
-this research raise new questions. 
+responses on divergent thinking. The results show that rewards increased fluency and flexibility when examinees were not requested to be original. Rewards and requests for original responses decreased the level of performance to a lower than without rewards. The results of this research raise new questions. 
 Guilford’s AUT is a good tool to measure creativity, and it can be recommended for use in 
 future studies. The thesis concludes with some suggestions for practical arrangements for 
 such research. 
