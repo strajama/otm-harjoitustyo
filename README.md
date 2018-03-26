@@ -2,7 +2,7 @@
 ## Tehtävät
 ### Viikko2
 #### [alustava määrittelydokumentti](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/alustavamaarittelydokumentti.md)
-#### [työaikakirjanpito]
+#### [työaikakirjanpito] jonka pushaus ei ole tullut vieläkään perille
 #### [laskaritehtävät](https://github.com/strajama/otm-harjoitustyo/tree/master/laskarit/viikko2)
 ### Viikko1
 #### [gitlog.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
