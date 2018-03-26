@@ -2,6 +2,8 @@
 ## Tehtävät
 ### Viikko2
 #### [alustava määrittelydokumentti](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/alustavamaarittelydokumentti.md)
+#### [työaikakirjanpito]
+#### [laskaritehtävät](https://github.com/strajama/otm-harjoitustyo/tree/master/laskarit/viikko2)
 ### Viikko1
 #### [gitlog.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
 #### [komentorivi.txt](https://github.com/strajama/otm-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)
