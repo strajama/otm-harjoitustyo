@@ -23,15 +23,15 @@ public class MaksukorttiTest {
     @Before
     public void setUp() {
         kortti = new Maksukortti(10);
-        kortti2 =new Maksukortti (12);
+        kortti2 = new Maksukortti(12);
     }
 
     @Test
     public void konstruktoriAsettaaSaldonOikein() {
         assertEquals("Kortilla on rahaa 10.0 euroa", kortti.toString());
     }
-    
-        @Test
+
+    @Test
     public void konstruktoriAsettaaToisenKortinSaldonOikein() {
         assertEquals("Kortilla on rahaa 12.0 euroa", kortti2.toString());
     }
@@ -47,7 +47,19 @@ public class MaksukorttiTest {
         kortti.syoMaukkaasti();
         assertEquals("Kortilla on rahaa 6.0 euroa", kortti.toString());
     }
-    
+
+    @Test
+    public void syoEdullisestiVahentaaToisenKortinSaldoaOikein() {
+        kortti2.syoEdullisesti();
+        assertEquals("Kortilla on rahaa 9.5 euroa", kortti2.toString());
+    }
+
+    @Test
+    public void syoMaukkaastiVahentaaToisenKortinSaldoaOikein() {
+        kortti2.syoMaukkaasti();
+        assertEquals("Kortilla on rahaa 8.0 euroa", kortti2.toString());
+    }
+
     @Test
     public void syoEdullisestiOnnistuuKunSaldoaVainHinnanVerran() {
         kortti.syoEdullisesti();
@@ -56,7 +68,7 @@ public class MaksukorttiTest {
         kortti.syoEdullisesti();
         assertEquals("Kortilla on rahaa 0.0 euroa", kortti.toString());
     }
-    
+
     @Test
     public void syoMaukkaastiOnnistuuKunSaldoaVainHinnanVerran() {
         kortti.syoMaukkaasti();
@@ -71,6 +83,7 @@ public class MaksukorttiTest {
         kortti2.syoEdullisesti();
         assertEquals("Kortilla on rahaa 2.0 euroa", kortti.toString());
     }
+
     @Test
     public void syoMaukkaastiEiVieSaldoaNegatiiviseksi() {
         kortti.syoMaukkaasti();
@@ -84,8 +97,8 @@ public class MaksukorttiTest {
         kortti.lataaRahaa(25);
         assertEquals("Kortilla on rahaa 35.0 euroa", kortti.toString());
     }
-    
-        @Test
+
+    @Test
     public void kortilleEiVoiLadataNegatiivistaRahaa() {
         kortti.lataaRahaa(-25);
         assertEquals("Kortilla on rahaa 10.0 euroa", kortti.toString());
@@ -96,5 +109,6 @@ public class MaksukorttiTest {
         kortti.lataaRahaa(200);
         assertEquals("Kortilla on rahaa 150.0 euroa", kortti.toString());
     }
-    
+
+
 }
