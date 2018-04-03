@@ -17,19 +17,17 @@ import javafx.stage.Stage;
  *
  * @author strajama
  */
-public class VisualFX extends Application {
-    
-    public Stage primaryStage;
+public class SeikkailuFXMain extends Application {
     
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
-        btn.setText("Seikkailuun");
+        btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Nyt se alkaa...");
+                System.out.println("Hello World!");
             }
         });
         
@@ -38,7 +36,7 @@ public class VisualFX extends Application {
         
         Scene scene = new Scene(root, 300, 250);
         
-        primaryStage.setTitle("Seikkailupeli");
+        primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -46,8 +44,8 @@ public class VisualFX extends Application {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String[] args) {
-  //      launch(args);
-    //}
+    public static void main(String[] args) {
+        launch(args);
+    }
     
 }
