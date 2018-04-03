@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package seikkailupeli;
+package seikkailupeli.ui;
 
 /**
  *
@@ -12,7 +12,7 @@ package seikkailupeli;
 public class Main {
     
     public static void main() {
-        SeikkailuFXMain window = new SeikkailuFXMain();
+        VisualFX window = new VisualFX();
         window.start(window.primaryStage);
-}
+    }
 }
