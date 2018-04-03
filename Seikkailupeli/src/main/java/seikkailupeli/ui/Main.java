@@ -14,5 +14,6 @@ public class Main {
     public static void main() {
         VisualFX window = new VisualFX();
         window.start(window.primaryStage);
+        //vituttaa kun muutokset ei näy githubissa
     }
 }
