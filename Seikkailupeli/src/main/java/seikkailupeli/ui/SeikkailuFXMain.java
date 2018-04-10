@@ -5,23 +5,145 @@
  */
 package seikkailupeli.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import seikkailupeli.domain.Action;
+import seikkailupeli.domain.Direction;
+import seikkailupeli.domain.Item;
+import seikkailupeli.domain.World;
 
 /**
  *
  * @author strajama
  */
 public class SeikkailuFXMain extends Application {
-    
+
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
+
+        World world = new World(3, 4);
+        world.createWorld();
+        Adventure adventure = new Adventure(world);
+        Item goalitem = new Item("palantiri", "kauaksi näkevä kivi.");
+        adventure.itemGoal(goalitem);
+        adventure.timeGoal(10);
+
+        BorderPane bp = new BorderPane();
+        //asettelun ylaosaan tulee tietoa mitä pelaaja näkee
+        VBox up = new VBox();
+        // kuvailussa kerrotaan mitä pelaaja näkee. Aloituspaikka on metsä
+        Label area = new Label(world.getPlayer().getArea().getName().toUpperCase());
+        Label description = new Label(world.getPlayer().getArea().getDescription());
+        Label finding = new Label(world.getPlayer().getArea().show());
+        Label bag = new Label(world.getPlayer().bag());
+        Label happening = new Label("Tässä kerrotaan mitä on juuri tapahtunut");
+        up.getChildren().add(area);
+        up.getChildren().add(description);
+        up.getChildren().add(finding);
+        up.getChildren().add(bag);
+        up.getChildren().add(happening);
+        bp.setTop(up);
+
+        // tehdään kaksi ruudukkoa, johon sijoitetaan toimintonapit ja sijoitetaan ne alas
+        HBox down = new HBox();
+        GridPane doStuff = new GridPane();
+        GridPane move = new GridPane();
+
+        //liikkuminen vasemmalle puolelle ja muut toiminnot oikealle
+        down.getChildren().add(move);
+        down.getChildren().add(doStuff);
+        bp.setBottom(down);
+
+        //tehdään lista, johon liikkumis-napit laitetaan helpottamaan niiden käyttöä
+        List<Button> moveButtons = new ArrayList<>();
+        //napit liikkumiseen
+        Button north = new Button("POHJOINEN");
+        moveButtons.add(north);
+        north.setOnAction((event) -> {
+            new Action().move(world, world.getPlayer(), Direction.NORTH);
+            area.setText(world.getPlayer().getArea().getName().toUpperCase());
+            description.setText(world.getPlayer().getArea().getDescription());
+            finding.setText(world.getPlayer().getArea().show());
+            adventure.takeTurn();
+            if (adventure.getTimeGoal() < 0) {
+                happening.setText("Aika loppui, sinä hävisit!");
+            }
+        });
+        move.add(north, 1, 0);
+        Button east = new Button("ITÄ");
+        moveButtons.add(east);
+        east.setOnAction((event) -> {
+            new Action().move(world, world.getPlayer(), Direction.EAST);
+            area.setText(world.getPlayer().getArea().getName().toUpperCase());
+            description.setText(world.getPlayer().getArea().getDescription());
+            finding.setText(world.getPlayer().getArea().show());
+            adventure.takeTurn();
+            if (adventure.getTimeGoal() < 0) {
+                happening.setText("Aika loppui, sinä hävisit!");
+            }
+        });
+        move.add(east, 2, 1);
+        Button west = new Button("LÄNSI");
+        moveButtons.add(west);
+        west.setOnAction((event) -> {
+            new Action().move(world, world.getPlayer(), Direction.WEST);
+            area.setText(world.getPlayer().getArea().getName().toUpperCase());
+            description.setText(world.getPlayer().getArea().getDescription());
+            finding.setText(world.getPlayer().getArea().show());
+            adventure.takeTurn();
+            if (adventure.getTimeGoal() < 0) {
+                happening.setText("Aika loppui, sinä hävisit!");
+            }
+        });
+        move.add(west, 0, 1);
+        Button south = new Button("ETELÄ");
+        moveButtons.add(south);
+        south.setOnAction((event) -> {
+            new Action().move(world, world.getPlayer(), Direction.SOUTH);
+            area.setText(world.getPlayer().getArea().getName().toUpperCase());
+            description.setText(world.getPlayer().getArea().getDescription());
+            finding.setText(world.getPlayer().getArea().show());
+            adventure.takeTurn();
+            if (adventure.getTimeGoal() < 0) {
+                happening.setText("Aika loppui, sinä hävisit!");
+            }
+        });
+        move.add(south, 1, 2);
+
+        // muita toimintoja
+        List<Button> doButtons = new ArrayList<>();
+        Button pick = new Button("POIMI");
+        doButtons.add(pick);
+        pick.setOnAction((event) -> {
+            Action a = new Action();
+            a.take(world, world.getPlayer());
+            finding.setText(world.getPlayer().getArea().show());
+            bag.setText(world.getPlayer().bag());
+            adventure.takeTurn();
+            if (world.getPlayer().getItems().containsValue(adventure.getItemGoal())) {
+                happening.setText("Sinä löysit etsimäsi!");
+            } else if (adventure.getTimeGoal() < 0) {
+                happening.setText("Aika loppui, sinä hävisit!");
+            }
+
+        });
+        doStuff.add(pick, 0, 0);
+
+        Scene scene = new Scene(bp, 600, 300);
+        primaryStage.setTitle("Seikkailu");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        /*Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -38,7 +160,7 @@ public class SeikkailuFXMain extends Application {
         
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.show();*/
     }
 
     /**
@@ -47,5 +169,5 @@ public class SeikkailuFXMain extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
