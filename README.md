@@ -10,7 +10,7 @@
 
 Avaa sovellus komennolla mvn compile exec:java -Dexec.mainClass=seikkailupeli.ui.SeikkailuFXMain
 
-###Testaus
+### Testaus
 
 ```
 mvn test
