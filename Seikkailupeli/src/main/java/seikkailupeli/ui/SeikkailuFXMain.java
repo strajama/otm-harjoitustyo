@@ -5,12 +5,16 @@
  */
 package seikkailupeli.ui;
 
+import java.awt.Color;
+import java.awt.Insets;
+import seikkailupeli.domain.Adventure;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,9 +31,29 @@ import seikkailupeli.domain.World;
  */
 public class SeikkailuFXMain extends Application {
 
+    private Scene playScene;
+    private Scene loginScene;
+
     @Override
     public void start(Stage primaryStage) {
 
+        //login-scene
+        VBox loginPane = new VBox(10);
+        HBox inputPane = new HBox(10);
+        Label withoutLabel = new Label("Tadaa!");
+
+        inputPane.getChildren().addAll(withoutLabel);
+        Label loginMessage = new Label();
+
+        Button withoutButton = new Button("Pelaa kirjautumatta yhtä seikkailua");
+        withoutButton.setOnAction(e -> {
+            primaryStage.setScene(playScene);
+        });
+        loginPane.getChildren().addAll(loginMessage, inputPane, withoutButton);
+
+        loginScene = new Scene(loginPane, 300, 250);
+
+        //luo maailma ja seikkailu
         World world = new World(3, 4);
         world.createWorld();
         Adventure adventure = new Adventure(world);
@@ -138,29 +162,11 @@ public class SeikkailuFXMain extends Application {
         });
         doStuff.add(pick, 0, 0);
 
-        Scene scene = new Scene(bp, 600, 300);
+        playScene = new Scene(bp, 600, 300);
         primaryStage.setTitle("Seikkailu");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(loginScene);
         primaryStage.show();
 
-        /*Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();*/
     }
 
     /**

@@ -151,4 +151,9 @@ public class World {
     public Area findArea(Location location) {
         return grid[location.getI()][location.getJ()];
     }
+
+    public int getSize() {
+        return size;
+    }
+    
 }

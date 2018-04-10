@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package seikkailupeli.ui;
+package seikkailupeli.domain;
 
 import seikkailupeli.domain.Item;
 import seikkailupeli.domain.World;
