@@ -18,7 +18,7 @@ public class World {
     //  private ItemDao itemDao;
     //private Database database;
 
-    public World(int i, int j) throws Exception {
+    public World(int i, int j){
         this.grid = new Area[i][j];
         this.size = i * j;
         this.random = new Random();
@@ -58,7 +58,6 @@ public class World {
     }
 
     private void setItems() {
-
         if (!items.isEmpty()) {
             for (int i = 0; i < items.size(); i++) {
                 Area place = findRandomPlace();

@@ -43,6 +43,7 @@ public class Database {
         
         list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
         list.add("CREATE TABLE Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
+        list.add("CREATE TABLE Adventure (id integer PRIMARY KEY, name varchar(50), description varchar(500), timegoal int, itemgoal varchar(50)");
         
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
         list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");

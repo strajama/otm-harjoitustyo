@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package seikkailupeli.ui;
 
 import java.sql.Connection;
@@ -13,6 +8,8 @@ import seikkailupeli.domain.Adventure;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,10 +27,6 @@ import seikkailupeli.domain.Direction;
 import seikkailupeli.domain.Item;
 import seikkailupeli.domain.World;
 
-/**
- *
- * @author strajama
- */
 public class SeikkailuFXMain extends Application {
 
     private Scene playScene;
@@ -42,33 +35,28 @@ public class SeikkailuFXMain extends Application {
     private ItemDao itemDao;
     private Database database;
 
-
     @Override
     public void init() throws Exception {
         this.database = new Database("jdbc:sqlite:seikkailu.db");
         database.init();
         this.areaDao = new AreaDao(database);
         this.itemDao = new ItemDao(database);
-        
     }
-    
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         //login-scene
         VBox loginPane = new VBox(10);
-        HBox inputPane = new HBox(10);
-        Label withoutLabel = new Label("Tadaa!");
 
-        inputPane.getChildren().addAll(withoutLabel);
-        Label loginMessage = new Label();
+        Label loginMessage = new Label("Pelaa kirjautumatta randomisti seikkailua");
+        Button withoutButton = new Button("Jee, pelaamaan!");
+        Label createNew = new Label("Tähän tulee uusien juttujen luominen tietokantaan.");
+        Button createNewButton = new Button("Sitten myöhemmin");
 
-        Button withoutButton = new Button("Pelaa kirjautumatta randomisti luotua seikkailua");
         withoutButton.setOnAction(e -> {
             primaryStage.setScene(playScene);
         });
-        loginPane.getChildren().addAll(loginMessage, inputPane, withoutButton);
+        loginPane.getChildren().addAll(loginMessage, withoutButton, createNew, createNewButton);
 
         loginScene = new Scene(loginPane, 300, 250);
 
@@ -78,7 +66,6 @@ public class SeikkailuFXMain extends Application {
         Adventure adventure = new Adventure(world);
         adventure.randomItemGoal();
         adventure.setTimeGoal(20);
-
         BorderPane bp = new BorderPane();
         //asettelun ylaosaan tulee tietoa mitä pelaaja näkee
         VBox up = new VBox();
@@ -87,8 +74,8 @@ public class SeikkailuFXMain extends Application {
         Label description = new Label(world.getPlayer().getArea().getDescription());
         Label finding = new Label(world.getPlayer().getArea().show());
         Label bag = new Label(world.getPlayer().bag());
-        Label happening = new Label("Tässä kerrotaan mitä on juuri tapahtunut");
-        Label remainingTime = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä. Alussa vuoroja on "+adventure.getTimeGoal());
+        Label happening = new Label("Tässä kerrotaan pelitilanteesi.");
+        Label remainingTime = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä. Alussa vuoroja on " + adventure.getTimeGoal() + ".");
         up.getChildren().add(area);
         up.getChildren().add(description);
         up.getChildren().add(finding);
@@ -121,7 +108,7 @@ public class SeikkailuFXMain extends Application {
             if (adventure.getTimeGoal() < 0) {
                 happening.setText("Aika loppui, sinä hävisit!");
             }
-            remainingTime.setText("Vuoroja on jäljellä "+adventure.getTimeGoal());
+            remainingTime.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
         });
         move.add(north, 1, 0);
         Button east = new Button("ITÄ");
@@ -135,7 +122,7 @@ public class SeikkailuFXMain extends Application {
             if (adventure.getTimeGoal() < 0) {
                 happening.setText("Aika loppui, sinä hävisit!");
             }
-            remainingTime.setText("Vuoroja on jäljellä "+adventure.getTimeGoal());
+            remainingTime.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
         });
         move.add(east, 2, 1);
         Button west = new Button("LÄNSI");
@@ -149,7 +136,7 @@ public class SeikkailuFXMain extends Application {
             if (adventure.getTimeGoal() < 0) {
                 happening.setText("Aika loppui, sinä hävisit!");
             }
-            remainingTime.setText("Vuoroja on jäljellä "+adventure.getTimeGoal());
+            remainingTime.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
         });
         move.add(west, 0, 1);
         Button south = new Button("ETELÄ");
@@ -163,7 +150,7 @@ public class SeikkailuFXMain extends Application {
             if (adventure.getTimeGoal() < 0) {
                 happening.setText("Aika loppui, sinä hävisit!");
             }
-            remainingTime.setText("Vuoroja on jäljellä "+adventure.getTimeGoal());
+            remainingTime.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
         });
         move.add(south, 1, 2);
 
@@ -182,7 +169,7 @@ public class SeikkailuFXMain extends Application {
             } else if (adventure.getTimeGoal() < 0) {
                 happening.setText("Aika loppui, sinä hävisit!");
             }
-            remainingTime.setText("Vuoroja on jäljellä "+adventure.getTimeGoal());
+            remainingTime.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
 
         });
         doStuff.add(pick, 0, 0);
@@ -191,7 +178,6 @@ public class SeikkailuFXMain extends Application {
         primaryStage.setTitle("Seikkailu");
         primaryStage.setScene(loginScene);
         primaryStage.show();
-
     }
 
     /**
