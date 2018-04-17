@@ -17,7 +17,7 @@ public class WorldTest {
     @Before
     public void setUp() throws Exception {
         world = new World(3, 4);
-        world.createWorld();
+        world.createWorldTest();
     }
 
     @Test

@@ -17,29 +17,29 @@ public class World {
     private int size;
     private Player player;
     private Random ram;
-    private AreaDao areaDao;
-    private ItemDao itemDao;
-    private Database database;
+//    private AreaDao areaDao;
+  //  private ItemDao itemDao;
+    //private Database database;
 
     public World(int i, int j) throws Exception {
         this.grid = new Area[i][j];
         this.size = i * j;
         this.ram = new Random();
-        this.database = new Database("jdbc:sqlite:seikkailu.db");
-        database.init();
-        this.areaDao = new AreaDao(database);
-        this.itemDao = new ItemDao(database);
+//        this.database = new Database("jdbc:sqlite:seikkailu.db");
+  //      database.init();
+    //    this.areaDao = new AreaDao(database);
+      //  this.itemDao = new ItemDao(database);
     }
 
-    public void createWorld() throws Exception {
-        this.createAreas();
-        this.createItems();
+    public void createWorld(AreaDao areaDao, ItemDao itemDao) throws Exception {
+        this.createAreas(areaDao);
+        this.createItems(itemDao);
         this.createGrid();
         this.setItems();
         this.createPlayer();
     }
 
-    private void createAreas() throws Exception {        
+    private void createAreas(AreaDao areaDao) throws Exception {        
         this.areas = areaDao.findAll();
     }
 
@@ -54,7 +54,7 @@ public class World {
         }
     }
 
-    private void createItems() throws Exception {        
+    private void createItems(ItemDao itemDao) throws Exception {        
         this.items = itemDao.findAll();
     }
 
@@ -97,6 +97,53 @@ public class World {
 
     public int getSize() {
         return size;
+    }
+    
+    public void createWorldTest() {
+        //luodaan testiä varten alueet ja esineet vanhalla tavalla
+        this.areas = new ArrayList();
+        this.items = new ArrayList();
+        Area suo = new Area("suo", "Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.");
+        Area metsa = new Area("metsä", "Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta");
+        Area aukio = new Area("aukio", "Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.");
+        Area lehto = new Area("lehto", "Auringonsäteet valaisevat lehtien läpi lehdossa ja saa sinulle lämpimän olon.");
+        Area niitty = new Area("niitty", "Kukkaniityllä kasvaa orvokki, lehdokki, vuokko ja moni muu.");
+        Area pusikko = new Area("pusikko", "Olet pusikossa. On vaikea nähdä minne mennä.");
+        Area puro = new Area("puro", "Edessäsi on kylmävetinen puro, jonka vesi juoksee iloisesti pulisten.");
+        Area lahde = new Area("lähde", "Näet kirkasvetisen lähteen. Kumarrut juomaan siitä huikan.");
+        Area kumpu = new Area("kumpu", "Seisot kummulla, joka muistuttaa hautakeroja. Saat kylmiä väreitä");
+        Area vuori = new Area("vuori", "Vuorelta on komeat näkymät yli koko maan.");
+        Area laakso = new Area("laakso", "Laakso on kaunis ja laakea. Täällä sinun on hyvä olla.");
+        Area luola = new Area("luola", "Tulet pimeään luolaan, jota ei voi ylittää eikä alittaa.");
+        Area kallio = new Area("kallio", "Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.");
+        this.areas.add(suo);
+        this.areas.add(metsa);
+        this.areas.add(aukio);
+        this.areas.add(lehto);
+        this.areas.add(niitty);
+        this.areas.add(pusikko);
+        this.areas.add(puro);
+        this.areas.add(lahde);
+        this.areas.add(kumpu);
+        this.areas.add(vuori);
+        this.areas.add(laakso);
+        this.areas.add(luola);
+        this.areas.add(kallio);
+        Item palantiri = new Item("palantiri", "kauaksi näkevä kivi.");
+        Item google = new Item("google", "hakukone, jolla voi löytää maailman.");
+        Item tv = new Item("tv", "loputon uusien ideoiden lähde.");
+        Item kommunikaattori = new Item("kommunikaattori", "kone, jolla saa yhteyden ystäviin.");
+        Item kartta = new Item("kartta", "esine, jota käytetään, kun ei voi kysyä tietä.");
+        Item lokikirja = new Item("lokikirja", "tapahtumien tallennuspaikka.");
+        this.items.add(palantiri);
+        this.items.add(google);
+        this.items.add(tv);
+        this.items.add(kommunikaattori);
+        this.items.add(kartta);
+        this.items.add(lokikirja);        
+        this.createGrid();
+        this.setItems();
+        this.createPlayer();
     }
 
 }

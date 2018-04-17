@@ -39,7 +39,6 @@
                 <configuration>
                     <excludes>
                         <exclude>seikkailupeli/ui/*</exclude>
-                        <exclude>seikkailupeli/dao/*</exclude>
                         <exclude>seikkailupeli/domain/Direction*</exclude>
                     </excludes>
                 </configuration>   

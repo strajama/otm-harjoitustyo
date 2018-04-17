@@ -37,6 +37,17 @@ public class SeikkailuFXMain extends Application {
 
     private Scene playScene;
     private Scene loginScene;
+    private AreaDao areaDao;
+    private ItemDao itemDao;
+    private Database database;
+
+    @Override
+    public void init() throws Exception {
+        this.database = new Database("jdbc:sqlite:seikkailu.db");
+        database.init();
+        this.areaDao = new AreaDao(database);
+        this.itemDao = new ItemDao(database);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -58,7 +69,7 @@ public class SeikkailuFXMain extends Application {
 
         //luo maailma ja seikkailu
         World world = new World(3, 4);
-        world.createWorld();
+        world.createWorld(areaDao, itemDao);
         Adventure adventure = new Adventure(world);
         Item goalitem = new Item("palantiri", "kauaksi näkevä kivi.");
         adventure.itemGoal(goalitem);
