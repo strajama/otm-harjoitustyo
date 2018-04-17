@@ -24,4 +24,9 @@ mvn jacoco:report
 
 Kattavuusraporttia voi tarkastella avaamalla selaimella tiedosto _target/site/jacoco/index.html_
 
- 
+
+Checkstylen saa katsottua komennolla
+
+...
+mvn jxr:jxr checkstyle:checkstyle
+...
