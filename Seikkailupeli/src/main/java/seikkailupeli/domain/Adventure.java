@@ -36,9 +36,12 @@ public class Adventure {
     }
 
     public void randomItemGoal() {
-        ArrayList<Item> items = world.getItems();
-        int r = random.nextInt(items.size());
-        this.itemGoal = items.get(r);
+        if (!world.getItems().isEmpty()) {
+            ArrayList<Item> items = world.getItems();
+            int r = random.nextInt(items.size());
+            this.itemGoal = items.get(r);
+        }
+
     }
 
 }

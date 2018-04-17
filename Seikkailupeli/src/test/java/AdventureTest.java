@@ -45,4 +45,10 @@ public class AdventureTest {
         a.takeTurn();
         assertEquals(1, a.getTimeGoal());
     }
+    
+    @Test
+    public void randomItemTestNull() {
+        a.randomItemGoal();
+        assertTrue(a.getItemGoal()==null);
+    }
 }

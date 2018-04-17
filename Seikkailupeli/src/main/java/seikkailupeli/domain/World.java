@@ -22,6 +22,8 @@ public class World {
         this.grid = new Area[i][j];
         this.size = i * j;
         this.random = new Random();
+        this.items = new ArrayList();
+        this.areas = new ArrayList();
 //        this.database = new Database("jdbc:sqlite:seikkailu.db");
         //      database.init();
         //    this.areaDao = new AreaDao(database);
@@ -97,6 +99,7 @@ public class World {
     }
 
     public ArrayList<Item> getItems() {
+
         return items;
     }
     
@@ -104,8 +107,6 @@ public class World {
 
     public void createWorldTest() {
         //luodaan testiä varten alueet ja esineet vanhalla tavalla
-        this.areas = new ArrayList();
-        this.items = new ArrayList();
         Area suo = new Area("suo", "Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.");
         Area metsa = new Area("metsä", "Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta");
         Area aukio = new Area("aukio", "Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.");
