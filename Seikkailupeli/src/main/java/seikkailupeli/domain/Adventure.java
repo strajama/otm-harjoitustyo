@@ -24,7 +24,7 @@ public class Adventure {
         this.find = false;
     }
     
-    public void itemGoal (Item item) {
+    public void itemGoal(Item item) {
         this.itemGoal = item;
     }
     
@@ -33,7 +33,7 @@ public class Adventure {
     }
     
     public void takeTurn() {
-        timeGoal --;
+        timeGoal--;
     }
 
     public Item getItemGoal() {

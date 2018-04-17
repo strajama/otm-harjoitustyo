@@ -5,8 +5,6 @@
  */
 package seikkailupeli.ui;
 
-import java.awt.Color;
-import java.awt.Insets;
 import seikkailupeli.domain.Adventure;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +12,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import seikkailupeli.dao.AreaDao;
+import seikkailupeli.dao.Database;
+import seikkailupeli.dao.ItemDao;
 import seikkailupeli.domain.Action;
 import seikkailupeli.domain.Direction;
 import seikkailupeli.domain.Item;
@@ -35,7 +35,12 @@ public class SeikkailuFXMain extends Application {
     private Scene loginScene;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception{
+        
+        Database database = new Database("jdbc:sqlite:seikkailu.db");
+        database.init();        
+        AreaDao areaDao = new AreaDao(database);
+        ItemDao itemDao = new ItemDao(database);
 
         //login-scene
         VBox loginPane = new VBox(10);

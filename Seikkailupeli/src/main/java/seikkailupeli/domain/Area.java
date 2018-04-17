@@ -59,15 +59,15 @@ public class Area {
     public void putItem(Item item) {
         items.put(item.getName(), item);
     }
-    
+
     public Item giveSomeItem() {
         if (!items.isEmpty()) {
             Item item = items.values().toArray(new Item[items.size()])[0];
             items.remove(item.getName());
             return item;
-        } 
-            return null;
-        
+        }
+        return null;
+
     }
 
     @Override
@@ -82,5 +82,5 @@ public class Area {
     public void setLocation(Location location) {
         this.location = location;
     }
-    
+
 }

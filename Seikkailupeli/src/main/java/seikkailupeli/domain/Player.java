@@ -55,7 +55,7 @@ public class Player {
         return builder.toString();
     }
 
-    public void putInBag (Item item) {
+    public void putInBag(Item item) {
         items.put(item.getName(), item);
     }
 }
