@@ -5,6 +5,10 @@
  */
 package seikkailupeli.ui;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import seikkailupeli.domain.Adventure;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +39,7 @@ public class SeikkailuFXMain extends Application {
     private Scene loginScene;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        
-        Database database = new Database("jdbc:sqlite:seikkailu.db");
-        database.init();        
-        AreaDao areaDao = new AreaDao(database);
-        ItemDao itemDao = new ItemDao(database);
-
+    public void start(Stage primaryStage) throws Exception {
         //login-scene
         VBox loginPane = new VBox(10);
         HBox inputPane = new HBox(10);

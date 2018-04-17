@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import seikkailupeli.dao.AreaDao;
+import seikkailupeli.dao.Database;
+import seikkailupeli.dao.ItemDao;
 
 public class World {
 
@@ -14,16 +17,21 @@ public class World {
     private int size;
     private Player player;
     private Random ram;
+    private AreaDao areaDao;
+    private ItemDao itemDao;
+    private Database database;
 
-    public World(int i, int j) {
-        this.areas = new ArrayList<>();
-        this.items = new ArrayList<>();
+    public World(int i, int j) throws Exception {
         this.grid = new Area[i][j];
         this.size = i * j;
         this.ram = new Random();
+        this.database = new Database("jdbc:sqlite:seikkailu.db");
+        database.init();
+        this.areaDao = new AreaDao(database);
+        this.itemDao = new ItemDao(database);
     }
 
-    public void createWorld() {
+    public void createWorld() throws Exception {
         this.createAreas();
         this.createItems();
         this.createGrid();
@@ -31,7 +39,68 @@ public class World {
         this.createPlayer();
     }
 
-    private void createAreas() {
+    private void createAreas() throws Exception {        
+        this.areas = areaDao.findAll();
+    }
+
+    private void createGrid() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                int r = ram.nextInt(areas.size());
+                grid[i][j] = areas.get(r);
+                Location location = new Location(i, j);
+                areas.get(r).setLocation(location);
+            }
+        }
+    }
+
+    private void createItems() throws Exception {        
+        this.items = itemDao.findAll();
+    }
+
+    private void setItems() {
+
+        if (!items.isEmpty()) {
+            for (int i = 0; i < items.size(); i++) {
+                Area place = findRandomPlace();
+                place.putItem(items.get(i));
+                items.get(i).setArea(place);
+            }
+        }
+    }
+
+    private Area findRandomPlace() {
+        int r = ram.nextInt(size);
+
+        Area place = grid[r / grid[0].length][r % grid.length];
+
+        return place;
+    }
+
+    private void createPlayer() {
+        this.player = new Player();
+        Area place = findRandomPlace();
+        player.setArea(place);
+    }
+
+    public Area[][] getGrid() {
+        return grid;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Area findArea(Location location) {
+        return grid[location.getI()][location.getJ()];
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+}
+/*
         Area suo = new Area("suo", "Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.");
         Area metsa = new Area("metsä", "Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta");
         Area aukio = new Area("aukio", "Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.");
@@ -58,7 +127,7 @@ public class World {
         this.areas.add(laakso);
         this.areas.add(luola);
         this.areas.add(kallio);
-        /*
+        
         CREATE TABLE Areas (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200));
         INSERT INTO Areas (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.');
         INSERT INTO Areas (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.');
@@ -73,21 +142,7 @@ public class World {
         INSERT INTO Areas (name, description) VALUES ('laakso', 'Laakso on kaunis ja laakea. Täällä sinun on hyvä olla.');
         INSERT INTO Areas (name, description) VALUES ('luola', 'Tulet pimeään luolaan, jota ei voi ylittää eikä alittaa.');
         INSERT INTO Areas (name, description) VALUES ('kallio', 'Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.');
-         */
-    }
-
-    private void createGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                int r = ram.nextInt(areas.size());
-                grid[i][j] = areas.get(r);
-                Location location = new Location(i, j);
-                areas.get(r).setLocation(location);
-            }
-        }
-    }
-
-    private void createItems() {
+         
         //luodaan esineet
         Item palantiri = new Item("palantiri", "kauaksi näkevä kivi.");
         Item google = new Item("google", "hakukone, jolla voi löytää maailman.");
@@ -101,7 +156,7 @@ public class World {
         this.items.add(kommunikaattori);
         this.items.add(kartta);
         this.items.add(lokikirja);
-        /*
+        
         CREATE TABLE Items (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200));
         INSERT INTO Items (name, description) VALUES ('palantiri', 'kauaksi näkevä kivi');
         INSERT INTO Items (name, description) VALUES ('google', 'hakukone, jolla voi löytää maailman');
@@ -109,49 +164,5 @@ public class World {
         INSERT INTO Items (name, description) VALUES ('kommunikaattori', 'kone, jolla saa yhteyden ystäviin');
         INSERT INTO Items (name, description) VALUES ('kartta', 'esine, jota käytetään, kun ei voi kysyä tietä');
         INSERT INTO Items (name, description) VALUES ('lokikirja', 'tapahtumien tallennuspaikka');
-         */
-    }
-
-    private void setItems() {
-
-        if (!items.isEmpty()) {
-            for (int i = 0; i < items.size(); i++) {
-                Area place = findRandomPlace();
-                place.putItem(items.get(i));
-                items.get(i).setArea(place);
-            }
-        }
-    }
-
-    private Area findRandomPlace() {
-        int r = ram.nextInt(size);
-
-        Area place = grid[r / grid[0].length][r % grid.length];
-
-        return place;
-    }
-
-    public void createPlayer() {
-
-        this.player = new Player();
-        Area place = findRandomPlace();
-        player.setArea(place);
-    }
-
-    public Area[][] getGrid() {
-        return grid;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Area findArea(Location location) {
-        return grid[location.getI()][location.getJ()];
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-}
+         
+*/

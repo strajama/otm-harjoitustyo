@@ -39,6 +39,7 @@
                 <configuration>
                     <excludes>
                         <exclude>seikkailupeli/ui/*</exclude>
+                        <exclude>seikkailupeli/dao/*</exclude>
                     </excludes>
                 </configuration>   
                 <executions>
