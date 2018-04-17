@@ -27,6 +27,6 @@ Kattavuusraporttia voi tarkastella avaamalla selaimella tiedosto _target/site/ja
 
 Checkstylen saa katsottua komennolla
 
-...
+```
 mvn jxr:jxr checkstyle:checkstyle
-...
+```
