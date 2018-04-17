@@ -1,17 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package seikkailupeli.domain;
 
-import seikkailupeli.domain.Area;
-import seikkailupeli.domain.World;
-
-/**
- *
- * @author strajama
- */
 public class Action {
 
     public Action() {
