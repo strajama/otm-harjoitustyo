@@ -17,12 +17,12 @@ public class ItemDao implements Dao<Item, Integer> {
     }
 
     @Override
-    public List<Item> findAll() throws SQLException {
+    public ArrayList<Item> findAll() throws SQLException {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item");
         ResultSet rs = stmt.executeQuery();
 
-        List<Item> items = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<>();
 
         while (rs.next()) {
             String name = rs.getString("name");

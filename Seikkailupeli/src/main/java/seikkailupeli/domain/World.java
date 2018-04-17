@@ -1,34 +1,31 @@
 package seikkailupeli.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.Database;
 import seikkailupeli.dao.ItemDao;
 
 public class World {
 
     private List<Area> areas;
-    private List<Item> items;
+    private ArrayList<Item> items;
     private Area[][] grid;
     private int size;
     private Player player;
-    private Random ram;
+    private Random random;
 //    private AreaDao areaDao;
-  //  private ItemDao itemDao;
+    //  private ItemDao itemDao;
     //private Database database;
 
     public World(int i, int j) throws Exception {
         this.grid = new Area[i][j];
         this.size = i * j;
-        this.ram = new Random();
+        this.random = new Random();
 //        this.database = new Database("jdbc:sqlite:seikkailu.db");
-  //      database.init();
-    //    this.areaDao = new AreaDao(database);
-      //  this.itemDao = new ItemDao(database);
+        //      database.init();
+        //    this.areaDao = new AreaDao(database);
+        //  this.itemDao = new ItemDao(database);
     }
 
     public void createWorld(AreaDao areaDao, ItemDao itemDao) throws Exception {
@@ -39,14 +36,14 @@ public class World {
         this.createPlayer();
     }
 
-    private void createAreas(AreaDao areaDao) throws Exception {        
+    private void createAreas(AreaDao areaDao) throws Exception {
         this.areas = areaDao.findAll();
     }
 
     private void createGrid() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                int r = ram.nextInt(areas.size());
+                int r = random.nextInt(areas.size());
                 grid[i][j] = areas.get(r);
                 Location location = new Location(i, j);
                 areas.get(r).setLocation(location);
@@ -54,7 +51,7 @@ public class World {
         }
     }
 
-    private void createItems(ItemDao itemDao) throws Exception {        
+    private void createItems(ItemDao itemDao) throws Exception {
         this.items = itemDao.findAll();
     }
 
@@ -70,7 +67,7 @@ public class World {
     }
 
     private Area findRandomPlace() {
-        int r = ram.nextInt(size);
+        int r = random.nextInt(size);
 
         Area place = grid[r / grid[0].length][r % grid.length];
 
@@ -98,7 +95,13 @@ public class World {
     public int getSize() {
         return size;
     }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
     
+    
+
     public void createWorldTest() {
         //luodaan testiä varten alueet ja esineet vanhalla tavalla
         this.areas = new ArrayList();
@@ -140,7 +143,7 @@ public class World {
         this.items.add(tv);
         this.items.add(kommunikaattori);
         this.items.add(kartta);
-        this.items.add(lokikirja);        
+        this.items.add(lokikirja);
         this.createGrid();
         this.setItems();
         this.createPlayer();

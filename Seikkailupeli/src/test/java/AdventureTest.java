@@ -28,20 +28,20 @@ public class AdventureTest {
 
     @Test
     public void setTimeGoal() {
-        a.timeGoal(1);
+        a.setTimeGoal(1);
         assertEquals(1, a.getTimeGoal());
     }
 
     @Test
     public void setItemGoal() {
         Item item = new Item("testi", "toimiiko");
-        a.itemGoal(item);
+        a.setItemGoal(item);
         assertEquals(item, a.getItemGoal());
     }
 
     @Test
     public void takeTurn() {
-        a.timeGoal(2);
+        a.setTimeGoal(2);
         a.takeTurn();
         assertEquals(1, a.getTimeGoal());
     }

@@ -1,29 +1,28 @@
-
 package seikkailupeli.domain;
 
-import seikkailupeli.domain.Item;
-import seikkailupeli.domain.World;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Adventure {
- 
+
     private World world;
-    private boolean find;
     private Item itemGoal;
     private int timeGoal;
+    private Random random;
 
     public Adventure(World world) {
         this.world = world;
-        this.find = false;
+        this.random = new Random();
     }
-    
-    public void itemGoal(Item item) {
+
+    public void setItemGoal(Item item) {
         this.itemGoal = item;
     }
-    
-    public void timeGoal(int t) {
+
+    public void setTimeGoal(int t) {
         this.timeGoal = t;
     }
-    
+
     public void takeTurn() {
         timeGoal--;
     }
@@ -35,5 +34,11 @@ public class Adventure {
     public int getTimeGoal() {
         return timeGoal;
     }
-    
+
+    public void randomItemGoal() {
+        ArrayList<Item> items = world.getItems();
+        int r = random.nextInt(items.size());
+        this.itemGoal = items.get(r);
+    }
+
 }
