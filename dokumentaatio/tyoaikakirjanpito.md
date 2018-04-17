@@ -6,4 +6,5 @@
 | 3.4.2018 | 4 | projektin aloittaminen ja hahmottelu |
 | 9.4.2018 | 3 | projektin luokkien luomista |
 | 10.4.2018 | 6 | käyttöliittymään toiminnallisuuksia |
-| yht   | 15   | | 
+| 16.4.2018 | 2 | muodollisten vaatimusten täydentämistä |
+| yht   | 17   | | 
