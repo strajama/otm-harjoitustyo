@@ -7,5 +7,5 @@
 | 9.4.2018 | 3 | projektin luokkien luomista |
 | 10.4.2018 | 6 | käyttöliittymään toiminnallisuuksia |
 | 16.4.2018 | 2 | muodollisten vaatimusten täydentämistä |
-| 17.4.2018 | 8 | testejä ja toiminnallisuutta |
-| yht   | 25   | | 
+| 17.4.2018 | 10 | testejä ja toiminnallisuutta |
+| yht   | 27   | | 
