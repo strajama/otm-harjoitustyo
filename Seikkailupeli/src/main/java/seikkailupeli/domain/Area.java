@@ -39,7 +39,7 @@ public class Area {
             StringBuilder builder = new StringBuilder();
             builder.append("Näet jotain mielenkiintoista: ");
             while (itemiterator.hasNext()) {
-                builder.append(itemiterator.next());
+                builder.append(itemiterator.next().toUpperCase());
                 if (itemiterator.hasNext()) {
                     builder.append(", ");
                 }

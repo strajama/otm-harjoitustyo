@@ -37,7 +37,7 @@ public class Player {
         StringBuilder builder = new StringBuilder();
         builder.append("Repussa on ");
         while (itemirator.hasNext()) {
-            builder.append(itemirator.next());
+            builder.append(itemirator.next().toUpperCase());
             if (itemirator.hasNext()) {
                 builder.append(", ");
             }
