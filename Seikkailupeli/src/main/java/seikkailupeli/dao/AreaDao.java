@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import seikkailupeli.domain.Area;
-import seikkailupeli.domain.Item;
 
 public class AreaDao implements Dao<Area, Integer> {
 
@@ -18,23 +16,20 @@ public class AreaDao implements Dao<Area, Integer> {
     }
 
     @Override
-    public List<Area> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area");
-        ResultSet rs = stmt.executeQuery();
-
-        List<Area> areas = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            Area newArea = new Area(name, description);
-            areas.add(newArea);
+    public ArrayList<Area> findAll() throws SQLException {
+        ArrayList<Area> areas;
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area");
+            ResultSet rs = stmt.executeQuery();
+            areas = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Area newArea = new Area(name, description);
+                areas.add(newArea);
+            }   rs.close();
+            stmt.close();
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return areas;
     }
@@ -59,7 +54,7 @@ public class AreaDao implements Dao<Area, Integer> {
         }
 
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Area (name, description) VALUES(?, ?)");
-        stmt.setString(1, object.getName());
+        stmt.setString(1, object.getName().toLowerCase());
         stmt.setString(2, object.getDescription());
         stmt.executeUpdate();
 

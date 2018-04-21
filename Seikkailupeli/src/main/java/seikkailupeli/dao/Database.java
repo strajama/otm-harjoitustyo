@@ -3,7 +3,7 @@ package seikkailupeli.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 public class Database {
 
@@ -18,32 +18,30 @@ public class Database {
     }
 
     public void init() {
-        List<String> createSql = sqlites();
+        ArrayList<String> createSql = sqlites();
 
         // "try with resources" sulkee resurssin automaattisesti lopuksi
         try (Connection conn = getConnection()) {
             Statement st = conn.createStatement();
-
-            // suoritetaan komennot
+            System.out.println("otetaan yhteyttä");
+              // suoritetaan komennot
             for (String d : createSql) {
                 System.out.println("Running command >> " + d);
                 st.executeUpdate(d);
             }
-
         } catch (Throwable t) {
             // jos tietokantataulu on jo olemassa, ei komentoja suoriteta
             System.out.println("Error >> " + t.getMessage());
         }
     }
 
-    private List<String> sqlites() {
+    private ArrayList<String> sqlites() {
         ArrayList<String> list = new ArrayList<>();
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
         
         list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
         list.add("CREATE TABLE Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
-        list.add("CREATE TABLE Adventure (id integer PRIMARY KEY, name varchar(50), description varchar(500), timegoal int, itemgoal varchar(50)");
         
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
         list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");

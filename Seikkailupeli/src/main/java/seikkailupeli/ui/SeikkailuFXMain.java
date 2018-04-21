@@ -1,5 +1,7 @@
 package seikkailupeli.ui;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class SeikkailuFXMain extends Application {
     private ItemDao itemDao;
     private Database database;
     private String table;
+    private ArrayList allList;
 
     @Override
     public void init() throws Exception {
@@ -74,7 +77,7 @@ public class SeikkailuFXMain extends Application {
         world.createWorld(areaDao, itemDao);
         Adventure adventure = new Adventure(world);
         adventure.randomItemGoal();
-        adventure.setTimeGoal(20);
+        adventure.setTimeGoal(200);
         BorderPane playBp = new BorderPane();
         //asettelun ylaosaan tulee tietoa mitä pelaaja näkee
         VBox up = new VBox();
@@ -203,16 +206,38 @@ public class SeikkailuFXMain extends Application {
         createGrid.setVgap(5);
         createGrid.setHgap(5);
         table = "";
+        allList = new ArrayList();
 
         ChoiceBox cb = new ChoiceBox();
         cb.setItems(FXCollections.observableArrayList("Alue", "Esine"));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
+        
+        ChoiceBox cbAll = new ChoiceBox();
+        cbAll.setItems(FXCollections.observableArrayList(allList));
+        GridPane.setConstraints(cbAll, 0, 4);
+        createGrid.getChildren().add(cbAll);
+
         String[] daos = new String[]{"Area", "Item"};
         cb.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov,
                         Number old_val, Number new_val) -> {
                     table = daos[new_val.intValue()];
+                    if (table.equals("Area")) {
+                        try {
+                            allList = areaDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (table.equals("Item")) {
+                        try {
+                            allList = itemDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
         );
 
@@ -230,6 +255,12 @@ public class SeikkailuFXMain extends Application {
         GridPane.setColumnSpan(label, 2);
         createGrid.getChildren().add(label);
 
+        cbAll.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov,
+                        Number old_val, Number new_val) -> {
+                }
+        );
+
         Button submit = new Button("Lisää");
         GridPane.setConstraints(submit, 1, 1);
         createGrid.getChildren().add(submit);
@@ -239,23 +270,24 @@ public class SeikkailuFXMain extends Application {
                     label.setText("Valitse taulu.");
                 } else {
                     if (table == "Area") {
-                        Area newArea = new Area (name.getText(), des.getText());
+                        Area newArea = new Area(name.getText(), des.getText());
                         try {
                             areaDao.saveOrUpdate(newArea);
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if (table == "Item") {
-                        Item newItem = new Item (name.getText(), des.getText());
+                        Item newItem = new Item(name.getText(), des.getText());
                         try {
                             itemDao.saveOrUpdate(newItem);
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                label.setText("Uusi " + table + "-taulu lisätty.");
-                name.clear();
-                des.clear();}
+                    label.setText("Uusi " + table + "-taulu lisätty.");
+                    name.clear();
+                    des.clear();
+                }
             } else if (name.getText().isEmpty() && des.getText().isEmpty()) {
                 label.setText("Anna nimi ja kuvaus.");
             } else if (des.getText().isEmpty()) {
@@ -279,6 +311,23 @@ public class SeikkailuFXMain extends Application {
         rLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
         });
+
+        createScene = new Scene(createGrid, 600, 300);
+
+        primaryStage.setTitle("Seikkailu");
+        primaryStage.setScene(loginScene);
+        primaryStage.show();
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+}
+/*
 
         /*
         VBox createvb = new VBox();
@@ -305,18 +354,3 @@ public class SeikkailuFXMain extends Application {
         createvb.getChildren().add(daoDes);
         TextField tfDes = new TextField();
         createvb.getChildren().add(tfDes);*/
-        createScene = new Scene(createGrid, 600, 300);
-
-        primaryStage.setTitle("Seikkailu");
-        primaryStage.setScene(loginScene);
-        primaryStage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-}
