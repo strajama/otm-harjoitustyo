@@ -8,4 +8,5 @@
 | 10.4.2018 | 6 | käyttöliittymään toiminnallisuuksia |
 | 16.4.2018 | 2 | muodollisten vaatimusten täydentämistä |
 | 17.4.2018 | 10 | testejä ja toiminnallisuutta |
-| yht   | 27   | | 
+| 21.4.2018 | 6 | käyttöliittymän opiskelua ja tekemistä |
+| yht   | 33   | | 
