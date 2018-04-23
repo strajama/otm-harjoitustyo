@@ -1,15 +1,19 @@
-
 package seikkailupeli.domain;
 
 public class Action {
+    
+    private World world;
+    private Player player;
 
-    public Action() {
+    public Action(World world, Player player) {
+        this.world = world;
+        this.player = player;
     }
 
-    public void move(World world, Player player, Direction d) {
+    public void move(Direction d) {
         Area now = player.getArea();
 
-        Location newL;
+        Location newL = player.getArea().getLocation();
         switch (d) {
             case NORTH:
                 if (now.getLocation().getI() - 1 >= 0) {
@@ -44,12 +48,29 @@ public class Action {
                 player.setArea(world.findArea(newL));
                 break;
         }
+        System.out.println(newL);
     }
 
-    public void take(World world, Player player) {
-        if (!player.getArea().getItems().isEmpty()) {
-            Item item = player.getArea().giveSomeItem();
-            player.putInBag(item);
+    public Item take() {
+        if (!player.getArea().getFindings().isEmpty()) {
+            Item item = (Item) player.getArea().giveSomeItem();
+            if (item != null) {
+                player.putInBag(item);
+                return item;
+            }
         }
+        return null;
+    }
+    
+    public Helper speak() {
+        
+        if (!player.getArea().getFindings().isEmpty()) {
+            Helper helper = player.getArea().speakHelper(player);
+            if (helper != null) {
+                player.speakWith(helper);
+                return helper;
+            }
+        }        
+        return null;
     }
 }

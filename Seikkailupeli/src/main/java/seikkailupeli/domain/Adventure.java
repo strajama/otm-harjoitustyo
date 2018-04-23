@@ -9,10 +9,12 @@ public class Adventure {
     private Item itemGoal;
     private int timeGoal;
     private Random random;
+    private boolean over;
 
     public Adventure(World world) {
         this.world = world;
         this.random = new Random();
+        this.over = false;
     }
 
     public void setItemGoal(Item item) {
@@ -24,7 +26,12 @@ public class Adventure {
     }
 
     public void takeTurn() {
-        timeGoal--;
+        if (!over) {
+            timeGoal--;
+            if (timeGoal <= 0) {
+                over = true;
+            }
+        }
     }
 
     public Item getItemGoal() {
@@ -41,7 +48,14 @@ public class Adventure {
             int r = random.nextInt(items.size());
             this.itemGoal = items.get(r);
         }
+    }
 
+    public boolean isOver() {
+        return over;
+    }
+
+    public void setOver(boolean over) {
+        this.over = over;
     }
 
 }

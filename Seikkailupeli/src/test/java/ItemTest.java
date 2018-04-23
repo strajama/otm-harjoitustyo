@@ -35,11 +35,6 @@ public class ItemTest {
     }
 
     @Test
-    public void nullArea() {
-        assertTrue(item.getArea() == null);
-    }
-
-    @Test
     public void itemToString() {
         assertEquals("testi", item.toString());
     }

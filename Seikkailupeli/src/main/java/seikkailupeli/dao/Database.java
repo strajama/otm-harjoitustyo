@@ -42,6 +42,8 @@ public class Database {
         
         list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
         list.add("CREATE TABLE Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
+        list.add("CREATE TABLE Helper (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
+        list.add("CREATE TABLE Monster (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
         
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
         list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");
@@ -62,6 +64,14 @@ public class Database {
         list.add("INSERT INTO Item (name, description) VALUES ('kommunikaattori', 'kone, jolla saa yhteyden ystäviin')");
         list.add("INSERT INTO Item (name, description) VALUES ('kartta', 'esine, jota käytetään, kun ei voi kysyä tietä')");
         list.add("INSERT INTO Item (name, description) VALUES ('lokikirja', 'tapahtumien tallennuspaikka')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('gandalf', 'viisas velho Keski-Maasta')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('luke cage', 'supervahva ja vahingoittumaton sankari')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('michonne', 'taitava katanan käyttäjä')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('gizmo', 'söpöläinen, jota ei pidä ruokkia keskiyön jälkeen')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('hermione', 'jästisyntyinen taikaministeri')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota olit etsimässä')");
+        list.add("INSERT INTO Monster (name, description) VALUES ('gazebo', 'Et voi paeta. Sinun on taisteltava.')");
+        
         return list;
     }
 }

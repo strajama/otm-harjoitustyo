@@ -7,10 +7,12 @@ import java.util.Map;
 public class Player {
 
     private Area area;
-    private Map<String, Item> items;
+    private HashMap<String, Item> items;
+    private HashMap<String, Helper> helpers;
 
     public Player() {
         this.items = new HashMap<>();
+        this.helpers = new HashMap<>();
     }
 
     public Area getArea() {
@@ -21,12 +23,12 @@ public class Player {
         this.area = area;
     }
 
-    public Map<String, Item> getItems() {
+    public HashMap<String, Item> getItems() {
         return items;
     }
 
-    public void setItems(Map<String, Item> items) {
-        this.items = items;
+    public HashMap<String, Helper> getHelpers() {
+        return helpers;
     }
 
     public String bag() {
@@ -48,5 +50,13 @@ public class Player {
 
     public void putInBag(Item item) {
         items.put(item.getName(), item);
+    }
+    
+    public void speakWith (Helper helper) {
+        helpers.put(helper.getName(), helper);
+    }
+    
+    public boolean spokenWith (String helper) {
+        return helpers.containsKey(helper);
     }
 }

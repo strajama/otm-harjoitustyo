@@ -28,5 +28,8 @@ public class Location {
         this.j = j;
     }
     
-    
+    @Override
+    public String toString() {
+        return "i on "+i+" ja j on "+j;
+    }
 }

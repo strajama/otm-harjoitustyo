@@ -8,21 +8,21 @@ public class Area {
 
     private String name;
     private String description;
-    private Map<String, Item> items;
+    private Map<String, Finding> findings;
     private Location location;
 
     public Area(String name, String description) {
         this.name = name;
         this.description = description;
-        this.items = new HashMap<>();
+        this.findings = new HashMap<>();
     }
 
-    public Map<String, Item> getItems() {
-        return items;
+    public Map<String, Finding> getFindings() {
+        return findings;
     }
 
-    public void setItems(Map<String, Item> items) {
-        this.items = items;
+    public void setFindings(Map<String, Finding> findings) {
+        this.findings = findings;
     }
 
     public String getName() {
@@ -34,8 +34,8 @@ public class Area {
     }
 
     public String show() {
-        if (!items.isEmpty()) {
-            Iterator<String> itemiterator = items.keySet().iterator();
+        if (!findings.isEmpty()) {
+            Iterator<String> itemiterator = findings.keySet().iterator();
             StringBuilder builder = new StringBuilder();
             builder.append("Näet jotain mielenkiintoista: ");
             while (itemiterator.hasNext()) {
@@ -50,24 +50,37 @@ public class Area {
         return "Täällä ei ole mitään mielenkiintoista.";
     }
 
-    public void removeItem(String item) {
-        if (items.containsKey(item)) {
-            items.remove(item);
-        }
-    }
 
-    public void putItem(Item item) {
-        items.put(item.getName(), item);
+    public void putFinding(Finding finding) {
+        findings.put(finding.getName(), finding);
     }
 
     public Item giveSomeItem() {
-        if (!items.isEmpty()) {
-            Item item = items.values().toArray(new Item[items.size()])[0];
-            items.remove(item.getName());
-            return item;
+        if (!findings.isEmpty()) {
+            Iterator<String> it = findings.keySet().iterator();
+            while (it.hasNext()) {
+                String next = it.next();
+                if (findings.get(next).isItem() ) {
+                    Finding item = findings.get(next);
+                    findings.remove(next);
+                    return (Item) item;
+                }
+            }
         }
         return null;
-
+    }
+    
+    public Helper speakHelper(Player player) {
+        if (!findings.isEmpty()) {
+            Iterator<String> it = findings.keySet().iterator();
+            while (it.hasNext()) {
+                String next = it.next();
+                if (!findings.get(next).isItem() && !player.spokenWith(next)) {
+                    return (Helper) findings.get(next);
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -82,5 +95,6 @@ public class Area {
     public void setLocation(Location location) {
         this.location = location;
     }
+    
 
 }

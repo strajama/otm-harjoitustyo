@@ -1,45 +1,43 @@
 package seikkailupeli.domain;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import seikkailupeli.dao.AreaDao;
+import seikkailupeli.dao.HelperDao;
 import seikkailupeli.dao.ItemDao;
+import seikkailupeli.dao.MonsterDao;
 
 public class World {
 
-    private List<Area> areas;
+    private ArrayList<Area> areas;
     private ArrayList<Item> items;
+    private ArrayList<Helper> helpers;
+    private ArrayList<Monster> monsters;
     private Area[][] grid;
     private int size;
     private Player player;
     private Random random;
-//    private AreaDao areaDao;
-    //  private ItemDao itemDao;
-    //private Database database;
 
-    public World(int i, int j){
+    public World(int i, int j) {
         this.grid = new Area[i][j];
         this.size = i * j;
         this.random = new Random();
         this.items = new ArrayList();
         this.areas = new ArrayList();
-//        this.database = new Database("jdbc:sqlite:seikkailu.db");
-        //      database.init();
-        //    this.areaDao = new AreaDao(database);
-        //  this.itemDao = new ItemDao(database);
+        this.helpers = new ArrayList();
+        this.monsters = new ArrayList();
     }
 
-    public void createWorld(AreaDao areaDao, ItemDao itemDao) throws Exception {
+    public void createWorld(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
         this.createAreas(areaDao);
         this.createItems(itemDao);
-        this.createGrid();
-        this.setItems();
+        this.createHelpers(helperDao);
         this.createPlayer();
     }
 
     private void createAreas(AreaDao areaDao) throws Exception {
         this.areas = areaDao.findAll();
+        this.createGrid();
     }
 
     private void createGrid() {
@@ -55,15 +53,19 @@ public class World {
 
     private void createItems(ItemDao itemDao) throws Exception {
         this.items = itemDao.findAll();
+        for (int i = 0; i < Math.min(items.size(), size / 2); i++) {
+            Area place = findRandomPlace();
+            System.out.println(place);
+            System.out.println(items.get(i));
+            place.putFinding(items.get(i));
+        }
     }
 
-    private void setItems() {
-        if (!items.isEmpty()) {
-            for (int i = 0; i < items.size(); i++) {
-                Area place = findRandomPlace();
-                place.putItem(items.get(i));
-                items.get(i).setArea(place);
-            }
+    private void createHelpers(HelperDao helperDao) throws Exception {
+        this.helpers = helperDao.findAll();
+        for (int i = 0; i < Math.min(helpers.size(), size / 2); i++) {
+            Area place = findRandomPlace();
+                place.putFinding(helpers.get(i));
         }
     }
 
@@ -75,9 +77,9 @@ public class World {
         return place;
     }
 
-    private void createPlayer() {
+    public void createPlayer() {
         this.player = new Player();
-        Area place = findRandomPlace();
+        Area place = grid[0][0];
         player.setArea(place);
     }
 
@@ -98,11 +100,8 @@ public class World {
     }
 
     public ArrayList<Item> getItems() {
-
         return items;
     }
-    
-    
 
     public void createWorldTest() {
         //luodaan testiä varten alueet ja esineet vanhalla tavalla
@@ -147,6 +146,13 @@ public class World {
         this.createGrid();
         this.setItems();
         this.createPlayer();
+    }
+
+    private void setItems() {
+        for (int i = 0; i < Math.min(items.size(), size / 2); i++) {
+            Area place = findRandomPlace();
+            place.putFinding(items.get(i));
+        }
     }
 
 }
@@ -215,4 +221,4 @@ public class World {
         INSERT INTO Items (name, description) VALUES ('kartta', 'esine, jota käytetään, kun ei voi kysyä tietä');
         INSERT INTO Items (name, description) VALUES ('lokikirja', 'tapahtumien tallennuspaikka');
          
-*/
+ */
