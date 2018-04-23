@@ -1,27 +1,35 @@
 package seikkailupeli.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class Area {
 
     private String name;
     private String description;
-    private Map<String, Finding> findings;
-    private Location location;
+    private HashMap<String, Finding> findings;
+    private HashMap<Direction, Area> neighbors;
 
     public Area(String name, String description) {
         this.name = name;
         this.description = description;
         this.findings = new HashMap<>();
+        this.neighbors = new HashMap<>();
+        neighbors.put(Direction.NORTH, null);
+        neighbors.put(Direction.EAST, null);
+        neighbors.put(Direction.WEST, null);
+        neighbors.put(Direction.SOUTH, null);;
     }
 
     public Map<String, Finding> getFindings() {
         return findings;
     }
 
-    public void setFindings(Map<String, Finding> findings) {
+    public void setFindings(HashMap<String, Finding> findings) {
         this.findings = findings;
     }
 
@@ -50,7 +58,6 @@ public class Area {
         return "Täällä ei ole mitään mielenkiintoista.";
     }
 
-
     public void putFinding(Finding finding) {
         findings.put(finding.getName(), finding);
     }
@@ -60,7 +67,7 @@ public class Area {
             Iterator<String> it = findings.keySet().iterator();
             while (it.hasNext()) {
                 String next = it.next();
-                if (findings.get(next).isItem() ) {
+                if (findings.get(next).isItem()) {
                     Finding item = findings.get(next);
                     findings.remove(next);
                     return (Item) item;
@@ -69,7 +76,7 @@ public class Area {
         }
         return null;
     }
-    
+
     public Helper speakHelper(Player player) {
         if (!findings.isEmpty()) {
             Iterator<String> it = findings.keySet().iterator();
@@ -88,13 +95,37 @@ public class Area {
         return name;
     }
 
-    public Location getLocation() {
-        return location;
+    public void putNeighbors(Area n, Area e, Area w, Area s) {
+        if (n != null) {
+            neighbors.put(Direction.NORTH, n);
+        }
+        if (e != null) {
+            neighbors.put(Direction.EAST, e);
+        }
+        if (w != null) {
+            neighbors.put(Direction.WEST, w);
+        }
+        if (s != null) {
+            neighbors.put(Direction.SOUTH, s);
+        }
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public HashMap<Direction, Area> getNeighbors() {
+        return neighbors;
     }
-    
 
+    public Area randomNeighbor() {
+        ArrayList<Direction> d = new ArrayList();
+        d.add(Direction.WEST);
+        d.add(Direction.EAST);
+        d.add(Direction.NORTH);
+        d.add(Direction.SOUTH);
+        Collections.shuffle(d);
+        for (Direction a : d) {
+            if (neighbors.get(a) != null) {
+                return neighbors.get(a);
+            }
+        }
+        return null;
+    }
 }

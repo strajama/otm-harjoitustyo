@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package seikkailupeli.dao;
 
 import java.sql.Connection;
@@ -13,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import seikkailupeli.domain.Monster;
 
-/**
- *
- * @author strajama
- */
 public class MonsterDao implements Dao<Monster, Integer> {
 
     private Database database;
@@ -64,12 +55,12 @@ public class MonsterDao implements Dao<Monster, Integer> {
             if (this.findIdByName(object.getName()) != null) {
                 return null;
             }
-            
+
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Monster (name, description) VALUES(?, ?)");
             stmt.setString(1, object.getName().toLowerCase());
             stmt.setString(2, object.getDescription());
             stmt.executeUpdate();
-            
+
             stmt.close();
         }
 
@@ -78,7 +69,7 @@ public class MonsterDao implements Dao<Monster, Integer> {
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-    Connection connection = database.getConnection();
+        Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Monster WHERE name = ?");
         stmt.setObject(1, name);
 

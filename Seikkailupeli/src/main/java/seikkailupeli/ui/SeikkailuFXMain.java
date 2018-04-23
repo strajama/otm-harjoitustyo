@@ -88,8 +88,8 @@ public class SeikkailuFXMain extends Application {
         playButton.setOnAction(e -> {
             adventure = new Adventure(world);
             adventure.randomItemGoal();
+            adventure.randomHelperGoal();
             adventure.setTimeGoal(200);
-            world.createPlayer();
             primaryStage.setScene(playScene);
         });
         loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
@@ -100,11 +100,7 @@ public class SeikkailuFXMain extends Application {
             primaryStage.setScene(createScene);
         });
 
-        world = new World(3, 4);
-        world.createWorld(areaDao, itemDao, helperDao, monsterDao);
- //       adventure = new Adventure(world);
-   //           adventure.randomItemGoal();
-     //       adventure.setTimeGoal(200);
+        world = new World(areaDao, itemDao, helperDao, monsterDao);
         BorderPane playBp = new BorderPane();
         playBp.setPadding(new Insets(10, 10, 10, 10));
         //asettelun ylaosaan tulee tietoa mitä pelaaja näkee
@@ -151,46 +147,62 @@ public class SeikkailuFXMain extends Application {
 //        Image imageDecline = new Image(getClass().getResourceAsStream("arrow.png"));
         //      north.setGraphic(new ImageView(imageDecline));
         north.setOnAction((event) -> {
-            new Action(world, world.getPlayer()).move(Direction.NORTH);
+            boolean move = new Action(world, world.getPlayer()).move(Direction.NORTH);
             adventure.takeTurn();
             actionShow();
-            doingLabel.setText("Matkasit pohjoiseen.");
+            if (move) {
+                doingLabel.setText("Matkasit pohjoiseen.");
+            } else {
+                doingLabel.setText("Et voi mennä pohjoiseen.");
+            }
         });
         moveGrid.add(north, 1, 0);
-        
+
         Button east = new Button("");
         ImageView eastView = new ImageView(arrowImage);
         eastView.setRotate(90);
         east.setGraphic(eastView);
         east.setOnAction((event) -> {
-            new Action(world, world.getPlayer()).move(Direction.EAST);
+            boolean move = new Action(world, world.getPlayer()).move(Direction.EAST);
             adventure.takeTurn();
             actionShow();
-            doingLabel.setText("Matkasit itään.");
+            if (move) {
+                doingLabel.setText("Matkasit itään.");
+            } else {
+                doingLabel.setText("Et voi mennä itään.");
+            }
         });
         moveGrid.add(east, 2, 1);
-        
+
         Button west = new Button("");
         ImageView westView = new ImageView(arrowImage);
         westView.setRotate(270);
         west.setGraphic(westView);
         west.setOnAction((event) -> {
-            new Action(world, world.getPlayer()).move(Direction.WEST);
+            boolean move = new Action(world, world.getPlayer()).move(Direction.WEST);
             adventure.takeTurn();
             actionShow();
-            doingLabel.setText("Matkasit länteen.");
+            if (move) {
+                doingLabel.setText("Matkasit länteen.");
+            } else {
+                doingLabel.setText("Et voi mennä länteen.");
+            }
         });
         moveGrid.add(west, 0, 1);
-        
+
         Button south = new Button("");
         ImageView southView = new ImageView(arrowImage);
         southView.setRotate(180);
         south.setGraphic(southView);
         south.setOnAction((event) -> {
-            new Action(world, world.getPlayer()).move(Direction.SOUTH);
+            boolean move = new Action(world, world.getPlayer()).move(Direction.SOUTH);
             adventure.takeTurn();
             actionShow();
-            doingLabel.setText("Matkasit etelään.");
+            if (move) {
+                doingLabel.setText("Matkasit etelään.");
+            } else {
+                doingLabel.setText("Et voi mennä etelään.");
+            }
         });
         moveGrid.add(south, 1, 2);
 
@@ -203,6 +215,8 @@ public class SeikkailuFXMain extends Application {
             actionShow();
             if (item != null) {
                 doingLabel.setText("Poimit esineen " + item + ".");
+            } else {
+                doingLabel.setText("Täällä ei ole poimittavaa.");
             }
         });
         doGrid.add(pick, 0, 0);
@@ -221,7 +235,7 @@ public class SeikkailuFXMain extends Application {
         }));
         doGrid.add(speak, 0, 1);
         //paluu alkuun
-        Button returnLogin = new Button("LOPETA PELI");
+        Button returnLogin = new Button("PALAA VALIKKOON");
         returnLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
         });
@@ -312,14 +326,14 @@ public class SeikkailuFXMain extends Application {
                 if (table.isEmpty()) {
                     label.setText("Valitse taulu.");
                 } else {
-                    if (table == "Area") {
+                    /*                    if (table == "Area") {
                         Area newArea = new Area(name.getText(), des.getText());
                         try {
                             areaDao.saveOrUpdate(newArea);
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else if (table == "Item") {
+                    } else*/ if (table == "Item") {
                         Item newItem = new Item(name.getText(), des.getText());
                         try {
                             itemDao.saveOrUpdate(newItem);
@@ -341,7 +355,7 @@ public class SeikkailuFXMain extends Application {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    label.setText("Uusi " + table + "-taulu lisätty.");
+                    label.setText("Uusi " + table + "-taulu lisätty. Paitsi jos kyseessä on Area.");
                     name.clear();
                     des.clear();
                 }
@@ -382,10 +396,16 @@ public class SeikkailuFXMain extends Application {
         findingLabel.setText(world.getPlayer().getArea().show());
         bagLabel.setText(world.getPlayer().bag());
         if (adventure.getTimeGoal() < 0) {
+            adventure.isOver();
             gameLabel.setText("Aika loppui, sinä hävisit!");
         }
         if (world.getPlayer().getItems().containsValue(adventure.getItemGoal())) {
+            adventure.isOver();
             gameLabel.setText("Sinä löysit etsimäsi! Se oli " + adventure.getItemGoal().toString() + ".");
+        }
+        if (world.getPlayer().getHelpers().containsValue(adventure.getHelperGoal())) {
+            adventure.isOver();
+            gameLabel.setText(adventure.getHelperGoal().toString() + ", oli kaipaamasi puhekumppani.");
         }
         remainingTimeLabel.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
     }

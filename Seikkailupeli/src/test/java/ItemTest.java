@@ -6,15 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import seikkailupeli.domain.Item;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author strajama
- */
 public class ItemTest {
 
     Item item;
@@ -36,7 +27,7 @@ public class ItemTest {
 
     @Test
     public void itemToString() {
-        assertEquals("testi", item.toString());
+        assertEquals("TESTI, toimiiko", item.toString());
     }
 
     @Test
@@ -65,5 +56,9 @@ public class ItemTest {
     @Test
     public void equalsTestDifferent3() {
         assertFalse(item.equals(null));
+    }
+    @Test
+    public void isItem() {
+        assertTrue(item.isItem());
     }
 }

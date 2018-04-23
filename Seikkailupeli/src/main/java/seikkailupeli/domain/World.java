@@ -1,6 +1,8 @@
 package seikkailupeli.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Random;
 import seikkailupeli.dao.AreaDao;
 import seikkailupeli.dao.HelperDao;
@@ -13,96 +15,96 @@ public class World {
     private ArrayList<Item> items;
     private ArrayList<Helper> helpers;
     private ArrayList<Monster> monsters;
-    private Area[][] grid;
-    private int size;
     private Player player;
     private Random random;
+    private Area home;
 
-    public World(int i, int j) {
-        this.grid = new Area[i][j];
-        this.size = i * j;
+    public World(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
         this.random = new Random();
         this.items = new ArrayList();
         this.areas = new ArrayList();
         this.helpers = new ArrayList();
         this.monsters = new ArrayList();
+        this.home = new Area("koti", "Oma koti kullan kallis");
+        this.createAreas(areaDao);
+        this.createItems(itemDao);
+        this.createHelpers(helperDao);
+        this.createPlayer();
+        areas.add(home);
     }
-
+/*
     public void createWorld(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
         this.createAreas(areaDao);
         this.createItems(itemDao);
         this.createHelpers(helperDao);
         this.createPlayer();
-    }
+        areas.add(home);
+    }*/
 
     private void createAreas(AreaDao areaDao) throws Exception {
         this.areas = areaDao.findAll();
-        this.createGrid();
-    }
-
-    private void createGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                int r = random.nextInt(areas.size());
-                grid[i][j] = areas.get(r);
-                Location location = new Location(i, j);
-                areas.get(r).setLocation(location);
-            }
-        }
+        Collections.shuffle(areas);
+        home.putNeighbors(areas.get(0), areas.get(1), areas.get(2), null);
+        areas.get(0).putNeighbors(areas.get(3), areas.get(4), areas.get(5), home);
+        areas.get(1).putNeighbors(areas.get(4), null, home, null);
+        areas.get(2).putNeighbors(areas.get(5), home, areas.get(6), null);
+        areas.get(3).putNeighbors(areas.get(7), areas.get(8), areas.get(9), areas.get(0));
+        areas.get(4).putNeighbors(areas.get(8), null, areas.get(0), areas.get(1));
+        areas.get(5).putNeighbors(areas.get(9), areas.get(0), areas.get(10), areas.get(2));
+        areas.get(6).putNeighbors(areas.get(10), areas.get(2), null, null);
+        areas.get(7).putNeighbors(null, null, areas.get(11), areas.get(3));
+        areas.get(8).putNeighbors(null, null, areas.get(3), areas.get(4));
+        areas.get(9).putNeighbors(areas.get(11), areas.get(3), areas.get(12), areas.get(5));
+        areas.get(10).putNeighbors(areas.get(12), areas.get(5), null, areas.get(6));
+        areas.get(11).putNeighbors(null, areas.get(7), null, areas.get(9));
+        areas.get(12).putNeighbors(null, areas.get(9), null, areas.get(10));
     }
 
     private void createItems(ItemDao itemDao) throws Exception {
         this.items = itemDao.findAll();
-        for (int i = 0; i < Math.min(items.size(), size / 2); i++) {
+        for (int i = 0; i < Math.min(items.size(), areas.size() / 2); i++) {
             Area place = findRandomPlace();
-            System.out.println(place);
-            System.out.println(items.get(i));
+            while (!place.getFindings().isEmpty()) {
+                place = findRandomPlace();
+            }
             place.putFinding(items.get(i));
         }
     }
 
+    public ArrayList<Helper> getHelpers() {
+        return helpers;
+    }
+
     private void createHelpers(HelperDao helperDao) throws Exception {
         this.helpers = helperDao.findAll();
-        for (int i = 0; i < Math.min(helpers.size(), size / 2); i++) {
+        for (int i = 0; i < Math.min(helpers.size(), areas.size() / 2); i++) {
             Area place = findRandomPlace();
-                place.putFinding(helpers.get(i));
+            while (!place.getFindings().isEmpty()) {
+                place = findRandomPlace();
+            }
+            place.putFinding(helpers.get(i));
         }
     }
 
     private Area findRandomPlace() {
-        int r = random.nextInt(size);
+        int r = random.nextInt(areas.size());
 
-        Area place = grid[r / grid[0].length][r % grid.length];
-
-        return place;
+        return areas.get(r);
     }
 
-    public void createPlayer() {
+    private void createPlayer() {
         this.player = new Player();
-        Area place = grid[0][0];
-        player.setArea(place);
-    }
-
-    public Area[][] getGrid() {
-        return grid;
+        player.setArea(home);
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public Area findArea(Location location) {
-        return grid[location.getI()][location.getJ()];
-    }
-
-    public int getSize() {
-        return size;
-    }
-
     public ArrayList<Item> getItems() {
         return items;
     }
-
+/*
     public void createWorldTest() {
         //luodaan testiä varten alueet ja esineet vanhalla tavalla
         Area suo = new Area("suo", "Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.");
@@ -143,17 +145,16 @@ public class World {
         this.items.add(kommunikaattori);
         this.items.add(kartta);
         this.items.add(lokikirja);
-        this.createGrid();
         this.setItems();
         this.createPlayer();
     }
 
     private void setItems() {
-        for (int i = 0; i < Math.min(items.size(), size / 2); i++) {
+        for (int i = 0; i < Math.min(items.size(), areas.size() / 2); i++) {
             Area place = findRandomPlace();
             place.putFinding(items.get(i));
         }
-    }
+    }*/
 
 }
 /*

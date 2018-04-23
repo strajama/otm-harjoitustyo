@@ -80,7 +80,6 @@ public class AreaDao implements Dao<Area, Integer> {
         rs.close();
         stmt.close();
         connection.close();
-
         return id;
     }
 

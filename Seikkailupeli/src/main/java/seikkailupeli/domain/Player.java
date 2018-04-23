@@ -51,12 +51,12 @@ public class Player {
     public void putInBag(Item item) {
         items.put(item.getName(), item);
     }
-    
-    public void speakWith (Helper helper) {
+
+    public void speakWith(Helper helper) {
         helpers.put(helper.getName(), helper);
     }
-    
-    public boolean spokenWith (String helper) {
+
+    public boolean spokenWith(String helper) {
         return helpers.containsKey(helper);
     }
 }

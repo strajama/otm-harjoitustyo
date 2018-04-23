@@ -11,5 +11,4 @@ public class Monster extends Finding {
         return false;
     }
 
-    
 }

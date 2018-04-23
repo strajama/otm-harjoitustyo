@@ -1,43 +1,36 @@
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Test;
-import seikkailupeli.domain.Location;
+import seikkailupeli.dao.AreaDao;
+import seikkailupeli.dao.Database;
+import seikkailupeli.dao.HelperDao;
+import seikkailupeli.dao.ItemDao;
+import seikkailupeli.dao.MonsterDao;
 import seikkailupeli.domain.World;
 
 public class WorldTest {
 
     World world;
 
+    Database d;
+    AreaDao a;
+    ItemDao i;
+    HelperDao h;
+    MonsterDao m;
+
     public WorldTest() {
     }
 
     @Before
     public void setUp() throws Exception {
-        world = new World(3, 4);
-        world.createWorldTest();
+        
+        d = new Database("jdbc:sqlite:test.db");
+        d.init();
+        a = new AreaDao(d);
+        i = new ItemDao(d);
+        h = new HelperDao(d);
+        m = new MonsterDao(d);
+        World world = new World(a, i, h, m);
     }
 
-    @Test
-    public void worldSize() {
-        assertEquals(12, world.getSize());
-    }
 
-    @Test
-    public void thereIsGrid() {
-        assertTrue(world.getGrid() != null);
-    }
-
-    @Test
-    public void thereIsPlayer() {
-        assertTrue(world.getPlayer() != null);
-    }
-    
-    @Test
-    public void thereIsArea() {
-        assertTrue(world.findArea(new Location(0,0)) != null);
-    }
-    
 }

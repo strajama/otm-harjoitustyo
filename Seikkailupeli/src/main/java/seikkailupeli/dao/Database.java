@@ -57,7 +57,8 @@ public class Database {
         list.add("INSERT INTO Area (name, description) VALUES ('vuori', 'Vuorelta on komeat näkymät yli koko maan.')");
         list.add("INSERT INTO Area (name, description) VALUES ('laakso', 'Laakso on kaunis ja laakea. Täällä sinun on hyvä olla.')");
         list.add("INSERT INTO Area (name, description) VALUES ('luola', 'Tulet pimeään luolaan, jota ei voi ylittää eikä alittaa.')");
-        list.add("INSERT INTO Area (name, description) VALUES ('kallio', 'Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.')");                    
+        list.add("INSERT INTO Area (name, description) VALUES ('kallio', 'Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.')");
+//        list.add("INSERT INTO Area (name, description) VALUES ('koti', 'Oma koti kullan kallis.')");
         list.add("INSERT INTO Item (name, description) VALUES ('palantiri', 'kauaksi näkevä kivi')");
         list.add("INSERT INTO Item (name, description) VALUES ('google', 'hakukone, jolla voi löytää maailman')");
         list.add("INSERT INTO Item (name, description) VALUES ('tv', 'loputon uusien ideoiden lähde')");
@@ -69,7 +70,7 @@ public class Database {
         list.add("INSERT INTO Helper (name, description) VALUES ('michonne', 'taitava katanan käyttäjä')");
         list.add("INSERT INTO Helper (name, description) VALUES ('gizmo', 'söpöläinen, jota ei pidä ruokkia keskiyön jälkeen')");
         list.add("INSERT INTO Helper (name, description) VALUES ('hermione', 'jästisyntyinen taikaministeri')");
-        list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota olit etsimässä')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota et ollut etsimässä')");
         list.add("INSERT INTO Monster (name, description) VALUES ('gazebo', 'Et voi paeta. Sinun on taisteltava.')");
         
         return list;

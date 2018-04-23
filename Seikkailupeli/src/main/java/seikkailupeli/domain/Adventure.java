@@ -7,6 +7,7 @@ public class Adventure {
 
     private World world;
     private Item itemGoal;
+    private Helper helperGoal;
     private int timeGoal;
     private Random random;
     private boolean over;
@@ -58,4 +59,19 @@ public class Adventure {
         this.over = over;
     }
 
+    public Helper getHelperGoal() {
+        return helperGoal;
+    }
+
+    public void setHelperGoal(Helper helperGoal) {
+        this.helperGoal = helperGoal;
+    }
+
+    public void randomHelperGoal() {
+        if (!world.getHelpers().isEmpty()) {
+            ArrayList<Helper> helpers = world.getHelpers();
+            int r = random.nextInt(helpers.size());
+            this.helperGoal = helpers.get(r);
+        }
+    }
 }
