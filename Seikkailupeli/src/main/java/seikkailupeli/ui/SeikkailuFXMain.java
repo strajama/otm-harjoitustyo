@@ -2,6 +2,7 @@ package seikkailupeli.ui;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -53,7 +54,6 @@ public class SeikkailuFXMain extends Application {
     private World world;
     private Area area;
     private Adventure adventure;
-    private Finding last;
 //playscenen muutettavat Labelit
     private Label areaLabel;
     private Label descriptionLabel;
@@ -61,6 +61,7 @@ public class SeikkailuFXMain extends Application {
     private Label bagLabel;
     private Label gameLabel;
     private Label doingLabel;
+    private Label monsterLabel;
     private Label remainingTimeLabel;
 
     @Override
@@ -86,10 +87,11 @@ public class SeikkailuFXMain extends Application {
         Button createNewButton = new Button("Sitä tekemään");
 
         playButton.setOnAction(e -> {
-            adventure = new Adventure(world);
+            Monster monster = world.getMonsters().get(0);
+            adventure = new Adventure(world, monster);
             adventure.randomItemGoal();
             adventure.randomHelperGoal();
-            adventure.setTimeGoal(200);
+            adventure.setTimeGoal(200);            
             primaryStage.setScene(playScene);
         });
         loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
@@ -113,13 +115,15 @@ public class SeikkailuFXMain extends Application {
         bagLabel = new Label(world.getPlayer().bag());
         gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
         doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
+        monsterLabel = new Label("");
         remainingTimeLabel = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä.");
         up.getChildren().add(areaLabel);
         up.getChildren().add(descriptionLabel);
         up.getChildren().add(findingLabel);
         up.getChildren().add(bagLabel);
-        up.getChildren().add(doingLabel);
         up.getChildren().add(gameLabel);
+        up.getChildren().add(doingLabel);        
+        up.getChildren().add(monsterLabel);
         up.getChildren().add(remainingTimeLabel);
         playBp.setTop(up);
 
@@ -144,8 +148,6 @@ public class SeikkailuFXMain extends Application {
         Button north = new Button("");
         ImageView northView = new ImageView(arrowImage);
         north.setGraphic(northView);
-//        Image imageDecline = new Image(getClass().getResourceAsStream("arrow.png"));
-        //      north.setGraphic(new ImageView(imageDecline));
         north.setOnAction((event) -> {
             boolean move = new Action(world, world.getPlayer()).move(Direction.NORTH);
             adventure.takeTurn();
@@ -243,6 +245,7 @@ public class SeikkailuFXMain extends Application {
 
         playScene = new Scene(playBp, 600, 400);
 
+        //tietokantataulujen lisääminen
         GridPane createGrid = new GridPane();
         createGrid.setPadding(new Insets(10, 10, 10, 10));
         createGrid.setVgap(5);
@@ -355,7 +358,7 @@ public class SeikkailuFXMain extends Application {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    label.setText("Uusi " + table + "-taulu lisätty. Paitsi jos kyseessä on Area.");
+                    label.setText("Uusi " + table + "-taulu lisätty. Paitsi Area.");
                     name.clear();
                     des.clear();
                 }
@@ -407,6 +410,7 @@ public class SeikkailuFXMain extends Application {
             adventure.isOver();
             gameLabel.setText(adventure.getHelperGoal().toString() + ", oli kaipaamasi puhekumppani.");
         }
+        monsterLabel.setText(world.getPlayer().getArea().showMonster());
         remainingTimeLabel.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
     }
 

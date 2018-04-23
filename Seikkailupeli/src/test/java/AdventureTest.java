@@ -1,6 +1,4 @@
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -12,6 +10,7 @@ import seikkailupeli.dao.ItemDao;
 import seikkailupeli.dao.MonsterDao;
 import seikkailupeli.domain.Adventure;
 import seikkailupeli.domain.Item;
+import seikkailupeli.domain.Monster;
 import seikkailupeli.domain.World;
 
 public class AdventureTest {
@@ -24,6 +23,7 @@ public class AdventureTest {
     ItemDao i;
     HelperDao h;
     MonsterDao m;
+    Monster monster;
 
     @Before
     public void setup() throws Exception {
@@ -35,8 +35,9 @@ public class AdventureTest {
         h = new HelperDao(d);
         m = new MonsterDao(d);
         w = new World(a, i, h, m);
+        monster = new Monster("testi","testi");
 
-        ad = new Adventure(w);
+        ad = new Adventure(w, monster);
     }
 
     @Test

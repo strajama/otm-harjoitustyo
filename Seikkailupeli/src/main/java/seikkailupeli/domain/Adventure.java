@@ -11,11 +11,16 @@ public class Adventure {
     private int timeGoal;
     private Random random;
     private boolean over;
+    private Monster monster;
 
-    public Adventure(World world) {
+    public Adventure(World world, Monster monster) {
         this.world = world;
+        this.monster = monster;
         this.random = new Random();
         this.over = false;
+        Area area = world.getAreas().get(0);
+        area.putMonster(monster);
+        monster.setArea(area);
     }
 
     public void setItemGoal(Item item) {
@@ -33,6 +38,10 @@ public class Adventure {
                 over = true;
             }
         }
+        Area next = monster.getArea().randomNeighbor();
+        monster.getArea().removeMonster(monster);
+        monster.setArea(next);
+        next.putMonster(monster);
     }
 
     public Item getItemGoal() {

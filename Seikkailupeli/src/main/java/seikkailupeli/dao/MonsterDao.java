@@ -58,7 +58,7 @@ public class MonsterDao implements Dao<Monster, Integer> {
 
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Monster (name, description) VALUES(?, ?)");
             stmt.setString(1, object.getName().toLowerCase());
-            stmt.setString(2, object.getDescription());
+            stmt.setString(2, object.getSlogan());
             stmt.executeUpdate();
 
             stmt.close();

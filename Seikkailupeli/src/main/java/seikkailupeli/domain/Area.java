@@ -13,16 +13,23 @@ public class Area {
     private String description;
     private HashMap<String, Finding> findings;
     private HashMap<Direction, Area> neighbors;
+    ArrayList<Direction> directions;
+    private ArrayList<Monster> monsters;
 
     public Area(String name, String description) {
         this.name = name;
         this.description = description;
         this.findings = new HashMap<>();
         this.neighbors = new HashMap<>();
-        neighbors.put(Direction.NORTH, null);
-        neighbors.put(Direction.EAST, null);
-        neighbors.put(Direction.WEST, null);
-        neighbors.put(Direction.SOUTH, null);;
+        this.monsters = new ArrayList<>();
+        directions = new ArrayList();
+        directions.add(Direction.WEST);
+        directions.add(Direction.EAST);
+        directions.add(Direction.NORTH);
+        directions.add(Direction.SOUTH);
+        for (Direction a : directions) {
+            neighbors.put(a, null);
+        }
     }
 
     public Map<String, Finding> getFindings() {
@@ -115,17 +122,27 @@ public class Area {
     }
 
     public Area randomNeighbor() {
-        ArrayList<Direction> d = new ArrayList();
-        d.add(Direction.WEST);
-        d.add(Direction.EAST);
-        d.add(Direction.NORTH);
-        d.add(Direction.SOUTH);
-        Collections.shuffle(d);
-        for (Direction a : d) {
+        Collections.shuffle(directions);
+        for (Direction a : directions) {
             if (neighbors.get(a) != null) {
                 return neighbors.get(a);
             }
         }
         return null;
+    }
+
+    public void putMonster(Monster monster) {
+        monsters.add(monster);
+    }
+
+    public void removeMonster(Monster monster) {
+        monsters.clear();
+    }
+
+    public String showMonster() {
+        if (monsters.isEmpty()) {
+            return "Täällä ei ole hirviöitä.";
+        }
+        return "Edessäsi on hirvittävä " + monsters.get(0).getName() + ". Se sanoo: '" + monsters.get(0).getSlogan() + "'.";
     }
 }
