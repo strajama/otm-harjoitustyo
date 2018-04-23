@@ -9,4 +9,5 @@
 | 16.4.2018 | 2 | muodollisten vaatimusten täydentämistä |
 | 17.4.2018 | 10 | testejä ja toiminnallisuutta |
 | 21.4.2018 | 6 | käyttöliittymän opiskelua ja tekemistä |
-| yht   | 33   | | 
+| 23.4.2018 | 6 | uusien luokkien lisäämistä ja yhteensopivuuden hallintaa |
+| yht   | 39   | | 
