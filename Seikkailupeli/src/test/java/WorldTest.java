@@ -1,5 +1,7 @@
 
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Test;
 import seikkailupeli.dao.AreaDao;
 import seikkailupeli.dao.Database;
 import seikkailupeli.dao.HelperDao;

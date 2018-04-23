@@ -156,6 +156,10 @@ public class World {
         }
     }*/
 
+    public Area getHome() {
+        return home;
+    }
+
 }
 /*
         Area suo = new Area("suo", "Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.");

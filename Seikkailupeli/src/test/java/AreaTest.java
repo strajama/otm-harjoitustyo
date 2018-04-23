@@ -77,8 +77,8 @@ public class AreaTest {
         area.putFinding(test);
         assertFalse(area.getFindings().isEmpty());
     }
-    
-        @Test
+
+    @Test
     public void giveItem() {
         Item test = new Item("testi", "testi");
         area.putFinding(test);
