@@ -336,21 +336,21 @@ public class SeikkailuFXMain extends Application {
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else*/ if (table == "Item") {
+                    } else*/ if ("Item".equals(table)) {
                         Item newItem = new Item(name.getText(), des.getText());
                         try {
                             itemDao.saveOrUpdate(newItem);
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else if (table == "Helper") {
+                    } else if ("Helper".equals(table)) {
                         Helper newHelper = new Helper(name.getText(), des.getText());
                         try {
                             helperDao.saveOrUpdate(newHelper);
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else if (table == "Monster") {
+                    } else if ("Monster".equals(table)) {
                         Monster newMonster = new Monster(name.getText(), des.getText());
                         try {
                             monsterDao.saveOrUpdate(newMonster);
