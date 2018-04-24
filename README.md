@@ -8,7 +8,7 @@
 
 [arkkitehtuuri](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
 
-[github release]
+[github release](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko5)
 
 ## Komentorivitoiminnot
 
