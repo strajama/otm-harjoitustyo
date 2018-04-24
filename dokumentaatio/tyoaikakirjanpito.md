@@ -10,4 +10,5 @@
 | 17.4.2018 | 10 | testejä ja toiminnallisuutta |
 | 21.4.2018 | 6 | käyttöliittymän opiskelua ja tekemistä |
 | 23.4.2018 | 12 | uusien luokkien lisäämistä ja yhteensopivuuden hallintaa, liikkumisen uudistaminen |
-| yht   | 45   | | 
+| 24.4.2018 | 6 | sekvenssikaavio ja muut viikkodeadlinejen viimeistely, koodin siivoamista |
+| yht   | 51   | | 
