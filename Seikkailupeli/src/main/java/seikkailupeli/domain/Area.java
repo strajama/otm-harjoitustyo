@@ -32,6 +32,14 @@ public class Area {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public Map<String, Finding> getFindings() {
         return findings;
     }
@@ -40,12 +48,8 @@ public class Area {
         this.findings = findings;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
+    public HashMap<Direction, Area> getNeighbors() {
+        return neighbors;
     }
 
     public String show() {
@@ -63,6 +67,21 @@ public class Area {
             return builder.toString();
         }
         return "Täällä ei ole mitään mielenkiintoista.";
+    }
+
+    public String showMonster() {
+        if (monsters.isEmpty()) {
+            return "Täällä ei ole hirviöitä.";
+        }
+        return "Edessäsi on hirvittävä " + monsters.get(0).getName() + ". Se sanoo: '" + monsters.get(0).getSlogan() + "'.";
+    }
+
+    public void putMonster(Monster monster) {
+        monsters.add(monster);
+    }
+
+    public void removeMonster(Monster monster) {
+        monsters.clear();
     }
 
     public void putFinding(Finding finding) {
@@ -97,11 +116,6 @@ public class Area {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
     public void putNeighbors(Area n, Area e, Area w, Area s) {
         if (n != null) {
             neighbors.put(Direction.NORTH, n);
@@ -117,10 +131,6 @@ public class Area {
         }
     }
 
-    public HashMap<Direction, Area> getNeighbors() {
-        return neighbors;
-    }
-
     public Area randomNeighbor() {
         Collections.shuffle(directions);
         for (Direction a : directions) {
@@ -131,18 +141,9 @@ public class Area {
         return null;
     }
 
-    public void putMonster(Monster monster) {
-        monsters.add(monster);
+    @Override
+    public String toString() {
+        return name;
     }
 
-    public void removeMonster(Monster monster) {
-        monsters.clear();
-    }
-
-    public String showMonster() {
-        if (monsters.isEmpty()) {
-            return "Täällä ei ole hirviöitä.";
-        }
-        return "Edessäsi on hirvittävä " + monsters.get(0).getName() + ". Se sanoo: '" + monsters.get(0).getSlogan() + "'.";
-    }
 }

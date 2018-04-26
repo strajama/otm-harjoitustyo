@@ -48,6 +48,10 @@ public class Player {
         return builder.toString();
     }
 
+    public boolean spokenWith(String helper) {
+        return helpers.containsKey(helper);
+    }
+
     public void putInBag(Item item) {
         items.put(item.getName(), item);
     }
@@ -56,7 +60,4 @@ public class Player {
         helpers.put(helper.getName(), helper);
     }
 
-    public boolean spokenWith(String helper) {
-        return helpers.containsKey(helper);
-    }
 }

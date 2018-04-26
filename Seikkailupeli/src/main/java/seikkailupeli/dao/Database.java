@@ -1,4 +1,3 @@
-
 package seikkailupeli.dao;
 
 import java.sql.*;
@@ -24,7 +23,7 @@ public class Database {
         try (Connection conn = getConnection()) {
             Statement st = conn.createStatement();
             System.out.println("otetaan yhteyttä");
-              // suoritetaan komennot
+            // suoritetaan komennot
             for (String d : createSql) {
                 System.out.println("Running command >> " + d);
                 st.executeUpdate(d);
@@ -39,12 +38,11 @@ public class Database {
         ArrayList<String> list = new ArrayList<>();
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        
-        list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
+        list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))"); // IF NOT EXISTS 
         list.add("CREATE TABLE Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
         list.add("CREATE TABLE Helper (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
         list.add("CREATE TABLE Monster (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
-        
+
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
         list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");
         list.add("INSERT INTO Area (name, description) VALUES ('aukio', 'Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.')");
@@ -72,7 +70,7 @@ public class Database {
         list.add("INSERT INTO Helper (name, description) VALUES ('hermione', 'jästisyntyinen taikaministeri')");
         list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota et ollut etsimässä')");
         list.add("INSERT INTO Monster (name, description) VALUES ('gazebo', 'Et voi paeta. Sinun on taisteltava.')");
-        
+
         return list;
     }
 }

@@ -12,6 +12,8 @@ public abstract class Finding {
         this.description = description;
     }
 
+    public abstract boolean isItem();
+
     public String getName() {
         return name;
     }
@@ -50,6 +52,4 @@ public abstract class Finding {
         return true;
     }
 
-    public abstract boolean isItem();
-    
 }

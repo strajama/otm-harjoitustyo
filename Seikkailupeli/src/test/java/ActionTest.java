@@ -42,32 +42,32 @@ public class ActionTest {
     public void moveTrue() {
         assertTrue(action.move(Direction.NORTH));
     }
- 
+
     @Test
     public void moveFalse() {
         assertFalse(action.move(Direction.SOUTH));
     }
-    
+
     @Test
     public void takeNull() {
         assertTrue(action.take() == null);
     }
-    
+
     @Test
     public void speakNull() {
         assertTrue(action.speak() == null);
     }
-    
-        @Test
+
+    @Test
     public void takeTest() {
-        Item test = new Item ("testi", "testi");
+        Item test = new Item("testi", "testi");
         w.getHome().putFinding(test);
         assertTrue(action.take() == test);
     }
-    
+
     @Test
     public void speakTest() {
-        Helper test = new Helper ("testi", "testi");
+        Helper test = new Helper("testi", "testi");
         w.getHome().putFinding(test);
         assertTrue(action.speak() == test);
     }

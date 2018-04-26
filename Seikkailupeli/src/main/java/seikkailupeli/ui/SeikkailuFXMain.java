@@ -51,9 +51,14 @@ public class SeikkailuFXMain extends Application {
     private Database database;
     private String table;
     private ArrayList allList;
+    private Monster monster;
     private World world;
     private Area area;
     private Adventure adventure;
+
+    private GridPane doGrid;
+    private GridPane moveGrid;
+
 //playscenen muutettavat Labelit
     private Label areaLabel;
     private Label descriptionLabel;
@@ -63,6 +68,9 @@ public class SeikkailuFXMain extends Application {
     private Label doingLabel;
     private Label monsterLabel;
     private Label remainingTimeLabel;
+
+    ChoiceBox cb;
+    ChoiceBox cbAll;
 
     @Override
     public void init() throws Exception {
@@ -76,167 +84,38 @@ public class SeikkailuFXMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        world = new World(areaDao, itemDao, helperDao, monsterDao);
+        Monster monster = world.getMonsters().get(0);
         //login-scene
         VBox loginPane = new VBox(10);
         loginPane.setPadding(new Insets(10, 10, 10, 10));
         loginPane.setAlignment(Pos.CENTER);
-
         Label loginLabel = new Label("Pelaa kirjautumatta randomisti seikkailua");
         Button playButton = new Button("Jee, pelaamaan!");
-        Label createNewLabel = new Label("Tähän tulee uusien juttujen luominen tietokantaan.");
-        Button createNewButton = new Button("Sitä tekemään");
-
         playButton.setOnAction(e -> {
-            Monster monster = world.getMonsters().get(0);
             adventure = new Adventure(world, monster);
-            adventure.randomItemGoal();
-            adventure.randomHelperGoal();
-            adventure.setTimeGoal(200);            
+            adventure.makeAGame(200);
             primaryStage.setScene(playScene);
         });
-        loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
-
-        loginScene = new Scene(loginPane, 600, 400);
-
+        Label createNewLabel = new Label("Tähän tulee uusien juttujen luominen tietokantaan.");
+        Button createNewButton = new Button("Sitä tekemään");
         createNewButton.setOnAction(e -> {
             primaryStage.setScene(createScene);
         });
 
-        world = new World(areaDao, itemDao, helperDao, monsterDao);
+        loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
+        loginScene = new Scene(loginPane, 600, 400);
+
         BorderPane playBp = new BorderPane();
         playBp.setPadding(new Insets(10, 10, 10, 10));
-        //asettelun ylaosaan tulee tietoa mitä pelaaja näkee
-        VBox up = new VBox();
-        up.setSpacing(10);
-        // kuvailussa kerrotaan mitä pelaaja näkee.
-        areaLabel = new Label(world.getPlayer().getArea().getName().toUpperCase());
-        descriptionLabel = new Label(world.getPlayer().getArea().getDescription());
-        findingLabel = new Label(world.getPlayer().getArea().show());
-        bagLabel = new Label(world.getPlayer().bag());
-        gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
-        doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
-        monsterLabel = new Label("");
-        remainingTimeLabel = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä.");
-        up.getChildren().add(areaLabel);
-        up.getChildren().add(descriptionLabel);
-        up.getChildren().add(findingLabel);
-        up.getChildren().add(bagLabel);
-        up.getChildren().add(gameLabel);
-        up.getChildren().add(doingLabel);        
-        up.getChildren().add(monsterLabel);
-        up.getChildren().add(remainingTimeLabel);
-        playBp.setTop(up);
+        playBp.setTop(playUp());
+        playBp.setBottom(playDown());
+        
+        createMoveButtons();
+        createDoButtons();
 
-        // tehdään kaksi ruudukkoa, johon sijoitetaan toimintonapit ja sijoitetaan ne alas
-        HBox down = new HBox();
-        GridPane doGrid = new GridPane();
-        GridPane moveGrid = new GridPane();
-        doGrid.setPadding(new Insets(10, 10, 10, 10));
-        doGrid.setVgap(5);
-        doGrid.setHgap(5);
-        moveGrid.setPadding(new Insets(10, 10, 10, 10));
-        moveGrid.setVgap(5);
-        moveGrid.setHgap(5);
-
-        //liikkuminen vasemmalle puolelle ja muut toiminnot oikealle
-        down.getChildren().add(moveGrid);
-        down.getChildren().add(doGrid);
-        playBp.setBottom(down);
-
-        Image arrowImage = new Image("file:arrow.png");
-        //napit liikkumiseen
-        Button north = new Button("");
-        ImageView northView = new ImageView(arrowImage);
-        north.setGraphic(northView);
-        north.setOnAction((event) -> {
-            boolean move = new Action(world, world.getPlayer()).move(Direction.NORTH);
-            adventure.takeTurn();
-            actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit pohjoiseen.");
-            } else {
-                doingLabel.setText("Et voi mennä pohjoiseen.");
-            }
-        });
-        moveGrid.add(north, 1, 0);
-
-        Button east = new Button("");
-        ImageView eastView = new ImageView(arrowImage);
-        eastView.setRotate(90);
-        east.setGraphic(eastView);
-        east.setOnAction((event) -> {
-            boolean move = new Action(world, world.getPlayer()).move(Direction.EAST);
-            adventure.takeTurn();
-            actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit itään.");
-            } else {
-                doingLabel.setText("Et voi mennä itään.");
-            }
-        });
-        moveGrid.add(east, 2, 1);
-
-        Button west = new Button("");
-        ImageView westView = new ImageView(arrowImage);
-        westView.setRotate(270);
-        west.setGraphic(westView);
-        west.setOnAction((event) -> {
-            boolean move = new Action(world, world.getPlayer()).move(Direction.WEST);
-            adventure.takeTurn();
-            actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit länteen.");
-            } else {
-                doingLabel.setText("Et voi mennä länteen.");
-            }
-        });
-        moveGrid.add(west, 0, 1);
-
-        Button south = new Button("");
-        ImageView southView = new ImageView(arrowImage);
-        southView.setRotate(180);
-        south.setGraphic(southView);
-        south.setOnAction((event) -> {
-            boolean move = new Action(world, world.getPlayer()).move(Direction.SOUTH);
-            adventure.takeTurn();
-            actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit etelään.");
-            } else {
-                doingLabel.setText("Et voi mennä etelään.");
-            }
-        });
-        moveGrid.add(south, 1, 2);
-
-        // muita toimintoja
-        Button pick = new Button("POIMI");
-        pick.setOnAction((event) -> {
-            Action a = new Action(world, world.getPlayer());
-            Item item = a.take();
-            adventure.takeTurn();
-            actionShow();
-            if (item != null) {
-                doingLabel.setText("Poimit esineen " + item + ".");
-            } else {
-                doingLabel.setText("Täällä ei ole poimittavaa.");
-            }
-        });
-        doGrid.add(pick, 0, 0);
-
-        Button speak = new Button("PUHU");
-        speak.setOnAction((event -> {
-            Action a = new Action(world, world.getPlayer());
-            Helper helper = a.speak();
-            adventure.takeTurn();
-            actionShow();
-            if (helper != null) {
-                doingLabel.setText("Sinä ja " + helper + ", puhutte kauan.");
-            } else {
-                doingLabel.setText("Täällä ei ole uusia keskusteluja käytävänä.");
-            }
-        }));
-        doGrid.add(speak, 0, 1);
-        //paluu alkuun
+        //paluu alkuun*/
         Button returnLogin = new Button("PALAA VALIKKOON");
         returnLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
@@ -253,53 +132,16 @@ public class SeikkailuFXMain extends Application {
         table = "";
         allList = new ArrayList();
 
-        ChoiceBox cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Alue", "Esine", "Apuri", "Hirviö"));
-        GridPane.setConstraints(cb, 0, 0);
-        createGrid.getChildren().add(cb);
-
-        ChoiceBox cbAll = new ChoiceBox();
+        cbAll = new ChoiceBox();
         cbAll.setItems(FXCollections.observableArrayList(allList));
         GridPane.setConstraints(cbAll, 0, 4);
         createGrid.getChildren().add(cbAll);
 
-        String[] daos = new String[]{"Area", "Item", "Helper", "Monster"};
-        cb.getSelectionModel().selectedIndexProperty().addListener(
-                (ObservableValue<? extends Number> ov,
-                        Number old_val, Number new_val) -> {
-                    table = daos[new_val.intValue()];
-                    if (table.equals("Area")) {
-                        try {
-                            allList = areaDao.findAll();
-                            cbAll.setItems(FXCollections.observableArrayList(allList));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } else if (table.equals("Item")) {
-                        try {
-                            allList = itemDao.findAll();
-                            cbAll.setItems(FXCollections.observableArrayList(allList));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } else if (table.equals("Helper")) {
-                        try {
-                            allList = helperDao.findAll();
-                            cbAll.setItems(FXCollections.observableArrayList(allList));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } else if (table.equals("Monster")) {
-                        try {
-                            allList = monsterDao.findAll();
-                            cbAll.setItems(FXCollections.observableArrayList(allList));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-
-                        }
-                    }
-                }
-        );
+        cb = new ChoiceBox();
+        cb.setItems(FXCollections.observableArrayList("Alue", "Esine", "Apuri", "Hirviö"));
+        GridPane.setConstraints(cb, 0, 0);
+        createGrid.getChildren().add(cb);
+        findDaos();
 
         final TextField name = new TextField();
         name.setPromptText("Anna uusi nimi.");
@@ -399,19 +241,197 @@ public class SeikkailuFXMain extends Application {
         findingLabel.setText(world.getPlayer().getArea().show());
         bagLabel.setText(world.getPlayer().bag());
         if (adventure.getTimeGoal() < 0) {
-            adventure.isOver();
+            adventure.getOver();
             gameLabel.setText("Aika loppui, sinä hävisit!");
         }
         if (world.getPlayer().getItems().containsValue(adventure.getItemGoal())) {
-            adventure.isOver();
+            adventure.getOver();
             gameLabel.setText("Sinä löysit etsimäsi! Se oli " + adventure.getItemGoal().toString() + ".");
         }
         if (world.getPlayer().getHelpers().containsValue(adventure.getHelperGoal())) {
-            adventure.isOver();
+            adventure.getOver();
             gameLabel.setText(adventure.getHelperGoal().toString() + ", oli kaipaamasi puhekumppani.");
         }
         monsterLabel.setText(world.getPlayer().getArea().showMonster());
         remainingTimeLabel.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
+    }
+
+    private VBox playUp() {
+
+        VBox up = new VBox();
+        up.setSpacing(10);
+        areaLabel = new Label("KOTI");
+        descriptionLabel = new Label("Oma koti kullan kallis");
+        findingLabel = new Label("Kotona ei ole mitään mielenkiintoista. Paras lähteä matkaan.");
+        bagLabel = new Label("Reppusi on tyhjä. Etsi siihen täytettä.");
+        gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
+        doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
+        monsterLabel = new Label("");
+        remainingTimeLabel = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä.");
+        up.getChildren().add(areaLabel);
+        up.getChildren().add(descriptionLabel);
+        up.getChildren().add(findingLabel);
+        up.getChildren().add(bagLabel);
+        up.getChildren().add(gameLabel);
+        up.getChildren().add(doingLabel);
+        up.getChildren().add(monsterLabel);
+        up.getChildren().add(remainingTimeLabel);
+
+        return up;
+    }
+
+    private HBox playDown() {
+        HBox down = new HBox();
+        doGrid = new GridPane();
+        moveGrid = new GridPane();
+        doGrid.setPadding(new Insets(10, 10, 10, 10));
+        doGrid.setVgap(5);
+        doGrid.setHgap(5);
+        moveGrid.setPadding(new Insets(10, 10, 10, 10));
+        moveGrid.setVgap(5);
+        moveGrid.setHgap(5);
+        //liikkuminen vasemmalle puolelle ja muut toiminnot oikealle
+        down.getChildren().add(moveGrid);
+        down.getChildren().add(doGrid);
+
+        return down;
+    }
+
+    private void createMoveButtons() {
+        Image arrowImage = new Image("file:arrow.png");
+
+        Button north = new Button("");
+        ImageView northView = new ImageView(arrowImage);
+        north.setGraphic(northView);
+        north.setOnAction((event) -> {
+            boolean move = new Action(world, world.getPlayer()).move(Direction.NORTH);
+            adventure.takeTurn();
+            actionShow();
+            if (move) {
+                doingLabel.setText("Matkasit pohjoiseen.");
+            } else {
+                doingLabel.setText("Et voi mennä pohjoiseen.");
+            }
+        });
+        moveGrid.add(north, 1, 0);
+
+        Button east = new Button("");
+        ImageView eastView = new ImageView(arrowImage);
+        eastView.setRotate(90);
+        east.setGraphic(eastView);
+        east.setOnAction((event) -> {
+            boolean move = new Action(world, world.getPlayer()).move(Direction.EAST);
+            adventure.takeTurn();
+            actionShow();
+            if (move) {
+                doingLabel.setText("Matkasit itään.");
+            } else {
+                doingLabel.setText("Et voi mennä itään.");
+            }
+        });
+        moveGrid.add(east, 2, 1);
+
+        Button west = new Button("");
+        ImageView westView = new ImageView(arrowImage);
+        westView.setRotate(270);
+        west.setGraphic(westView);
+        west.setOnAction((event) -> {
+            boolean move = new Action(world, world.getPlayer()).move(Direction.WEST);
+            adventure.takeTurn();
+            actionShow();
+            if (move) {
+                doingLabel.setText("Matkasit länteen.");
+            } else {
+                doingLabel.setText("Et voi mennä länteen.");
+            }
+        });
+        moveGrid.add(west, 0, 1);
+
+        Button south = new Button("");
+        ImageView southView = new ImageView(arrowImage);
+        southView.setRotate(180);
+        south.setGraphic(southView);
+        south.setOnAction((event) -> {
+            boolean move = new Action(world, world.getPlayer()).move(Direction.SOUTH);
+            adventure.takeTurn();
+            actionShow();
+            if (move) {
+                doingLabel.setText("Matkasit etelään.");
+            } else {
+                doingLabel.setText("Et voi mennä etelään.");
+            }
+        });
+        moveGrid.add(south, 1, 2);
+    }
+
+    private void createDoButtons() {
+        Button pick = new Button("POIMI");
+        pick.setOnAction((event) -> {
+            Action a = new Action(world, world.getPlayer());
+            Item item = a.take();
+            adventure.takeTurn();
+            actionShow();
+            if (item != null) {
+                doingLabel.setText("Poimit esineen " + item + ".");
+            } else {
+                doingLabel.setText("Täällä ei ole poimittavaa.");
+            }
+        });
+        doGrid.add(pick, 0, 0);
+
+        Button speak = new Button("PUHU");
+        speak.setOnAction((event -> {
+            Action a = new Action(world, world.getPlayer());
+            Helper helper = a.speak();
+            adventure.takeTurn();
+            actionShow();
+            if (helper != null) {
+                doingLabel.setText("Sinä ja " + helper + ", puhutte kauan.");
+            } else {
+                doingLabel.setText("Täällä ei ole uusia keskusteluja käytävänä.");
+            }
+        }));
+        doGrid.add(speak, 0, 1);
+    }
+
+    public void findDaos() {
+        String[] daos = new String[]{"Area", "Item", "Helper", "Monster"};
+        cb.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov,
+                        Number old_val, Number new_val) -> {
+                    table = daos[new_val.intValue()];
+                    if (table.equals("Area")) {
+                        try {
+                            allList = areaDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (table.equals("Item")) {
+                        try {
+                            allList = itemDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (table.equals("Helper")) {
+                        try {
+                            allList = helperDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (table.equals("Monster")) {
+                        try {
+                            allList = monsterDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+
+                        }
+                    }
+                }
+        );
     }
 
     /**

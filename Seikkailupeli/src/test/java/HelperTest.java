@@ -7,7 +7,7 @@ import org.junit.Test;
 import seikkailupeli.domain.Helper;
 
 public class HelperTest {
-       
+
     Helper helper;
 
     @Before
@@ -57,6 +57,7 @@ public class HelperTest {
     public void equalsTestDifferent3() {
         assertFalse(helper.equals(null));
     }
+
     @Test
     public void isItem() {
         assertFalse(helper.isItem());

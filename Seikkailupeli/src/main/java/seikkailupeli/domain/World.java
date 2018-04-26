@@ -33,14 +33,6 @@ public class World {
         this.createMonsters(monsterdao);
         this.createPlayer();
     }
-/*
-    public void createWorld(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
-        this.createAreas(areaDao);
-        this.createItems(itemDao);
-        this.createHelpers(helperDao);
-        this.createPlayer();
-        areas.add(home);
-    }*/
 
     private void createAreas(AreaDao areaDao) throws Exception {
         this.areas = areaDao.findAll();
@@ -72,10 +64,6 @@ public class World {
         }
     }
 
-    public ArrayList<Helper> getHelpers() {
-        return helpers;
-    }
-
     private void createHelpers(HelperDao helperDao) throws Exception {
         this.helpers = helperDao.findAll();
         for (int i = 0; i < Math.min(helpers.size(), areas.size() / 2); i++) {
@@ -87,10 +75,9 @@ public class World {
         }
     }
 
-    private Area findRandomPlace() {
-        int r = random.nextInt(areas.size());
-
-        return areas.get(r);
+    public void createMonsters(MonsterDao monsterDao) throws Exception {
+        this.monsters = monsterDao.findAll();
+        Collections.shuffle(monsters);
     }
 
     private void createPlayer() {
@@ -98,33 +85,36 @@ public class World {
         player.setArea(home);
     }
 
-    public Player getPlayer() {
-        return player;
+    public ArrayList<Area> getAreas() {
+        Collections.shuffle(areas);
+        return areas;
     }
 
     public ArrayList<Item> getItems() {
         return items;
     }
 
-    public Area getHome() {
-        return home;
-    }
-    
-    public void createMonsters(MonsterDao monsterDao) throws Exception {
-        this.monsters = monsterDao.findAll();
-        Collections.shuffle(monsters);
+    public ArrayList<Helper> getHelpers() {
+        return helpers;
     }
 
     public ArrayList<Monster> getMonsters() {
         return monsters;
     }
 
-    public ArrayList<Area> getAreas() {
-        Collections.shuffle(areas);
-        return areas;
+    public Player getPlayer() {
+        return player;
     }
-    
-    
+
+    public Area getHome() {
+        return home;
+    }
+
+    private Area findRandomPlace() {
+        int r = random.nextInt(areas.size());
+
+        return areas.get(r);
+    }
 
 }
 /*

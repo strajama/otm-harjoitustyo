@@ -1,5 +1,6 @@
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class AdventureTest {
         h = new HelperDao(d);
         m = new MonsterDao(d);
         w = new World(a, i, h, m);
-        monster = new Monster("testi","testi");
+        monster = new Monster("testi", "testi");
 
         ad = new Adventure(w, monster);
     }
@@ -71,8 +72,20 @@ public class AdventureTest {
     }
 
     @Test
-    public void randomItemTestNotNull() {
-        ad.randomItemGoal();
-        assertTrue(ad.getItemGoal() != null);
+    public void makeAGameTime() {
+        ad.makeAGame(10);
+        assertEquals(10, ad.getTimeGoal());
+    }
+
+    @Test
+    public void makeAGameItem() {
+        ad.makeAGame(10);
+        assertFalse(ad.getItemGoal() == null);
+    }
+
+    @Test
+    public void makeAGameHelper() {
+        ad.makeAGame(10);
+        assertFalse(ad.getItemGoal() == null);
     }
 }

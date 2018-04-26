@@ -23,12 +23,58 @@ public class Adventure {
         monster.setArea(area);
     }
 
+    public boolean getOver() {
+        return over;
+    }
+
+    public void setOver(boolean over) {
+        this.over = over;
+    }
+
+    public Item getItemGoal() {
+        return itemGoal;
+    }
+
     public void setItemGoal(Item item) {
         this.itemGoal = item;
     }
 
+    public int getTimeGoal() {
+        return timeGoal;
+    }
+
     public void setTimeGoal(int t) {
         this.timeGoal = t;
+    }
+
+    public Helper getHelperGoal() {
+        return helperGoal;
+    }
+
+    public void setHelperGoal(Helper helperGoal) {
+        this.helperGoal = helperGoal;
+    }
+
+    public void makeAGame(int time) {
+        this.randomItemGoal();
+        this.randomHelperGoal();
+        this.setTimeGoal(time);
+    }
+
+    private void randomItemGoal() {
+        if (!world.getItems().isEmpty()) {
+            ArrayList<Item> items = world.getItems();
+            int r = random.nextInt(items.size());
+            this.itemGoal = items.get(r);
+        }
+    }
+
+    private void randomHelperGoal() {
+        if (!world.getHelpers().isEmpty()) {
+            ArrayList<Helper> helpers = world.getHelpers();
+            int r = random.nextInt(helpers.size());
+            this.helperGoal = helpers.get(r);
+        }
     }
 
     public void takeTurn() {
@@ -44,43 +90,4 @@ public class Adventure {
         next.putMonster(monster);
     }
 
-    public Item getItemGoal() {
-        return itemGoal;
-    }
-
-    public int getTimeGoal() {
-        return timeGoal;
-    }
-
-    public void randomItemGoal() {
-        if (!world.getItems().isEmpty()) {
-            ArrayList<Item> items = world.getItems();
-            int r = random.nextInt(items.size());
-            this.itemGoal = items.get(r);
-        }
-    }
-
-    public boolean isOver() {
-        return over;
-    }
-
-    public void setOver(boolean over) {
-        this.over = over;
-    }
-
-    public Helper getHelperGoal() {
-        return helperGoal;
-    }
-
-    public void setHelperGoal(Helper helperGoal) {
-        this.helperGoal = helperGoal;
-    }
-
-    public void randomHelperGoal() {
-        if (!world.getHelpers().isEmpty()) {
-            ArrayList<Helper> helpers = world.getHelpers();
-            int r = random.nextInt(helpers.size());
-            this.helperGoal = helpers.get(r);
-        }
-    }
 }
