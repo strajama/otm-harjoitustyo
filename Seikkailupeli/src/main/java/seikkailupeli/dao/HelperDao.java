@@ -9,20 +9,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import seikkailupeli.domain.Helper;
 import seikkailupeli.domain.Item;
 
-/**
- *
- * @author strajama
- */
+
 public class HelperDao implements Dao<Helper, Integer> {
 
     private Database database;
 
     public HelperDao(Database database) {
         this.database = database;
+        ArrayList<String> list = sqlites();
+        try (Connection conn = database.getConnection()) {
+            Statement test = conn.createStatement();
+            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
+            if (!rs.next()) {
+                Statement st = conn.createStatement();
+                for (String d : list) {
+                    st.executeUpdate(d);
+                }
+            }
+        } catch (Throwable t) {
+            System.out.println("Error >> " + t.getMessage());
+        }
     }
 
     @Override
@@ -94,6 +105,17 @@ public class HelperDao implements Dao<Helper, Integer> {
         connection.close();
 
         return id;
+    }
+
+    private ArrayList<String> sqlites() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("INSERT INTO Helper (name, description) VALUES ('gandalf', 'viisas velho Keski-Maasta')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('luke cage', 'supervahva ja vahingoittumaton sankari')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('michonne', 'taitava katanan käyttäjä')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('gizmo', 'söpöläinen, jota ei pidä ruokkia keskiyön jälkeen')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('hermione', 'jästisyntyinen taikaministeri')");
+        list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota et ollut etsimässä')");
+        return list;
     }
 
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import seikkailupeli.domain.Area;
 
@@ -13,6 +14,19 @@ public class AreaDao implements Dao<Area, Integer> {
 
     public AreaDao(Database database) {
         this.database = database;
+        ArrayList<String> list = sqlites();
+        try (Connection conn = database.getConnection()) {
+            Statement test = conn.createStatement();
+            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
+            if (!rs.next()) {
+                Statement st = conn.createStatement();
+                for (String d : list) {
+                    st.executeUpdate(d);
+                }
+            }
+        } catch (Throwable t) {
+            System.out.println("Error >> " + t.getMessage());
+        }
     }
 
     @Override
@@ -27,7 +41,8 @@ public class AreaDao implements Dao<Area, Integer> {
                 String description = rs.getString("description");
                 Area newArea = new Area(name, description);
                 areas.add(newArea);
-            }   rs.close();
+            }
+            rs.close();
             stmt.close();
         }
 
@@ -81,6 +96,25 @@ public class AreaDao implements Dao<Area, Integer> {
         stmt.close();
         connection.close();
         return id;
+    }
+
+    private ArrayList<String> sqlites() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('aukio', 'Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('lehto', 'Auringonsäteet valaisevat lehtien läpi lehdossa ja saa sinulle lämpimän olon.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('niitty', 'Kukkaniityllä kasvaa orvokki, lehdokki, vuokko ja moni muu.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('pusikko', 'Olet pusikossa. On vaikea nähdä minne mennä.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('puro', 'Edessäsi on kylmävetinen puro, jonka vesi juoksee iloisesti pulisten.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('lähde', 'Näet kirkasvetisen lähteen. Kumarrut juomaan siitä huikan.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('kumpu', 'Seisot kummulla, joka muistuttaa hautakeroja. Saat kylmiä väreitä.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('vuori', 'Vuorelta on komeat näkymät yli koko maan.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('laakso', 'Laakso on kaunis ja laakea. Täällä sinun on hyvä olla.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('luola', 'Tulet pimeään luolaan, jota ei voi ylittää eikä alittaa.')");
+        list.add("INSERT INTO Area (name, description) VALUES ('kallio', 'Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.')");
+//        list.add("INSERT INTO Area (name, description) VALUES ('koti', 'Oma koti kullan kallis.')");
+        return list;
     }
 
 }

@@ -1,7 +1,10 @@
 package seikkailupeli.domain;
 
 import java.util.Objects;
-
+/**
+ * Luokat Item ja Helper toteuttavat abstraktin luokan Finding
+ * @author strajama
+ */
 public abstract class Finding {
 
     private String name;
@@ -11,7 +14,10 @@ public abstract class Finding {
         this.name = name;
         this.description = description;
     }
-
+/**
+ * Metodi kertoo onko kyseessä Item-olio ja se toteutetaan luokissa
+ * @return palauttaa boolean-arvon
+ */
     public abstract boolean isItem();
 
     public String getName() {

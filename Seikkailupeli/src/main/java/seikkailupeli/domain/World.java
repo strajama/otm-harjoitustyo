@@ -1,25 +1,39 @@
 package seikkailupeli.domain;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Random;
 import seikkailupeli.dao.AreaDao;
 import seikkailupeli.dao.HelperDao;
 import seikkailupeli.dao.ItemDao;
 import seikkailupeli.dao.MonsterDao;
 
+/**
+ * World-luokka ylläpitää tietoa mitä on missäkin
+ *
+ * @author strajama
+ */
 public class World {
 
     private ArrayList<Area> areas;
     private ArrayList<Item> items;
     private ArrayList<Helper> helpers;
     private ArrayList<Monster> monsters;
+    private Monster monster;
     private Player player;
     private Random random;
     private Area home;
 
+    /**
+     * Metodi luo uuden maailman ja pelaajan ja sijoittaa alueet, esineet,
+     * apurit ja hirviön ja sijoittaa ne paikoilleen
+     *
+     * @param areaDao
+     * @param itemDao
+     * @param helperDao
+     * @param monsterdao
+     * @throws Exception
+     */
     public World(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
         this.random = new Random();
         this.items = new ArrayList();
@@ -34,6 +48,13 @@ public class World {
         this.createPlayer();
     }
 
+    /**
+     * Metodi hakee tietokannassa olevat alueet ja arpoo niille naapurit valmiin
+     * pohjan mukaisesti
+     *
+     * @param areaDao
+     * @throws Exception
+     */
     private void createAreas(AreaDao areaDao) throws Exception {
         this.areas = areaDao.findAll();
         Collections.shuffle(areas);
@@ -53,6 +74,13 @@ public class World {
         areas.get(12).putNeighbors(null, areas.get(9), null, areas.get(10));
     }
 
+    /**
+     * Metodi hakee tietokannassa olevat esineet ja arpoo niille sijainnin
+     * alueella, jossa ei vielä ole muuta Finding-oliota ja joka ei ole koti
+     *
+     * @param itemDao
+     * @throws Exception
+     */
     private void createItems(ItemDao itemDao) throws Exception {
         this.items = itemDao.findAll();
         for (int i = 0; i < Math.min(items.size(), areas.size() / 2); i++) {
@@ -64,6 +92,13 @@ public class World {
         }
     }
 
+    /**
+     * Metodi hakee tietokannassa olevat apurit ja arpoo niille sijainnin
+     * alueella, jossa ei vielä ole muuta Finding-oliota ja joka ei ole koti
+     *
+     * @param helperDao
+     * @throws Exception
+     */
     private void createHelpers(HelperDao helperDao) throws Exception {
         this.helpers = helperDao.findAll();
         for (int i = 0; i < Math.min(helpers.size(), areas.size() / 2); i++) {
@@ -75,9 +110,20 @@ public class World {
         }
     }
 
-    public void createMonsters(MonsterDao monsterDao) throws Exception {
+    /**
+     * Metodi hakee tietokannassa olevat hirviöt, arpoo niistä yhden ja
+     * sijoittaa sen arvotulle alueelle, joka ei ole koti
+     *
+     * @param monsterDao
+     * @throws Exception
+     */
+    private void createMonsters(MonsterDao monsterDao) throws Exception {
         this.monsters = monsterDao.findAll();
         Collections.shuffle(monsters);
+        this.monster = monsters.get(0);
+        Area area = findRandomPlace();
+        area.putMonster(monster);
+        monster.setArea(area);
     }
 
     private void createPlayer() {
@@ -102,6 +148,10 @@ public class World {
         return monsters;
     }
 
+    public Monster getMonster() {
+        return monster;
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -110,6 +160,11 @@ public class World {
         return home;
     }
 
+    /**
+     * Metodi palauttaa listalta arvotun alueen
+     *
+     * @return - alue
+     */
     private Area findRandomPlace() {
         int r = random.nextInt(areas.size());
 

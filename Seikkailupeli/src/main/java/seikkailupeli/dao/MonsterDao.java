@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import seikkailupeli.domain.Monster;
@@ -14,6 +15,19 @@ public class MonsterDao implements Dao<Monster, Integer> {
 
     public MonsterDao(Database database) {
         this.database = database;
+        ArrayList<String> list = sqlites();
+        try (Connection conn = database.getConnection()) {
+            Statement test = conn.createStatement();
+            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
+            if (!rs.next()) {
+                Statement st = conn.createStatement();
+                for (String d : list) {
+                    st.executeUpdate(d);
+                }
+            }
+        } catch (Throwable t) {
+
+        }
     }
 
     @Override
@@ -87,4 +101,9 @@ public class MonsterDao implements Dao<Monster, Integer> {
         return id;
     }
 
+    private ArrayList<String> sqlites() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("INSERT INTO Monster (name, description) VALUES ('gazebo', 'Et voi paeta. Sinun on taisteltava.')");
+        return list;
+    }
 }

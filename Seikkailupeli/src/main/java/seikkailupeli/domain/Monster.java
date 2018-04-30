@@ -1,15 +1,22 @@
 package seikkailupeli.domain;
-
+/**
+ * Monster-luokka ylläpitää hirviön tietoja
+ * @author strajama
+ */
 public class Monster {
 
     private String name;
     private String slogan;
     private int life;
     private Area area;
-
-    public Monster(String name, String description) {
+/**
+ * Luo hirviön
+ * @param name - hirviön nimi
+ * @param slogan - hirviön slogan, jonka sanoo nähdessään pelaajan
+ */
+    public Monster(String name, String slogan) {
         this.name = name;
-        this.slogan = description;
+        this.slogan = slogan;
         this.life = 5;
     }
 

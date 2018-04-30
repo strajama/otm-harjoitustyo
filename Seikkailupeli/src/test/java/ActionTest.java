@@ -9,6 +9,7 @@ import seikkailupeli.dao.HelperDao;
 import seikkailupeli.dao.ItemDao;
 import seikkailupeli.dao.MonsterDao;
 import seikkailupeli.domain.Action;
+import seikkailupeli.domain.Adventure;
 import seikkailupeli.domain.Direction;
 import seikkailupeli.domain.Helper;
 import seikkailupeli.domain.Item;
@@ -18,6 +19,7 @@ public class ActionTest {
 
     Action action;
 
+    Adventure ad;
     World w;
     Database d;
     AreaDao a;
@@ -35,7 +37,8 @@ public class ActionTest {
         h = new HelperDao(d);
         m = new MonsterDao(d);
         w = new World(a, i, h, m);
-        action = new Action(w, w.getPlayer());
+        ad = new Adventure(w);
+        action = new Action(ad);
     }
 
     @Test

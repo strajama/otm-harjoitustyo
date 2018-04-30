@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import seikkailupeli.domain.Item;
 
@@ -13,6 +14,19 @@ public class ItemDao implements Dao<Item, Integer> {
 
     public ItemDao(Database database) {
         this.database = database;
+        ArrayList<String> list = sqlites();
+        try (Connection conn = database.getConnection()) {
+            Statement test = conn.createStatement();
+            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
+            if (!rs.next()) {
+                Statement st = conn.createStatement();
+                for (String d : list) {
+                    st.executeUpdate(d);
+                }
+            }
+        } catch (Throwable t) {
+            System.out.println("Error >> " + t.getMessage());
+        }
     }
 
     @Override
@@ -54,12 +68,12 @@ public class ItemDao implements Dao<Item, Integer> {
             if (this.findIdByName(object.getName()) != null) {
                 return null;
             }
-            
+
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Item (name, description) VALUES(?, ?)");
             stmt.setString(1, object.getName().toLowerCase());
             stmt.setString(2, object.getDescription());
             stmt.executeUpdate();
-            
+
             stmt.close();
         }
 
@@ -86,4 +100,14 @@ public class ItemDao implements Dao<Item, Integer> {
         return id;
     }
 
+    private ArrayList<String> sqlites() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("INSERT INTO Item (name, description) VALUES ('palantiri', 'kauaksi näkevä kivi')");
+        list.add("INSERT INTO Item (name, description) VALUES ('google', 'hakukone, jolla voi löytää maailman')");
+        list.add("INSERT INTO Item (name, description) VALUES ('tv', 'loputon uusien ideoiden lähde')");
+        list.add("INSERT INTO Item (name, description) VALUES ('kommunikaattori', 'kone, jolla saa yhteyden ystäviin')");
+        list.add("INSERT INTO Item (name, description) VALUES ('kartta', 'esine, jota käytetään, kun ei voi kysyä tietä')");
+        list.add("INSERT INTO Item (name, description) VALUES ('lokikirja', 'tapahtumien tallennuspaikka')");
+        return list;
+    }
 }

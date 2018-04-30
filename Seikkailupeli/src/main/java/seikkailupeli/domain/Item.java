@@ -1,7 +1,10 @@
 package seikkailupeli.domain;
 
-import java.util.Objects;
-
+/**
+ * Luokka Item on tarkoitettu esineiden ylläpitämiseen ja toteuttaa abstraktin
+ * luokan Finding
+ * @author strajama
+ */
 public class Item extends Finding {
 
     public Item(String name, String description) {
@@ -13,4 +16,3 @@ public class Item extends Finding {
         return true;
     }
 }
-

@@ -3,6 +3,11 @@ package seikkailupeli.domain;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja niiden
+ * toteutumisesta
+ * @author strajama
+ */
 public class Adventure {
 
     private World world;
@@ -11,16 +16,19 @@ public class Adventure {
     private int timeGoal;
     private Random random;
     private boolean over;
-    private Monster monster;
-
-    public Adventure(World world, Monster monster) {
+/**
+ * Metodi luo uuden Adventure-olion
+ * 
+ * @param world - maailma, jossa seikkailu tapahtuu
+ */
+    public Adventure(World world) {
         this.world = world;
-        this.monster = monster;
         this.random = new Random();
         this.over = false;
-        Area area = world.getAreas().get(0);
-        area.putMonster(monster);
-        monster.setArea(area);
+    }
+    
+    public World getWorld() {
+        return world;
     }
 
     public boolean getOver() {
@@ -55,12 +63,21 @@ public class Adventure {
         this.helperGoal = helperGoal;
     }
 
+    /**
+     * Metodi aloittaa uuden pelin, jolla on arvottu esine- ja apuri-tavoitteet
+     * ja peliaika, joka annetaan parametrina
+     *
+     * @param time pelivuorojen määrä
+     */
     public void makeAGame(int time) {
         this.randomItemGoal();
         this.randomHelperGoal();
         this.setTimeGoal(time);
     }
 
+    /**
+     * Arpoo esineen, joka pelissä on tavoitteena löytää
+     */
     private void randomItemGoal() {
         if (!world.getItems().isEmpty()) {
             ArrayList<Item> items = world.getItems();
@@ -69,6 +86,9 @@ public class Adventure {
         }
     }
 
+    /**
+     * Metodi arpoo apurin, jonka kanssa pelissä on tavoitteena puhua
+     */
     private void randomHelperGoal() {
         if (!world.getHelpers().isEmpty()) {
             ArrayList<Helper> helpers = world.getHelpers();
@@ -77,6 +97,9 @@ public class Adventure {
         }
     }
 
+    /**
+     * Metodi vähentää tavoiteaikaa yhdellä
+     */
     public void takeTurn() {
         if (!over) {
             timeGoal--;
@@ -84,10 +107,6 @@ public class Adventure {
                 over = true;
             }
         }
-        Area next = monster.getArea().randomNeighbor();
-        monster.getArea().removeMonster(monster);
-        monster.setArea(next);
-        next.putMonster(monster);
     }
 
 }

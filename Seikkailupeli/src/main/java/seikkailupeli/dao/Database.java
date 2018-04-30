@@ -2,8 +2,11 @@ package seikkailupeli.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Iterator;
-
+/**
+ * Luokka Database luo sovelluksen tarvitsemat tietokantataulut, jos niitä ei ole
+ * ja ottaa tietokantaan yhteyden
+ * @author strajama
+ */
 public class Database {
 
     private String databaseAddress;
@@ -17,14 +20,13 @@ public class Database {
     }
 
     public void init() {
-        ArrayList<String> createSql = sqlites();
-
+        ArrayList<String> createTables = sqlitesTables();
         // "try with resources" sulkee resurssin automaattisesti lopuksi
         try (Connection conn = getConnection()) {
             Statement st = conn.createStatement();
             System.out.println("otetaan yhteyttä");
             // suoritetaan komennot
-            for (String d : createSql) {
+            for (String d : createTables) {
                 System.out.println("Running command >> " + d);
                 st.executeUpdate(d);
             }
@@ -34,15 +36,21 @@ public class Database {
         }
     }
 
-    private ArrayList<String> sqlites() {
+    private ArrayList<String> sqlitesTables() {
         ArrayList<String> list = new ArrayList<>();
-
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        list.add("CREATE TABLE Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))"); // IF NOT EXISTS 
-        list.add("CREATE TABLE Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
-        list.add("CREATE TABLE Helper (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
-        list.add("CREATE TABLE Monster (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
+        list.add("CREATE TABLE IF NOT EXISTS Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))"); // IF NOT EXISTS 
+        list.add("CREATE TABLE IF NOT EXISTS Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
+        list.add("CREATE TABLE IF NOT EXISTS Helper (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
+        list.add("CREATE TABLE IF NOT EXISTS Monster (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
 
+        return list;
+    }
+
+}
+/*
+    private ArrayList<String> sqlitesInsertAreas() {
+        ArrayList<String> list = new ArrayList<>();
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
         list.add("INSERT INTO Area (name, description) VALUES ('metsä', 'Seisot tiheäkasvuisessa paikassa, jossa et näe metsää puilta.')");
         list.add("INSERT INTO Area (name, description) VALUES ('aukio', 'Olet pienellä aukiolla. Melkein näkymättömät, pienet polut vievät eri suuntiin.')");
@@ -57,6 +65,11 @@ public class Database {
         list.add("INSERT INTO Area (name, description) VALUES ('luola', 'Tulet pimeään luolaan, jota ei voi ylittää eikä alittaa.')");
         list.add("INSERT INTO Area (name, description) VALUES ('kallio', 'Olet kalliolla kukkalalla ja sinun tekisi mieli rakentaa maja.')");
 //        list.add("INSERT INTO Area (name, description) VALUES ('koti', 'Oma koti kullan kallis.')");
+        return list;
+    }
+
+    private ArrayList<String> sqlitesInsertRest() {
+        ArrayList<String> list = new ArrayList<>();
         list.add("INSERT INTO Item (name, description) VALUES ('palantiri', 'kauaksi näkevä kivi')");
         list.add("INSERT INTO Item (name, description) VALUES ('google', 'hakukone, jolla voi löytää maailman')");
         list.add("INSERT INTO Item (name, description) VALUES ('tv', 'loputon uusien ideoiden lähde')");
@@ -70,7 +83,5 @@ public class Database {
         list.add("INSERT INTO Helper (name, description) VALUES ('hermione', 'jästisyntyinen taikaministeri')");
         list.add("INSERT INTO Helper (name, description) VALUES ('R2-D2', 'droidi, jota et ollut etsimässä')");
         list.add("INSERT INTO Monster (name, description) VALUES ('gazebo', 'Et voi paeta. Sinun on taisteltava.')");
-
         return list;
-    }
-}
+    }*/
