@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 /**
  * Monster-luokka ylläpitää hirviön tietoja
  * @author strajama

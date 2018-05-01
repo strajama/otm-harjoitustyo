@@ -1,12 +1,12 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.HelperDao;
-import seikkailupeli.dao.ItemDao;
-import seikkailupeli.dao.MonsterDao;
+import adventuregame.dao.AreaDao;
+import adventuregame.dao.HelperDao;
+import adventuregame.dao.ItemDao;
+import adventuregame.dao.MonsterDao;
 
 /**
  * World-luokka ylläpitää tietoa mitä on missäkin
@@ -83,6 +83,7 @@ public class World {
      */
     private void createItems(ItemDao itemDao) throws Exception {
         this.items = itemDao.findAll();
+        Collections.shuffle(items);
         for (int i = 0; i < Math.min(items.size(), areas.size() / 2); i++) {
             Area place = findRandomPlace();
             while (!place.getFindings().isEmpty()) {
@@ -95,18 +96,21 @@ public class World {
     /**
      * Metodi hakee tietokannassa olevat apurit ja arpoo niille sijainnin
      * alueella, jossa ei vielä ole muuta Finding-oliota ja joka ei ole koti
+     * sekä antaa apurille tavaran, jota hän toivoo
      *
      * @param helperDao
      * @throws Exception
      */
     private void createHelpers(HelperDao helperDao) throws Exception {
         this.helpers = helperDao.findAll();
+        Collections.shuffle(helpers);
         for (int i = 0; i < Math.min(helpers.size(), areas.size() / 2); i++) {
             Area place = findRandomPlace();
             while (!place.getFindings().isEmpty()) {
                 place = findRandomPlace();
             }
             place.putFinding(helpers.get(i));
+            helpers.get(i).setItem(items.get(i));
         }
     }
 

@@ -3,7 +3,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.domain.Player;
+import adventuregame.domain.Player;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

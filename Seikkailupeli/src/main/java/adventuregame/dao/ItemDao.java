@@ -1,4 +1,4 @@
-package seikkailupeli.dao;
+package adventuregame.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import seikkailupeli.domain.Item;
+import adventuregame.domain.Item;
 
 public class ItemDao implements Dao<Item, Integer> {
 

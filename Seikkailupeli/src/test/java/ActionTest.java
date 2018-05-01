@@ -3,17 +3,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.Database;
-import seikkailupeli.dao.HelperDao;
-import seikkailupeli.dao.ItemDao;
-import seikkailupeli.dao.MonsterDao;
-import seikkailupeli.domain.Action;
-import seikkailupeli.domain.Adventure;
-import seikkailupeli.domain.Direction;
-import seikkailupeli.domain.Helper;
-import seikkailupeli.domain.Item;
-import seikkailupeli.domain.World;
+import adventuregame.dao.AreaDao;
+import adventuregame.dao.Database;
+import adventuregame.dao.HelperDao;
+import adventuregame.dao.ItemDao;
+import adventuregame.dao.MonsterDao;
+import adventuregame.domain.Action;
+import adventuregame.domain.Adventure;
+import adventuregame.domain.Direction;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
+import adventuregame.domain.World;
 
 public class ActionTest {
 

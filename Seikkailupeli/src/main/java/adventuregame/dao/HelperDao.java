@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package seikkailupeli.dao;
+package adventuregame.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import seikkailupeli.domain.Helper;
-import seikkailupeli.domain.Item;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
 
 
 public class HelperDao implements Dao<Helper, Integer> {

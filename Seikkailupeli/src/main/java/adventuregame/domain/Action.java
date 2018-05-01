@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 /**
  * Luokkaa käytetään pelin edistämiseen ja muutosten tekemiseen
@@ -8,6 +8,7 @@ package seikkailupeli.domain;
 public class Action {
 
     private Adventure adventure;
+    private Player player;
 
     /**
      * Metodi luo uuden Action-olion
@@ -16,6 +17,7 @@ public class Action {
      */
     public Action(Adventure adventure) {
         this.adventure = adventure;
+        this.player = adventure.getWorld().getPlayer();
     }
 
     /**
@@ -26,10 +28,10 @@ public class Action {
      * @return - tieto siitä, että onnistuiko liikkuminen
      */
     public boolean move(Direction direction) {
-        Area now = adventure.getWorld().getPlayer().getArea();
+        Area now = player.getArea();
         if (now.getNeighbors().get(direction) != null) {
             Area next = now.getNeighbors().get(direction);
-            adventure.getWorld().getPlayer().setArea(next);
+            player.setArea(next);
             adventure.takeTurn();
             moveMonster();
             return true;
@@ -44,10 +46,10 @@ public class Action {
      * @return - Esine, joka poimittiin tai null
      */
     public Item take() {
-        if (!adventure.getWorld().getPlayer().getArea().getFindings().isEmpty()) {
-            Item item = (Item) adventure.getWorld().getPlayer().getArea().giveSomeItem();
+        if (thereIsFinding()) {
+            Item item = (Item) player.getArea().giveSomeItem();
             if (item != null) {
-                adventure.getWorld().getPlayer().putInBag(item);
+                player.putInBag(item);
                 adventure.takeTurn();
                 moveMonster();
                 return item;
@@ -63,13 +65,27 @@ public class Action {
      * @return - apuri, jonka kanssa puhuttiin tai null
      */
     public Helper speak() {
-        if (!adventure.getWorld().getPlayer().getArea().getFindings().isEmpty()) {
-            Helper helper = adventure.getWorld().getPlayer().getArea().speakHelper(adventure.getWorld().getPlayer());
+        if (thereIsFinding()) {
+            Helper helper = player.getArea().speakWithNewHelper(player);
             if (helper != null) {
-                adventure.getWorld().getPlayer().speakWith(helper);
+                player.speakWith(helper);
                 adventure.takeTurn();
                 moveMonster();
                 return helper;
+            }
+        }
+        return null;
+    }
+    
+    public Item give() {
+        if (thereIsFinding()) {
+            Helper helper = player.getArea().findHelper();
+            if (helper != null) {
+                if (player.getItems().containsKey(helper.getItem().getName())) {
+                    player.removeFromBag(helper.getItem());
+                    player.getArea().removeHelper(helper);
+                    return helper.getItem();
+                }
             }
         }
         return null;
@@ -85,4 +101,10 @@ public class Action {
             next.putMonster(adventure.getWorld().getMonster());
         }
     }
+    
+    private boolean thereIsFinding() {
+        return !adventure.getWorld().getPlayer().getArea().getFindings().isEmpty();
+    }
+    
+    
 }

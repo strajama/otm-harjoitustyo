@@ -2,12 +2,12 @@
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.Database;
-import seikkailupeli.dao.HelperDao;
-import seikkailupeli.dao.ItemDao;
-import seikkailupeli.dao.MonsterDao;
-import seikkailupeli.domain.World;
+import adventuregame.dao.AreaDao;
+import adventuregame.dao.Database;
+import adventuregame.dao.HelperDao;
+import adventuregame.dao.ItemDao;
+import adventuregame.dao.MonsterDao;
+import adventuregame.domain.World;
 
 public class WorldTest {
 

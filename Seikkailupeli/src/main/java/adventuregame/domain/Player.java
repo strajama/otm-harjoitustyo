@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,14 +49,14 @@ public class Player {
         }
         Iterator<String> itemirator = items.keySet().iterator();
         StringBuilder builder = new StringBuilder();
-        builder.append("Repussa on ");
-        while (itemirator.hasNext()) {
+        builder.append("Repussasi on jotain ");
+/*        while (itemirator.hasNext()) {
             builder.append(itemirator.next().toUpperCase());
             if (itemirator.hasNext()) {
                 builder.append(", ");
             }
         }
-        builder.append(".");
+        builder.append(".");*/
         return builder.toString();
     }
 /**
@@ -65,6 +65,10 @@ public class Player {
  */
     public void putInBag(Item item) {
         items.put(item.getName(), item);
+    }
+    
+    public void removeFromBag(Item item) {
+        items.remove(item.getName());
     }
 /**
  * Metodi kertoo onko pelaaja jo puhunut apurin kanssa

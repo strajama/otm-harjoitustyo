@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 /**
  * Luokka Item on tarkoitettu esineiden ylläpitämiseen ja toteuttaa abstraktin

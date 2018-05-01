@@ -4,9 +4,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.domain.Area;
-import seikkailupeli.domain.Helper;
-import seikkailupeli.domain.Item;
+import adventuregame.domain.Area;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
 
 public class AreaTest {
 

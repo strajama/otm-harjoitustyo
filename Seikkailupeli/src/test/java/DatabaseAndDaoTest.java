@@ -5,15 +5,15 @@ import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.Database;
-import seikkailupeli.dao.HelperDao;
-import seikkailupeli.dao.ItemDao;
-import seikkailupeli.dao.MonsterDao;
-import seikkailupeli.domain.Area;
-import seikkailupeli.domain.Helper;
-import seikkailupeli.domain.Item;
-import seikkailupeli.domain.Monster;
+import adventuregame.dao.AreaDao;
+import adventuregame.dao.Database;
+import adventuregame.dao.HelperDao;
+import adventuregame.dao.ItemDao;
+import adventuregame.dao.MonsterDao;
+import adventuregame.domain.Area;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
+import adventuregame.domain.Monster;
 
 
 public class DatabaseAndDaoTest {

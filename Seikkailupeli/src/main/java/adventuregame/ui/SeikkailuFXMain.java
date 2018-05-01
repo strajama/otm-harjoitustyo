@@ -1,4 +1,4 @@
-package seikkailupeli.ui;
+package adventuregame.ui;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,19 +22,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import seikkailupeli.dao.AreaDao;
-import seikkailupeli.dao.Database;
-import seikkailupeli.dao.HelperDao;
-import seikkailupeli.dao.ItemDao;
-import seikkailupeli.dao.MonsterDao;
-import seikkailupeli.domain.Action;
-import seikkailupeli.domain.Adventure;
-import seikkailupeli.domain.Area;
-import seikkailupeli.domain.Direction;
-import seikkailupeli.domain.Helper;
-import seikkailupeli.domain.Item;
-import seikkailupeli.domain.Monster;
-import seikkailupeli.domain.World;
+import adventuregame.dao.AreaDao;
+import adventuregame.dao.Database;
+import adventuregame.dao.HelperDao;
+import adventuregame.dao.ItemDao;
+import adventuregame.dao.MonsterDao;
+import adventuregame.domain.Action;
+import adventuregame.domain.Adventure;
+import adventuregame.domain.Direction;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
+import adventuregame.domain.Monster;
+import adventuregame.domain.World;
+import java.util.Iterator;
 
 public class SeikkailuFXMain extends Application {
 
@@ -52,6 +52,7 @@ public class SeikkailuFXMain extends Application {
     private World world;
     private Adventure adventure;
 
+    private BorderPane playBp;
     private GridPane doGrid;
     private GridPane moveGrid;
 
@@ -60,6 +61,7 @@ public class SeikkailuFXMain extends Application {
     private TextField des;
     private Label label;
 
+    private VBox right;
 //playscenen muutettavat Labelit
     private Label areaLabel;
     private Label descriptionLabel;
@@ -86,7 +88,7 @@ public class SeikkailuFXMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        world = new World(areaDao, itemDao, helperDao, monsterDao);
+//        world = new World(areaDao, itemDao, helperDao, monsterDao);
         //login-scene
         VBox loginPane = new VBox(10);
         loginPane.setPadding(new Insets(10, 10, 10, 10));
@@ -95,6 +97,11 @@ public class SeikkailuFXMain extends Application {
         Button playButton = new Button("Jee, pelaamaan!");
 
         playButton.setOnAction(e -> {
+            try {
+                world = new World(areaDao, itemDao, helperDao, monsterDao);
+            } catch (Exception ex) {
+                Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
             adventure = new Adventure(world);
             adventure.makeAGame(200);
             primaryStage.setScene(playScene);
@@ -106,13 +113,10 @@ public class SeikkailuFXMain extends Application {
         });
 
         loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
-        loginScene = new Scene(loginPane, 600, 400);
+        loginScene = new Scene(loginPane, 1000, 400);
 
-        BorderPane playBp = new BorderPane();
-        playBp.setPadding(new Insets(10, 10, 10, 10));
-        playBp.setTop(playUp());
-        playBp.setBottom(playDown());
-
+        
+        playSceneBorderPaneCreate();
         createMoveButtons();
         createDoButtons();
 
@@ -123,7 +127,7 @@ public class SeikkailuFXMain extends Application {
         });
         doGrid.add(returnLogin, 2, 2);
 
-        playScene = new Scene(playBp, 600, 400);
+        playScene = new Scene(playBp, 1000, 400);
 
         createCreateScene();
         createDaoSubmitButton();
@@ -136,7 +140,7 @@ public class SeikkailuFXMain extends Application {
         rLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
         });
-        createScene = new Scene(createGrid, 600, 400);
+        createScene = new Scene(createGrid, 1000, 400);
 
         primaryStage.setTitle("Seikkailu");
         primaryStage.setScene(loginScene);
@@ -167,32 +171,39 @@ public class SeikkailuFXMain extends Application {
         remainingTimeLabel.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
     }
 
+    private void playSceneBorderPaneCreate() {
+        playBp = new BorderPane();
+        playBp.setPadding(new Insets(10, 10, 10, 10));
+        playBp.setLeft(playLeft());
+        playBp.setBottom(playDown());
+        playBp.setRight(playRight());
+    }
     /**
-     * Playscenen yläosan luominen
+     * Playscenen vasemman osan luominen
      *
      * @return - palauttaa itsensä näytölle sijoitettavaksi
      */
-    private VBox playUp() {
-        VBox up = new VBox();
-        up.setSpacing(10);
+    private VBox playLeft() {
+        VBox left = new VBox();
+        left.setSpacing(10);
         areaLabel = new Label("KOTI");
         descriptionLabel = new Label("Oma koti kullan kallis");
         findingLabel = new Label("Kotona ei ole mitään mielenkiintoista. Paras lähteä matkaan.");
-        bagLabel = new Label("Reppusi on tyhjä. Etsi siihen täytettä.");
+//        bagLabel = new Label("Reppusi on tyhjä. Etsi siihen täytettä.");
         gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
         doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
         monsterLabel = new Label("");
         remainingTimeLabel = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä.");
-        up.getChildren().add(areaLabel);
-        up.getChildren().add(descriptionLabel);
-        up.getChildren().add(findingLabel);
-        up.getChildren().add(bagLabel);
-        up.getChildren().add(gameLabel);
-        up.getChildren().add(doingLabel);
-        up.getChildren().add(monsterLabel);
-        up.getChildren().add(remainingTimeLabel);
+        left.getChildren().add(areaLabel);
+        left.getChildren().add(descriptionLabel);
+        left.getChildren().add(findingLabel);
+        //     left.getChildren().add(bagLabel);
+        left.getChildren().add(gameLabel);
+        left.getChildren().add(doingLabel);
+        left.getChildren().add(monsterLabel);
+        left.getChildren().add(remainingTimeLabel);
 
-        return up;
+        return left;
     }
 
     /**
@@ -215,6 +226,16 @@ public class SeikkailuFXMain extends Application {
         down.getChildren().add(doGrid);
 
         return down;
+    }
+
+    private VBox playRight() {
+        right = new VBox();
+        right.setSpacing(10);
+        right.setAlignment(Pos.TOP_LEFT);
+        right.setPadding(new Insets(20, 20, 20, 20));
+        bagLabel = new Label("Reppusi on tyhjä.");
+        right.getChildren().add(bagLabel);
+        return right;
     }
 
     /**
@@ -294,6 +315,7 @@ public class SeikkailuFXMain extends Application {
             actionShow();
             if (item != null) {
                 doingLabel.setText("Poimit esineen " + item + ".");
+                right.getChildren().add(new Label(item.getName().toUpperCase()));
             } else {
                 doingLabel.setText("Täällä ei ole poimittavaa.");
             }
@@ -306,12 +328,31 @@ public class SeikkailuFXMain extends Application {
             Helper helper = a.speak();
             actionShow();
             if (helper != null) {
-                doingLabel.setText("Sinä ja " + helper + ", puhutte kauan.");
+                doingLabel.setText(helper + " puuttuu " + helper.getItem().getDescription() + ".");
             } else {
                 doingLabel.setText("Täällä ei ole uusia keskusteluja käytävänä.");
             }
         }));
         doGrid.add(speak, 0, 1);
+
+        Button give = new Button("ANNA");
+        give.setOnAction((event -> {
+            Action a = new Action(adventure);
+            Item item = a.give();
+            actionShow();
+            if (item != null) {
+                doingLabel.setText("Reppusi on kevyempi, kun sieltä puuttuu " + item.getName() + ".");
+                right.getChildren().clear();
+                right.getChildren().add(bagLabel);
+                Iterator<String> it = world.getPlayer().getItems().keySet().iterator();
+                while (it.hasNext()) {
+                    right.getChildren().add(new Label(it.next().toUpperCase()));
+                }
+            } else {
+                doingLabel.setText("Sinulla ei ole mitään sopivaa annettavaa.");
+            }
+        }));
+        doGrid.add(give, 0, 2);
     }
 
     private void createCreateScene() {
@@ -414,6 +455,8 @@ public class SeikkailuFXMain extends Application {
                         Area newArea = new Area(name.getText(), des.getText());
                         try {
                             areaDao.saveOrUpdate(newArea);
+                    allList = areaDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -421,6 +464,8 @@ public class SeikkailuFXMain extends Application {
                         Item newItem = new Item(name.getText(), des.getText());
                         try {
                             itemDao.saveOrUpdate(newItem);
+                            allList = itemDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -428,6 +473,8 @@ public class SeikkailuFXMain extends Application {
                         Helper newHelper = new Helper(name.getText(), des.getText());
                         try {
                             helperDao.saveOrUpdate(newHelper);
+                            allList = helperDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -435,6 +482,8 @@ public class SeikkailuFXMain extends Application {
                         Monster newMonster = new Monster(name.getText(), des.getText());
                         try {
                             monsterDao.saveOrUpdate(newMonster);
+                            allList = monsterDao.findAll();
+                            cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }

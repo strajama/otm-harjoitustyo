@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,11 +127,12 @@ public class Area {
         return null;
     }
 /**
- * Metodi palauttaa Helper-olion, jos sellainen on alueella.
+ * Metodi palauttaa Helper-olion, jos sellainen on alueella ja pelaaja ei ole puhunut
+ * hänen kanssaan.
  * @param pelaaja, joka apurin kanssa haluaa puhua
  * @return alueella oleva apuri tai null
  */
-    public Helper speakHelper(Player player) {
+    public Helper speakWithNewHelper(Player player) {
         if (!findings.isEmpty()) {
             Iterator<String> it = findings.keySet().iterator();
             while (it.hasNext()) {
@@ -142,6 +143,27 @@ public class Area {
             }
         }
         return null;
+    }
+    
+    public Helper findHelper() {
+        if (!findings.isEmpty()) {
+            Iterator<Finding> it = findings.values().iterator();
+            while (it.hasNext()) {
+                Finding next = it.next();
+                if (!next.isItem()) {
+                    return (Helper) next;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public void removeHelper(Helper helper) {
+        if (!findings.isEmpty()) {
+            if (findings.containsKey(helper.getName())) {
+                findings.remove(helper.getName());
+            }
+        }
     }
 /**
  * Metodi sijoittaa alueen naapuri-mappiin parametrina annetut alueet naapureiksi

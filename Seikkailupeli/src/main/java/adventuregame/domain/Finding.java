@@ -1,4 +1,4 @@
-package seikkailupeli.domain;
+package adventuregame.domain;
 
 import java.util.Objects;
 /**

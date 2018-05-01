@@ -1,4 +1,4 @@
-package seikkailupeli.dao;
+package adventuregame.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import seikkailupeli.domain.Monster;
+import adventuregame.domain.Monster;
 
 public class MonsterDao implements Dao<Monster, Integer> {
 

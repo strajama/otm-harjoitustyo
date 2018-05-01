@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import seikkailupeli.domain.Item;
+import adventuregame.domain.Item;
 
 public class ItemTest {
 
