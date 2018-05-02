@@ -23,6 +23,16 @@ Käyttöliittymä on pyritty eristämään täysin sovelluslogiikasta. Ohjelma l
 
 ## Sovelluslogiikka
 
+* World-luokka ylläpitää tietoa mitä on missäkin.
+* Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja niiden toteutumisesta.
+* Action-luokkaa käytetään pelimuutosten tekemiseen
+* Area-luokka ylläpitää tietoa siitä mitä yksittäisellä alueella on.
+* Helper-luokka on tarkoitettu pelaajan tapaamien apureiden ylläpitämiseen ja toteuttaa abstraktin luokan Finding.
+* Item-luokka on tarkoitettu esineiden ylläpitämiseen.
+* Monster-luokka ylläpitää hirviön tietoja.
+* Player-luokka ylläpitää tietoa siitä mitä pelaaja on tehnyt.
+* Score-luokka on pisteiden tallentamista ja hallinnointia varten.
+
 ## Tietojen pysyväistallennus
 
 Pakkauksen _adventuregame.dao_ luokat _AreaDao_, _ItemDao_, _HelperDao_, _MonsterDao_ ja _ScoreDao_ huolehtivat tietojen tallettamisesta tietokantatiedostoon _adventure.db_.
@@ -39,5 +49,7 @@ Kuvataan seuraavaksi sovelluksen toimintalogiikka muutaman päätoiminnallisuude
 
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Making%20action%20in%20game.png">
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Saving%20new%20data.png">
-# Ohjelmaa on myllätty tämän luomisen jälkeen enkä halua tehdä uutta ennen kuin olen varma minkälaiseksi haluan tämän tulevan
+
+### Ensimmäinen arkkitehtuurikuvaus
+
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/arkkitehtuuri.png">
