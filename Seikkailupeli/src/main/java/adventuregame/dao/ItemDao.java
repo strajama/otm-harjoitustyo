@@ -15,7 +15,9 @@ public class ItemDao implements Dao<Item, Integer> {
     public ItemDao(Database database) throws SQLException {
         this.database = database;
         ArrayList<String> list = sqlites();
-        try (Connection conn = database.getConnection(); Statement test = conn.createStatement(); ResultSet rs = test.executeQuery("SELECT * FROM Item")) {
+        try (Connection conn = database.getConnection();
+                Statement test = conn.createStatement();
+                ResultSet rs = test.executeQuery("SELECT * FROM Item")) {
             if (!rs.next()) {
                 Statement st = conn.createStatement();
                 for (String d : list) {
@@ -29,7 +31,9 @@ public class ItemDao implements Dao<Item, Integer> {
     @Override
     public ArrayList<Item> findAll() throws SQLException {
         ArrayList<Item> items;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item"); ResultSet rs = stmt.executeQuery()) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item");
+                ResultSet rs = stmt.executeQuery()) {
             items = new ArrayList<>();
             while (rs.next()) {
                 String name = rs.getString("name");

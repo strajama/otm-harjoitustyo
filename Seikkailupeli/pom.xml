@@ -38,8 +38,8 @@
                 <version>0.8.0</version>
                 <configuration>
                     <excludes>
-                        <exclude>seikkailupeli/ui/*</exclude>
-                        <exclude>seikkailupeli/domain/Direction*</exclude>
+                        <exclude>adventuregame/ui/*</exclude>
+                        <exclude>adventuregame/domain/Direction*</exclude>
                     </excludes>
                 </configuration>   
                 <executions>
@@ -77,7 +77,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>seikkailupeli.ui.SeikkailuFXMain</mainClass>
+                                    <mainClass>adventuregame.ui.SeikkailuFXMain</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

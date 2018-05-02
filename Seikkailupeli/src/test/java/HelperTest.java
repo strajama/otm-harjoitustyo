@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
 
 public class HelperTest {
 
@@ -16,13 +17,17 @@ public class HelperTest {
     }
 
     @Test
-    public void getName() {
+    public void getters() {
         assertEquals("testi", helper.getName());
+        assertEquals("toimiiko", helper.getDescription());
+        assertTrue(helper.getItem() == null);
     }
 
     @Test
-    public void getDescription() {
-        assertEquals("toimiiko", helper.getDescription());
+    public void itemGetterSetter() {
+        Item test = new Item("testi", "toimiiko");
+        helper.setItem(test);
+        assertEquals(test, helper.getItem());
     }
 
     @Test
@@ -31,30 +36,20 @@ public class HelperTest {
     }
 
     @Test
-    public void hashi() {
+    public void hashTesting() {
         Helper n = new Helper("testi", "erilainen kuvailu");
+        Helper m = new Helper("test", "toimiiko");
         assertEquals(helper.hashCode(), n.hashCode());
+        assertFalse(helper.hashCode() == m.hashCode());
     }
 
     @Test
-    public void equalsTestSame() {
+    public void equalsTest() {
         Helper n = new Helper("testi", "erilainen kuvailu");
+        Helper m = new Helper("testi1", "eriniminen");
         assertTrue(helper.equals(n));
-    }
-
-    @Test
-    public void equalsTestDifferent1() {
-        Helper n = new Helper("testi1", "eriniminen");
-        assertFalse(helper.equals(n));
-    }
-
-    @Test
-    public void equalsTestDifferent2() {
+        assertFalse(helper.equals(m));
         assertFalse(helper.equals("testi"));
-    }
-
-    @Test
-    public void equalsTestDifferent3() {
         assertFalse(helper.equals(null));
     }
 

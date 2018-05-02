@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adventuregame.dao;
 
 import java.sql.Connection;
@@ -37,7 +32,9 @@ public class HelperDao implements Dao<Helper, Integer> {
     @Override
     public ArrayList<Helper> findAll() throws SQLException {
         ArrayList<Helper> helpers;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper"); ResultSet rs = stmt.executeQuery()) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper");
+                ResultSet rs = stmt.executeQuery()) {
             helpers = new ArrayList<>();
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -52,7 +49,8 @@ public class HelperDao implements Dao<Helper, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Helper WHERE key = ?")) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Helper WHERE key = ?")) {
             stmt.setObject(1, key);
 
             stmt.execute();
@@ -80,7 +78,8 @@ public class HelperDao implements Dao<Helper, Integer> {
     @Override
     public Integer findIdByName(String name) throws SQLException {
         Integer id;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper WHERE name = ?")) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper WHERE name = ?")) {
             stmt.setObject(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean hasOne = rs.next();

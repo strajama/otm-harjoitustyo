@@ -234,10 +234,8 @@ public class Area {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + Objects.hashCode(this.name);
-        hash = 89 * hash + Objects.hashCode(this.description);
-        hash = 89 * hash + Objects.hashCode(this.neighbors);
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -254,12 +252,6 @@ public class Area {
         }
         final Area other = (Area) obj;
         if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.description, other.description)) {
-            return false;
-        }
-        if (!Objects.equals(this.neighbors, other.neighbors)) {
             return false;
         }
         return true;

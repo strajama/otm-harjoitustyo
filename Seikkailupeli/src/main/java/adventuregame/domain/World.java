@@ -48,6 +48,31 @@ public class World {
         this.createPlayer();
     }
 
+    public ArrayList<Area> getAreas() {
+        Collections.shuffle(areas);
+        return areas;
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public ArrayList<Helper> getHelpers() {
+        return helpers;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Area getHome() {
+        return home;
+    }
+
     /**
      * Metodi hakee tietokannassa olevat alueet ja arpoo niille naapurit valmiin
      * pohjan mukaisesti
@@ -133,35 +158,6 @@ public class World {
     private void createPlayer() {
         this.player = new Player();
         player.setArea(home);
-    }
-
-    public ArrayList<Area> getAreas() {
-        Collections.shuffle(areas);
-        return areas;
-    }
-
-    public ArrayList<Item> getItems() {
-        return items;
-    }
-
-    public ArrayList<Helper> getHelpers() {
-        return helpers;
-    }
-
-    public ArrayList<Monster> getMonsters() {
-        return monsters;
-    }
-
-    public Monster getMonster() {
-        return monster;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Area getHome() {
-        return home;
     }
 
     /**

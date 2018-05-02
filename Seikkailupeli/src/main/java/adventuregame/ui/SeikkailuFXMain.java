@@ -81,7 +81,7 @@ public class SeikkailuFXMain extends Application {
     private Label gameLabel;
     private Label doingLabel;
     private Label monsterLabel;
-    private Label remainingTimeLabel;
+    private Label pointsLabel;
 
     private ChoiceBox cb;
     private ChoiceBox cbAll;
@@ -172,7 +172,7 @@ public class SeikkailuFXMain extends Application {
         findingLabel.setText(world.getPlayer().getArea().show());
         bagLabel.setText(world.getPlayer().bag());
         monsterLabel.setText(world.getPlayer().getArea().showMonster());
-        remainingTimeLabel.setText("Sinulla on pisteitä " + adventure.getPoints() + ".");
+        pointsLabel.setText("Sinulla on pisteitä " + adventure.getPoints() + ".");
     }
 
     private void playSceneBorderPaneCreate() throws SQLException {
@@ -197,18 +197,18 @@ public class SeikkailuFXMain extends Application {
         descriptionLabel = new Label("Oma koti kullan kallis");
         findingLabel = new Label("Kotona ei ole mitään mielenkiintoista. Paras lähteä matkaan.");
 //        bagLabel = new Label("Reppusi on tyhjä. Etsi siihen täytettä.");
-        gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
+//        gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
         doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
         monsterLabel = new Label("");
-        remainingTimeLabel = new Label("Tässä näkyy pisteesi.");
+        pointsLabel = new Label("Tässä näkyy pisteesi.");
         left.getChildren().add(areaLabel);
         left.getChildren().add(descriptionLabel);
         left.getChildren().add(findingLabel);
         //     left.getChildren().add(bagLabel);
-        left.getChildren().add(gameLabel);
+//        left.getChildren().add(gameLabel);
         left.getChildren().add(doingLabel);
         left.getChildren().add(monsterLabel);
-        left.getChildren().add(remainingTimeLabel);
+        left.getChildren().add(pointsLabel);
 
         return left;
     }
@@ -451,7 +451,7 @@ public class SeikkailuFXMain extends Application {
         createGrid.getChildren().add(cbAll);
 
         cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Esine", "Apuri", "Hirviö"));
+        cb.setItems(FXCollections.observableArrayList("Alue","Esine", "Apuri", "Hirviö"));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
         findDaos();

@@ -24,6 +24,7 @@ public class Adventure {
      */
     public Adventure(World world) {
         this.world = world;
+        this.points = 0;
         this.random = new Random();
     }
 
@@ -59,33 +60,27 @@ public class Adventure {
     }
 
     /**
+     * Metodi vähentää pisteitä yhdellä
+     */
+    public void takeTurn() {
+        points--;
+    }
+
+    /**
      * Arpoo esineen, joka pelissä on tavoitteena löytää
      */
     private void randomItemGoal() {
-        if (!world.getItems().isEmpty()) {
-            ArrayList<Item> items = world.getItems();
-            int r = random.nextInt(items.size());
-            this.itemGoal = items.get(r);
-        }
+        ArrayList<Item> items = world.getItems();
+        int r = random.nextInt(items.size());
+        this.itemGoal = items.get(r);
     }
 
     /**
      * Metodi arpoo apurin, jonka kanssa pelissä on tavoitteena puhua
      */
     private void randomHelperGoal() {
-        if (!world.getHelpers().isEmpty()) {
-            ArrayList<Helper> helpers = world.getHelpers();
-            int r = random.nextInt(helpers.size());
-            this.helperGoal = helpers.get(r);
-        }
+        ArrayList<Helper> helpers = world.getHelpers();
+        int r = random.nextInt(helpers.size());
+        this.helperGoal = helpers.get(r);
     }
-
-    /**
-     * Metodi vähentää pisteitä yhdellä
-     */
-    public void takeTurn() {
-        points--;
-
-    }
-
 }

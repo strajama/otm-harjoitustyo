@@ -10,12 +10,11 @@ import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
 import adventuregame.dao.MonsterDao;
 import adventuregame.domain.Adventure;
-import adventuregame.domain.Item;
 import adventuregame.domain.World;
 
 public class AdventureTest {
 
-    Adventure ad;
+    Adventure adventure;
 
     World w;
     Database d;
@@ -35,35 +34,39 @@ public class AdventureTest {
         m = new MonsterDao(d);
         w = new World(a, i, h, m);
 
-        ad = new Adventure(w);
+        adventure = new Adventure(w);
     }
 
     @Test
-    public void getItemGoalNone() {
-        assertTrue(ad.getItemGoal() == null);
+    public void gettersWork() {
+        assertEquals(w, adventure.getWorld());
+        assertTrue(adventure.getItemGoal() == null);
+        assertTrue(adventure.getHelperGoal() == null);
+        assertEquals(0, adventure.getPoints());
     }
 
     @Test
     public void takeTurn() {
-        ad.takeTurn();
-        assertEquals(-1, ad.getPoints());
+        adventure.takeTurn();
+        assertEquals(-1, adventure.getPoints());
     }
 
     @Test
-    public void makeAGamePoints() {
-        ad.makeAGame();
-        assertEquals(0, ad.getPoints());
+    public void givePoints() {
+        adventure.givePoints(10);
+        assertEquals(10, adventure.getPoints());
     }
 
     @Test
     public void makeAGameItemNull() {
-        ad.makeAGame();
-        assertFalse(ad.getItemGoal() == null);
+        adventure.makeAGame();
+        assertFalse(adventure.getHelperGoal() == null);
+        assertFalse(adventure.getItemGoal() == null);
     }
 
     @Test
     public void makeAGameHelperNull() {
-        ad.makeAGame();
-        assertFalse(ad.getItemGoal() == null);
+        adventure.makeAGame();
+        assertFalse(adventure.getItemGoal() == null);
     }
 }

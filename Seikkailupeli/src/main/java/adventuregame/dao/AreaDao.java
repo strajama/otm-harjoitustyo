@@ -32,7 +32,9 @@ public class AreaDao implements Dao<Area, Integer> {
     @Override
     public ArrayList<Area> findAll() throws SQLException {
         ArrayList<Area> areas;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area"); ResultSet rs = stmt.executeQuery()) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area");
+                ResultSet rs = stmt.executeQuery()) {
             areas = new ArrayList<>();
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -57,7 +59,7 @@ public class AreaDao implements Dao<Area, Integer> {
     @Override
     public Area saveOrUpdate(Area object) throws SQLException {
         try (Connection conn = database.getConnection()) {
-            if (this.findIdByName(object.getName()) != null) {;
+            if (this.findIdByName(object.getName()) != null) {
                 return null;
             }
 

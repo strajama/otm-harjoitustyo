@@ -16,12 +16,8 @@ public class ItemTest {
     }
 
     @Test
-    public void getName() {
+    public void getters() {
         assertEquals("testi", item.getName());
-    }
-
-    @Test
-    public void getDescription() {
         assertEquals("toimiiko", item.getDescription());
     }
 
@@ -31,32 +27,23 @@ public class ItemTest {
     }
 
     @Test
-    public void hashi() {
+    public void hashTest() {
         Item n = new Item("testi", "erilainen kuvailu");
+        Item m = new Item("testi1", "eriniminen");
         assertEquals(item.hashCode(), n.hashCode());
+        assertFalse(item.hashCode() == m.hashCode());
     }
 
     @Test
     public void equalsTestSame() {
         Item n = new Item("testi", "erilainen kuvailu");
         assertTrue(item.equals(n));
-    }
-
-    @Test
-    public void equalsTestDifferent1() {
-        Item n = new Item("testi1", "eriniminen");
-        assertFalse(item.equals(n));
-    }
-
-    @Test
-    public void equalsTestDifferent2() {
+        Item m = new Item("testi1", "eriniminen");
+        assertFalse(item.equals(m));
         assertFalse(item.equals("testi"));
-    }
-
-    @Test
-    public void equalsTestDifferent3() {
         assertFalse(item.equals(null));
     }
+
     @Test
     public void isItem() {
         assertTrue(item.isItem());
