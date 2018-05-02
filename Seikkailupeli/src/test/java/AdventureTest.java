@@ -44,45 +44,26 @@ public class AdventureTest {
     }
 
     @Test
-    public void getTimeGoalNone() {
-        assertTrue(ad.getTimeGoal() == 0);
-    }
-
-    @Test
-    public void setTimeGoal() {
-        ad.setTimeGoal(1);
-        assertEquals(1, ad.getTimeGoal());
-    }
-
-    @Test
-    public void setItemGoal() {
-        Item item = new Item("testi", "toimiiko");
-        ad.setItemGoal(item);
-        assertEquals(item, ad.getItemGoal());
-    }
-
-    @Test
     public void takeTurn() {
-        ad.setTimeGoal(2);
         ad.takeTurn();
-        assertEquals(1, ad.getTimeGoal());
+        assertEquals(-1, ad.getPoints());
     }
 
     @Test
-    public void makeAGameTime() {
-        ad.makeAGame(10);
-        assertEquals(10, ad.getTimeGoal());
+    public void makeAGamePoints() {
+        ad.makeAGame();
+        assertEquals(0, ad.getPoints());
     }
 
     @Test
-    public void makeAGameItem() {
-        ad.makeAGame(10);
+    public void makeAGameItemNull() {
+        ad.makeAGame();
         assertFalse(ad.getItemGoal() == null);
     }
 
     @Test
-    public void makeAGameHelper() {
-        ad.makeAGame(10);
+    public void makeAGameHelperNull() {
+        ad.makeAGame();
         assertFalse(ad.getItemGoal() == null);
     }
 }
