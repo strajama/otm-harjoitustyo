@@ -7,6 +7,7 @@ import adventuregame.dao.AreaDao;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
 import adventuregame.dao.MonsterDao;
+import java.sql.SQLException;
 
 /**
  * World-luokka ylläpitää tietoa mitä on missäkin
@@ -25,14 +26,14 @@ public class World {
     private Area home;
 
     /**
-     * Metodi luo uuden maailman ja pelaajan ja sijoittaa alueet, esineet,
-     * apurit ja hirviön ja sijoittaa ne paikoilleen
+     * Metodi luo uuden maailman, sille pelaajan ja sijoittaa alueet, esineet,
+     * apurit ja hirviön ja sijoittaa kaiken paikoilleen
      *
-     * @param areaDao
-     * @param itemDao
-     * @param helperDao
-     * @param monsterdao
-     * @throws Exception
+     * @param areaDao - tietokannassa olevat alueet
+     * @param itemDao - tietokannassa olevat esineet
+     * @param helperDao - tietokannassa olevat apurit
+     * @param monsterdao - tietokannassa olevat hirviöt
+     * @throws Exception - tietokannan käyttämisestä voi tulla virheilmoitus
      */
     public World(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
         this.random = new Random();
@@ -77,7 +78,7 @@ public class World {
      * Metodi hakee tietokannassa olevat alueet ja arpoo niille naapurit valmiin
      * pohjan mukaisesti
      *
-     * @param areaDao
+     * @param areaDao - tietokannassa olevat alueet
      * @throws Exception
      */
     private void createAreas(AreaDao areaDao) throws Exception {
@@ -103,7 +104,7 @@ public class World {
      * Metodi hakee tietokannassa olevat esineet ja arpoo niille sijainnin
      * alueella, jossa ei vielä ole muuta Finding-oliota ja joka ei ole koti
      *
-     * @param itemDao
+     * @param itemDao - tietokannassa olevat esineet
      * @throws Exception
      */
     private void createItems(ItemDao itemDao) throws Exception {
@@ -123,7 +124,7 @@ public class World {
      * alueella, jossa ei vielä ole muuta Finding-oliota ja joka ei ole koti
      * sekä antaa apurille tavaran, jota hän toivoo
      *
-     * @param helperDao
+     * @param helperDao - tietokannassa olevat apurit
      * @throws Exception
      */
     private void createHelpers(HelperDao helperDao) throws Exception {
@@ -143,7 +144,7 @@ public class World {
      * Metodi hakee tietokannassa olevat hirviöt, arpoo niistä yhden ja
      * sijoittaa sen arvotulle alueelle, joka ei ole koti
      *
-     * @param monsterDao
+     * @param monsterDao - tietokannassa olevat hirviöt
      * @throws Exception
      */
     private void createMonsters(MonsterDao monsterDao) throws Exception {
@@ -155,6 +156,9 @@ public class World {
         monster.setArea(area);
     }
 
+    /**
+     * Metodi luo uuden pelaajan ja sijoittaa hänen alueekseen kodin.
+     */
     private void createPlayer() {
         this.player = new Player();
         player.setArea(home);
@@ -163,7 +167,7 @@ public class World {
     /**
      * Metodi palauttaa listalta arvotun alueen
      *
-     * @return - alue
+     * @return - Area
      */
     private Area findRandomPlace() {
         int r = random.nextInt(areas.size());

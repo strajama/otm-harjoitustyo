@@ -1,8 +1,11 @@
 package adventuregame.domain;
 
 import java.util.Objects;
+
 /**
- * Luokat Item ja Helper toteuttavat abstraktin luokan Finding
+ * Finding-luokka on abstrakti luokka, jonka tarkoitus on helpottaa vain yhden
+ * asian laittamista alueelle.
+ *
  * @author strajama
  */
 public abstract class Finding {
@@ -10,14 +13,22 @@ public abstract class Finding {
     private String name;
     private String description;
 
+    /**
+     * Metodi luo uuden Finding-olion
+     *
+     * @param name - nimi
+     * @param description - kuvaus
+     */
     public Finding(String name, String description) {
         this.name = name;
         this.description = description;
     }
-/**
- * Metodi kertoo onko kyseessä Item-olio ja se toteutetaan luokissa
- * @return palauttaa boolean-arvon
- */
+
+    /**
+     * Metodi kertoo onko kyseessä Item-olio ja se toteutetaan luokissa
+     *
+     * @return palauttaa boolean-arvon
+     */
     public abstract boolean isItem();
 
     public String getName() {

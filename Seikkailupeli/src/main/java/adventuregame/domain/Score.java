@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adventuregame.domain;
 
 /**
+ * Score-luokan avulla tallennetaan pistetietoja muistiin
  *
  * @author strajama
  */
@@ -14,6 +10,12 @@ public class Score {
     private String name;
     private int points;
 
+    /**
+     * Metodi luo uuden Score-olion
+     *
+     * @param name - nimi
+     * @param points - kerätyt pisteet
+     */
     public Score(String name, int points) {
         this.name = name;
         this.points = points;

@@ -18,9 +18,9 @@ public class Adventure {
     private Random random;
 
     /**
-     * Metodi luo uuden Adventure-olion
+     * Metodi luo uuden Adventure-olion ja asettaa aluksi 0 pistettä.
      *
-     * @param world - maailma, jossa seikkailu tapahtuu
+     * @param world - World-olio, jossa seikkailu tapahtuu
      */
     public Adventure(World world) {
         this.world = world;
@@ -49,10 +49,7 @@ public class Adventure {
     }
 
     /**
-     * Metodi aloittaa uuden pelin, jolla on arvottu esine- ja apuri-tavoitteet
-     * ja peliaika, joka annetaan parametrina
-     *
-     * @param time pelivuorojen määrä
+     * Metodi arpoo uudet Item- ja Helper-tavoitteet pelille.
      */
     public void makeAGame() {
         this.randomItemGoal();
@@ -60,14 +57,14 @@ public class Adventure {
     }
 
     /**
-     * Metodi vähentää pisteitä yhdellä
+     * Metodi vähentää pisteitä yhdellä.
      */
     public void takeTurn() {
         points--;
     }
 
     /**
-     * Arpoo esineen, joka pelissä on tavoitteena löytää
+     * Metodi arpoo esineen, joka pelissä on tavoitteena löytää.
      */
     private void randomItemGoal() {
         ArrayList<Item> items = world.getItems();
@@ -76,7 +73,7 @@ public class Adventure {
     }
 
     /**
-     * Metodi arpoo apurin, jonka kanssa pelissä on tavoitteena puhua
+     * Metodi arpoo apurin, jonka kanssa pelissä on tavoitteena puhua.
      */
     private void randomHelperGoal() {
         ArrayList<Helper> helpers = world.getHelpers();

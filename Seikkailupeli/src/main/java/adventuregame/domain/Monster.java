@@ -13,10 +13,10 @@ public class Monster {
     private Area area;
 
     /**
-     * Luo hirviön
+     * Metodi luo uuden Monster-olion ja asettaa tämän lifeksi arvon 5
      *
      * @param name - hirviön nimi
-     * @param slogan - hirviön slogan, jonka sanoo nähdessään pelaajan
+     * @param slogan - hirviön slogan, jonka se sanoo nähdessään pelaajan
      */
     public Monster(String name, String slogan) {
         this.name = name;
@@ -49,11 +49,23 @@ public class Monster {
         return name.toUpperCase() + " huutaa " + slogan.toUpperCase() + "!";
     }
 
+    /**
+     * Metodi vähentää hirviön elämäpisteitä
+     *
+     * @param hit - pistemäärä, joka vähennetään
+     * @return boolean - tieto siitä tappoiko isku hirviön
+     */
     public boolean hitMonster(int hit) {
         life = life - hit;
         return isDead();
     }
 
+    /**
+     * Metodi kertoo onko hirviö kuollut
+     *
+     * @return boolean - tieto siitä onko hirviö elossa (false) vai kuollut
+     * (true)
+     */
     public boolean isDead() {
         return life <= 0;
     }

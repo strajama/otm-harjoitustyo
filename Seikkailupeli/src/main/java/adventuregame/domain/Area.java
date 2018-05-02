@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Luokka Area ylläpitää tietoa siitä mitä eri alueilla on
+ * Area-luokka ylläpitää tietoa siitä mitä eri alueilla on.
  *
  * @author strajama
  */
@@ -22,7 +22,8 @@ public class Area {
     private Monster monster;
 
     /**
-     * Metodi luo uuden Area-olion
+     * Metodi luo uuden Area-olion ja asettaa sille joka ilmansuuntaan
+     * naapuriksi null-arvon.
      *
      * @param name - nimi
      * @param description - kuvailu
@@ -64,9 +65,10 @@ public class Area {
     }
 
     /**
-     * Kertoo käyttäjälle mitä hän alueella näkee
+     * Kertoo käyttäjälle mitä hän alueella näkee. Tätä käytetään
+     * käyttöliittymän päivittämisessä.
      *
-     * @return - alueen sisällön kuvailu
+     * @return - String (alueen sisällön kuvailu)
      */
     public String show() {
         if (!findings.isEmpty()) {
@@ -86,9 +88,10 @@ public class Area {
     }
 
     /**
-     * Metodi kertoo käyttäjälle onko alueella hirviötä
+     * Metodi kertoo käyttäjälle onko alueella hirviötä. Tätä käytetään
+     * käyttöliittymän päivittämisessä.
      *
-     * @return - kuvailu hirviöistä
+     * @return - String (kuvailu hirviöistä)
      */
     public String showMonster() {
         if (monster == null) {
@@ -98,7 +101,7 @@ public class Area {
     }
 
     /**
-     * Metodi laittaa alueelle hirviön, jonka saa
+     * Metodi laittaa alueelle hirviön, jonka saa parametrina
      *
      * @param monster - parametrina annetaan hirviö
      */
@@ -126,7 +129,7 @@ public class Area {
      * Metodi palauttaa Item-olion, jos sellainen on alueella ja ottaa sen
      * alueelta pois
      *
-     * @return alueella oleva esine tai null
+     * @return Item tai null
      */
     public Item giveSomeItem() {
         if (!findings.isEmpty()) {
@@ -147,8 +150,8 @@ public class Area {
      * Metodi palauttaa Helper-olion, jos sellainen on alueella ja pelaaja ei
      * ole puhunut hänen kanssaan.
      *
-     * @param pelaaja, joka apurin kanssa haluaa puhua
-     * @return alueella oleva apuri tai null
+     * @param player joka apurin kanssa haluaa puhua
+     * @return Helper, jonka kanssa ei ole puhuttu tai null
      */
     public Helper speakWithNewHelper(Player player) {
         if (!findings.isEmpty()) {
@@ -163,6 +166,11 @@ public class Area {
         return null;
     }
 
+    /**
+     * Metodi palauttaa Helper-olion, jos sellainen on alueella
+     *
+     * @return Helper tai null
+     */
     public Helper findHelper() {
         if (!findings.isEmpty()) {
             Iterator<Finding> it = findings.values().iterator();
@@ -175,7 +183,11 @@ public class Area {
         }
         return null;
     }
-
+/**
+ * Metodi poistaa alueelta parametrina saatavan apurin.
+ * 
+ * @param helper - Helper-olio
+ */
     public void removeHelper(Helper helper) {
         if (!findings.isEmpty()) {
             if (findings.containsKey(helper.getName())) {
@@ -211,7 +223,7 @@ public class Area {
     /**
      * Metodi palauttaa alueen satunnaisen naapurin
      *
-     * @return naapurissa oleva Area tai null
+     * @return Area naapurissa tai null
      */
     public Area randomNeighbor() {
         Collections.shuffle(directions);

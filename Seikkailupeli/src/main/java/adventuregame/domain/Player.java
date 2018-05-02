@@ -15,7 +15,8 @@ public class Player {
     private HashMap<String, Helper> helpers;
 
     /**
-     * Metodi luo uuden pelaajan
+     * Metodi luo uuden pelaajan, jolla on tyhjä reppu eikä ole puhunut
+     * kenenkään kanssa
      */
     public Player() {
         this.items = new HashMap<>();
@@ -50,7 +51,7 @@ public class Player {
         Iterator<String> itemirator = items.keySet().iterator();
         StringBuilder builder = new StringBuilder();
         builder.append("Repussasi on jotain ");
-/*        while (itemirator.hasNext()) {
+        /*        while (itemirator.hasNext()) {
             builder.append(itemirator.next().toUpperCase());
             if (itemirator.hasNext()) {
                 builder.append(", ");
@@ -59,29 +60,40 @@ public class Player {
         builder.append(".");*/
         return builder.toString();
     }
-/**
- * Metodi laittaa parametrina annetun esineen pelaajan reppuun
- * @param item - esine
- */
+
+    /**
+     * Metodi laittaa parametrina annetun esineen pelaajan reppuun
+     *
+     * @param item - esine
+     */
     public void putInBag(Item item) {
         items.put(item.getName(), item);
     }
-    
+
+    /**
+     * Metodi poistaa esineen repusta
+     *
+     * @param item - esine, joka juuri poistettiin
+     */
     public void removeFromBag(Item item) {
         items.remove(item.getName());
     }
-/**
- * Metodi kertoo onko pelaaja jo puhunut apurin kanssa
- * @param helper - apuri, jonka kanssa halutaan puhua
- * @return - true jos pelaaja on puhunut apurin kanssa aiemmin, muuten false
- */
+
+    /**
+     * Metodi kertoo onko pelaaja jo puhunut apurin kanssa
+     *
+     * @param helper - apuri, jonka kanssa halutaan puhua
+     * @return - true jos pelaaja on puhunut apurin kanssa aiemmin, muuten false
+     */
     public boolean spokenWith(String helper) {
         return helpers.containsKey(helper);
     }
-/**
- * Metodi kirjaa ylös, että pelaaja puhuu apurin kanssa
- * @param helper - apuri, jonka kanssa puhutaan
- */
+
+    /**
+     * Metodi kirjaa ylös, että pelaaja puhuu apurin kanssa
+     *
+     * @param helper - apuri, jonka kanssa puhutaan
+     */
     public void speakWith(Helper helper) {
         helpers.put(helper.getName(), helper);
     }
