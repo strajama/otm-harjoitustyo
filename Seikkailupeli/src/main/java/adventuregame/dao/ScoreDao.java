@@ -97,7 +97,7 @@ public class ScoreDao implements Dao<Score, Integer> {
 
     public ArrayList<Score> bestScores() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score ORDER BY points LIMIT 5");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score ORDER BY points DESC LIMIT 5");
         ResultSet rs = stmt.executeQuery();
 
         ArrayList<Score> scores = new ArrayList<>();

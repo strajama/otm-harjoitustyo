@@ -38,6 +38,10 @@ import adventuregame.domain.Score;
 import adventuregame.domain.World;
 import java.util.Iterator;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class SeikkailuFXMain extends Application {
 
@@ -60,12 +64,15 @@ public class SeikkailuFXMain extends Application {
     private GridPane doGrid;
     private GridPane moveGrid;
 
+    private VBox scoreVBox;
+    private TableView scoreTable;
+
     private GridPane createGrid;
     private TextField name;
     private TextField des;
     private Label label;
 
-    private VBox right;
+    private VBox center;
 //playscenen muutettavat Labelit
     private Label areaLabel;
     private Label descriptionLabel;
@@ -127,6 +134,7 @@ public class SeikkailuFXMain extends Application {
         createMoveButtons();
         createDoButtons();
         createScoreSave();
+//        createScoreTable();
 
         //paluu alkuun
         Button returnLogin = new Button("PALUU VALIKKOON");
@@ -167,12 +175,14 @@ public class SeikkailuFXMain extends Application {
         remainingTimeLabel.setText("Sinulla on pisteitä " + adventure.getPoints() + ".");
     }
 
-    private void playSceneBorderPaneCreate() {
+    private void playSceneBorderPaneCreate() throws SQLException {
         playBp = new BorderPane();
         playBp.setPadding(new Insets(10, 10, 10, 10));
         playBp.setLeft(playLeft());
         playBp.setBottom(playDown());
-        playBp.setRight(playRight());
+        playBp.setCenter(playRight());
+        createScoreTable();
+        playBp.setRight(updateScoreTable());
     }
 
     /**
@@ -226,13 +236,13 @@ public class SeikkailuFXMain extends Application {
     }
 
     private VBox playRight() {
-        right = new VBox();
-        right.setSpacing(10);
-        right.setAlignment(Pos.TOP_LEFT);
-        right.setPadding(new Insets(20, 20, 20, 20));
+        center = new VBox();
+        center.setSpacing(10);
+        center.setAlignment(Pos.TOP_LEFT);
+        center.setPadding(new Insets(20, 20, 20, 20));
         bagLabel = new Label("Reppusi on tyhjä.");
-        right.getChildren().add(bagLabel);
-        return right;
+        center.getChildren().add(bagLabel);
+        return center;
     }
 
     /**
@@ -312,7 +322,7 @@ public class SeikkailuFXMain extends Application {
             actionShow();
             if (item != null) {
                 doingLabel.setText("Poimit esineen " + item + ".");
-                right.getChildren().add(new Label(item.getName().toUpperCase()));
+                center.getChildren().add(new Label(item.getName().toUpperCase()));
             } else {
                 doingLabel.setText("Täällä ei ole poimittavaa.");
             }
@@ -339,11 +349,11 @@ public class SeikkailuFXMain extends Application {
             actionShow();
             if (item != null) {
                 doingLabel.setText("Reppusi on kevyempi, kun sieltä puuttuu " + item.getName() + ".");
-                right.getChildren().clear();
-                right.getChildren().add(bagLabel);
+                center.getChildren().clear();
+                center.getChildren().add(bagLabel);
                 Iterator<String> it = world.getPlayer().getItems().keySet().iterator();
                 while (it.hasNext()) {
-                    right.getChildren().add(new Label(it.next().toUpperCase()));
+                    center.getChildren().add(new Label(it.next().toUpperCase()));
                 }
             } else {
                 doingLabel.setText("Sinulla ei ole mitään sopivaa annettavaa.");
@@ -372,6 +382,7 @@ public class SeikkailuFXMain extends Application {
         TextField playerName = new TextField();
         playerName.setPromptText("Anna uusi nimi.");
         doGrid.add(playerName, 2, 0);
+
         Button saveScore = new Button("TALLENNA PISTEET");
         saveScore.setOnAction((event) -> {
             if (!playerName.getText().equals("")) {
@@ -383,6 +394,41 @@ public class SeikkailuFXMain extends Application {
             }
         });
         doGrid.add(saveScore, 2, 1);
+    }
+
+    private void createScoreTable() throws SQLException {
+
+        Label label = new Label("Parhaat pisteet");
+        scoreTable = new TableView();
+        TableColumn name = new TableColumn("nimi");
+        TableColumn points = new TableColumn("pisteet");
+        scoreTable.getColumns().addAll(name, points);
+
+        name.setCellValueFactory(new PropertyValueFactory<Score, String>("name"));
+        points.setCellValueFactory(new PropertyValueFactory<Score, Integer>("points"));
+
+        scoreVBox = new VBox();
+        scoreVBox.setSpacing(5);
+        scoreVBox.setPadding(new Insets(20, 20, 20, 20));
+        scoreVBox.getChildren().addAll(label, scoreTable);
+
+        updateScoreTable();
+
+//        center.getChildren().add(scoreVBox);
+    }
+
+    private VBox updateScoreTable() throws SQLException {
+
+        ArrayList<Score> list = scoreDao.bestScores();
+
+        ObservableList<Score> data = FXCollections.observableArrayList(list);
+        scoreTable.setItems(data);
+
+        for (Score s : list) {
+
+        }
+
+        return scoreVBox;
     }
 
     private void createCreateScene() {

@@ -14,9 +14,9 @@ public class Score {
     private String name;
     private int points;
 
-    public Score(String name, int score) {
+    public Score(String name, int points) {
         this.name = name;
-        this.points = score;
+        this.points = points;
     }
 
     public String getName() {

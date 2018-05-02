@@ -6,7 +6,7 @@ package adventuregame.domain;
  * @author strajama
  */
 public class Action {
-    
+
     private Adventure adventure;
     private Player player;
 
@@ -84,7 +84,7 @@ public class Action {
         }
         return null;
     }
-    
+
     public Item give() {
         if (thereIsFinding()) {
             Helper helper = player.getArea().findHelper();
@@ -100,7 +100,7 @@ public class Action {
         }
         return null;
     }
-    
+
     public Monster hit() {
         if (player.getArea().getMonster() != null) {
             Monster monster = player.getArea().getMonster();
@@ -125,16 +125,18 @@ public class Action {
      * Metodi, joka liikuttaa hirviötä, jos pelaaja ei ole samassa ruudussa
      */
     private void moveMonster() {
-        if (adventure.getWorld().getMonster().getArea() != adventure.getWorld().getPlayer().getArea()) {
-            Area next = adventure.getWorld().getMonster().getArea().randomNeighbor();
-            adventure.getWorld().getMonster().getArea().removeMonster();
-            adventure.getWorld().getMonster().setArea(next);
-            next.putMonster(adventure.getWorld().getMonster());
+        if (!adventure.getWorld().getMonster().isDead()) {
+            if (adventure.getWorld().getMonster().getArea() != adventure.getWorld().getPlayer().getArea()) {
+                Area next = adventure.getWorld().getMonster().getArea().randomNeighbor();
+                adventure.getWorld().getMonster().getArea().removeMonster();
+                adventure.getWorld().getMonster().setArea(next);
+                next.putMonster(adventure.getWorld().getMonster());
+            }
         }
     }
-    
+
     private boolean thereIsFinding() {
         return !adventure.getWorld().getPlayer().getArea().getFindings().isEmpty();
     }
-    
+
 }
