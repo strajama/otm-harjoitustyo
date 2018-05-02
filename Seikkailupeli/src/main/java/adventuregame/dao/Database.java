@@ -24,25 +24,22 @@ public class Database {
         // "try with resources" sulkee resurssin automaattisesti lopuksi
         try (Connection conn = getConnection()) {
             Statement st = conn.createStatement();
-            System.out.println("otetaan yhteyttä");
             // suoritetaan komennot
             for (String d : createTables) {
-                System.out.println("Running command >> " + d);
                 st.executeUpdate(d);
             }
         } catch (Throwable t) {
-            // jos tietokantataulu on jo olemassa, ei komentoja suoriteta
-            System.out.println("Error >> " + t.getMessage());
         }
     }
 
     private ArrayList<String> sqlitesTables() {
         ArrayList<String> list = new ArrayList<>();
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        list.add("CREATE TABLE IF NOT EXISTS Area (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))"); // IF NOT EXISTS 
-        list.add("CREATE TABLE IF NOT EXISTS Item (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
-        list.add("CREATE TABLE IF NOT EXISTS Helper (id integer PRIMARY KEY, name varchar(50), description varchar(500), picture varchar(200))");
-        list.add("CREATE TABLE IF NOT EXISTS Monster (id integer PRIMARY KEY, name varchar(50), description varchar (500), picture varchar(200))");
+        list.add("CREATE TABLE IF NOT EXISTS Area (id integer PRIMARY KEY, name varchar(20), description varchar(200))"); 
+        list.add("CREATE TABLE IF NOT EXISTS Item (id integer PRIMARY KEY, name varchar(20), description varchar (200))");
+        list.add("CREATE TABLE IF NOT EXISTS Helper (id integer PRIMARY KEY, name varchar(20), description varchar(200))");
+        list.add("CREATE TABLE IF NOT EXISTS Monster (id integer PRIMARY KEY, name varchar(20), description varchar (200))");
+        list.add("CREATE TABLE IF NOT EXISTS Score (id integer PRIMARY KEY, name varchar(10), points integer)");
 
         return list;
     }

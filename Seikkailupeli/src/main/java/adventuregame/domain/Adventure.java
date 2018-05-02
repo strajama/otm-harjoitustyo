@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja niiden
- * toteutumisesta
+ * Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja
+ * niiden toteutumisesta
+ *
  * @author strajama
  */
 public class Adventure {
@@ -13,54 +14,37 @@ public class Adventure {
     private World world;
     private Item itemGoal;
     private Helper helperGoal;
-    private int timeGoal;
+    private int points;
     private Random random;
-    private boolean over;
-/**
- * Metodi luo uuden Adventure-olion
- * 
- * @param world - maailma, jossa seikkailu tapahtuu
- */
+
+    /**
+     * Metodi luo uuden Adventure-olion
+     *
+     * @param world - maailma, jossa seikkailu tapahtuu
+     */
     public Adventure(World world) {
         this.world = world;
         this.random = new Random();
-        this.over = false;
     }
-    
+
     public World getWorld() {
         return world;
-    }
-
-    public boolean getOver() {
-        return over;
-    }
-
-    public void setOver(boolean over) {
-        this.over = over;
     }
 
     public Item getItemGoal() {
         return itemGoal;
     }
 
-    public void setItemGoal(Item item) {
-        this.itemGoal = item;
-    }
-
-    public int getTimeGoal() {
-        return timeGoal;
-    }
-
-    public void setTimeGoal(int t) {
-        this.timeGoal = t;
-    }
-
     public Helper getHelperGoal() {
         return helperGoal;
     }
 
-    public void setHelperGoal(Helper helperGoal) {
-        this.helperGoal = helperGoal;
+    public int getPoints() {
+        return points;
+    }
+
+    public void givePoints(int points) {
+        this.points += points;
     }
 
     /**
@@ -69,10 +53,9 @@ public class Adventure {
      *
      * @param time pelivuorojen määrä
      */
-    public void makeAGame(int time) {
+    public void makeAGame() {
         this.randomItemGoal();
         this.randomHelperGoal();
-        this.setTimeGoal(time);
     }
 
     /**
@@ -98,15 +81,11 @@ public class Adventure {
     }
 
     /**
-     * Metodi vähentää tavoiteaikaa yhdellä
+     * Metodi vähentää pisteitä yhdellä
      */
     public void takeTurn() {
-        if (!over) {
-            timeGoal--;
-            if (timeGoal <= 0) {
-                over = true;
-            }
-        }
+        points--;
+
     }
 
 }

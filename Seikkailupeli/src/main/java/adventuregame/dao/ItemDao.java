@@ -12,21 +12,22 @@ public class ItemDao implements Dao<Item, Integer> {
 
     private Database database;
 
-    public ItemDao(Database database) {
+    public ItemDao(Database database) throws SQLException {
         this.database = database;
         ArrayList<String> list = sqlites();
-        try (Connection conn = database.getConnection()) {
-            Statement test = conn.createStatement();
-            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
-            if (!rs.next()) {
-                Statement st = conn.createStatement();
-                for (String d : list) {
-                    st.executeUpdate(d);
-                }
+        Connection conn = database.getConnection();
+        Statement test = conn.createStatement();
+        ResultSet rs = test.executeQuery("SELECT * FROM Item");
+        if (!rs.next()) {
+            Statement st = conn.createStatement();
+            for (String d : list) {
+                st.executeUpdate(d);
             }
-        } catch (Throwable t) {
-            System.out.println("Error >> " + t.getMessage());
         }
+        rs.close();
+        test.close();
+        conn.close();
+
     }
 
     @Override
@@ -64,18 +65,19 @@ public class ItemDao implements Dao<Item, Integer> {
 
     @Override
     public Item saveOrUpdate(Item object) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            if (this.findIdByName(object.getName()) != null) {
-                return null;
-            }
+        Connection conn = database.getConnection();
 
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Item (name, description) VALUES(?, ?)");
-            stmt.setString(1, object.getName().toLowerCase());
-            stmt.setString(2, object.getDescription());
-            stmt.executeUpdate();
-
-            stmt.close();
+        if (this.findIdByName(object.getName()) != null) {
+            return null;
         }
+
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Item (name, description) VALUES(?, ?)");
+        stmt.setString(1, object.getName().toLowerCase());
+        stmt.setString(2, object.getDescription());
+        stmt.executeUpdate();
+
+        stmt.close();
+        conn.close();
 
         return object;
     }

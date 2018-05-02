@@ -1,6 +1,8 @@
 package adventuregame.domain;
+
 /**
  * Monster-luokka ylläpitää hirviön tietoja
+ *
  * @author strajama
  */
 public class Monster {
@@ -9,11 +11,13 @@ public class Monster {
     private String slogan;
     private int life;
     private Area area;
-/**
- * Luo hirviön
- * @param name - hirviön nimi
- * @param slogan - hirviön slogan, jonka sanoo nähdessään pelaajan
- */
+
+    /**
+     * Luo hirviön
+     *
+     * @param name - hirviön nimi
+     * @param slogan - hirviön slogan, jonka sanoo nähdessään pelaajan
+     */
     public Monster(String name, String slogan) {
         this.name = name;
         this.slogan = slogan;
@@ -43,6 +47,15 @@ public class Monster {
     @Override
     public String toString() {
         return name.toUpperCase() + " huutaa " + slogan.toUpperCase() + "!";
+    }
+
+    public boolean hitMonster(int hit) {
+        life = life - hit;
+        return isDead();
+    }
+
+    public boolean isDead() {
+        return life <= 0;
     }
 
 }

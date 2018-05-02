@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+
 /**
  * Luokka Area ylläpitää tietoa siitä mitä eri alueilla on
+ *
  * @author strajama
  */
 public class Area {
@@ -16,13 +18,15 @@ public class Area {
     private String description;
     private HashMap<String, Finding> findings;
     private HashMap<Direction, Area> neighbors;
-    ArrayList<Direction> directions;
+    private ArrayList<Direction> directions;
     private Monster monster;
-/**
- * Metodi luo uuden Area-olion
- * @param name - nimi
- * @param description - kuvailu
- */
+
+    /**
+     * Metodi luo uuden Area-olion
+     *
+     * @param name - nimi
+     * @param description - kuvailu
+     */
     public Area(String name, String description) {
         this.name = name;
         this.description = description;
@@ -47,7 +51,7 @@ public class Area {
         return description;
     }
 
-    public Map<String, Finding> getFindings() {
+    public HashMap<String, Finding> getFindings() {
         return findings;
     }
 
@@ -58,10 +62,16 @@ public class Area {
     public HashMap<Direction, Area> getNeighbors() {
         return neighbors;
     }
-/**
- * Kertoo käyttäjälle mitä hän alueella näkee
- * @return - alueen sisällön kuvailu
- */
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    /**
+     * Kertoo käyttäjälle mitä hän alueella näkee
+     *
+     * @return - alueen sisällön kuvailu
+     */
     public String show() {
         if (!findings.isEmpty()) {
             Iterator<String> itemiterator = findings.keySet().iterator();
@@ -78,40 +88,50 @@ public class Area {
         }
         return "Täällä ei ole mitään mielenkiintoista.";
     }
-/**
- * Metodi kertoo käyttäjälle onko alueella hirviötä
- * @return - kuvailu hirviöistä
- */
+
+    /**
+     * Metodi kertoo käyttäjälle onko alueella hirviötä
+     *
+     * @return - kuvailu hirviöistä
+     */
     public String showMonster() {
         if (monster == null) {
             return "Täällä ei ole hirviöitä.";
         }
-        return "Edessäsi on hirvittävä " + monster.getName() + ". Se sanoo: '" + monster.getSlogan() + "'.";
+        return "Edessäsi on hirvittävä " + monster.getName().toUpperCase() + ". Se sanoo: '" + monster.getSlogan() + "'.";
     }
-/**
- * Metodi laittaa alueelle hirviön, jonka saa 
- * @param monster - parametrina annetaan hirviö
- */
+
+    /**
+     * Metodi laittaa alueelle hirviön, jonka saa
+     *
+     * @param monster - parametrina annetaan hirviö
+     */
     public void putMonster(Monster monster) {
         this.monster = monster;
     }
-/**
- * Metodi poistaa alueella olevan hirviön
- */
+
+    /**
+     * Metodi poistaa alueella olevan hirviön
+     */
     public void removeMonster() {
         this.monster = null;
     }
-/**
- * Metodi laittaa alueelle abstraktin luokan Finding toteuttavan olion
- * @param finding - parametrina saatava, alueelle laitettava olio
- */
+
+    /**
+     * Metodi laittaa alueelle abstraktin luokan Finding toteuttavan olion
+     *
+     * @param finding - parametrina saatava, alueelle laitettava olio
+     */
     public void putFinding(Finding finding) {
         findings.put(finding.getName(), finding);
     }
-/**
- * Metodi palauttaa Item-olion, jos sellainen on alueella ja ottaa sen alueelta pois
- * @return alueella oleva esine tai null
- */
+
+    /**
+     * Metodi palauttaa Item-olion, jos sellainen on alueella ja ottaa sen
+     * alueelta pois
+     *
+     * @return alueella oleva esine tai null
+     */
     public Item giveSomeItem() {
         if (!findings.isEmpty()) {
             Iterator<String> it = findings.keySet().iterator();
@@ -126,12 +146,14 @@ public class Area {
         }
         return null;
     }
-/**
- * Metodi palauttaa Helper-olion, jos sellainen on alueella ja pelaaja ei ole puhunut
- * hänen kanssaan.
- * @param pelaaja, joka apurin kanssa haluaa puhua
- * @return alueella oleva apuri tai null
- */
+
+    /**
+     * Metodi palauttaa Helper-olion, jos sellainen on alueella ja pelaaja ei
+     * ole puhunut hänen kanssaan.
+     *
+     * @param pelaaja, joka apurin kanssa haluaa puhua
+     * @return alueella oleva apuri tai null
+     */
     public Helper speakWithNewHelper(Player player) {
         if (!findings.isEmpty()) {
             Iterator<String> it = findings.keySet().iterator();
@@ -144,7 +166,7 @@ public class Area {
         }
         return null;
     }
-    
+
     public Helper findHelper() {
         if (!findings.isEmpty()) {
             Iterator<Finding> it = findings.values().iterator();
@@ -157,7 +179,7 @@ public class Area {
         }
         return null;
     }
-    
+
     public void removeHelper(Helper helper) {
         if (!findings.isEmpty()) {
             if (findings.containsKey(helper.getName())) {
@@ -165,13 +187,16 @@ public class Area {
             }
         }
     }
-/**
- * Metodi sijoittaa alueen naapuri-mappiin parametrina annetut alueet naapureiksi
- * @param n pohjoinen naapuri tai null
- * @param e itäinen naapuri tai null
- * @param w läntinen naapuri tai null
- * @param s eteläinen naapuri tai null
- */
+
+    /**
+     * Metodi sijoittaa alueen naapuri-mappiin parametrina annetut alueet
+     * naapureiksi
+     *
+     * @param n pohjoinen naapuri tai null
+     * @param e itäinen naapuri tai null
+     * @param w läntinen naapuri tai null
+     * @param s eteläinen naapuri tai null
+     */
     public void putNeighbors(Area n, Area e, Area w, Area s) {
         if (n != null) {
             neighbors.put(Direction.NORTH, n);
@@ -186,10 +211,12 @@ public class Area {
             neighbors.put(Direction.SOUTH, s);
         }
     }
-/**
- * Metodi palauttaa alueen satunnaisen naapurin
- * @return naapurissa oleva Area tai null
- */
+
+    /**
+     * Metodi palauttaa alueen satunnaisen naapurin
+     *
+     * @return naapurissa oleva Area tai null
+     */
     public Area randomNeighbor() {
         Collections.shuffle(directions);
         for (Direction a : directions) {

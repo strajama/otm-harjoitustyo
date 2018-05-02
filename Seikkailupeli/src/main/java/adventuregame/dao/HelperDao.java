@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import adventuregame.domain.Helper;
 import adventuregame.domain.Item;
 
-
 public class HelperDao implements Dao<Helper, Integer> {
 
     private Database database;
@@ -71,18 +70,18 @@ public class HelperDao implements Dao<Helper, Integer> {
 
     @Override
     public Helper saveOrUpdate(Helper object) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            if (this.findIdByName(object.getName()) != null) {
-                return null;
-            }
-
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Helper (name, description) VALUES(?, ?)");
-            stmt.setString(1, object.getName().toLowerCase());
-            stmt.setString(2, object.getDescription());
-            stmt.executeUpdate();
-
-            stmt.close();
+        Connection conn = database.getConnection();
+        if (this.findIdByName(object.getName()) != null) {
+            return null;
         }
+
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Helper (name, description) VALUES(?, ?)");
+        stmt.setString(1, object.getName().toLowerCase());
+        stmt.setString(2, object.getDescription());
+        stmt.executeUpdate();
+
+        stmt.close();
+        conn.close();
 
         return object;
     }

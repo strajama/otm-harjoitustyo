@@ -6,7 +6,7 @@ package adventuregame.domain;
  * @author strajama
  */
 public class Action {
-
+    
     private Adventure adventure;
     private Player player;
 
@@ -51,7 +51,11 @@ public class Action {
             if (item != null) {
                 player.putInBag(item);
                 adventure.takeTurn();
-                moveMonster();
+                if (item.equals(adventure.getItemGoal())) {
+                    adventure.givePoints(10);
+                } else {
+                    adventure.givePoints(5);
+                }
                 return item;
             }
         }
@@ -70,7 +74,11 @@ public class Action {
             if (helper != null) {
                 player.speakWith(helper);
                 adventure.takeTurn();
-                moveMonster();
+                if (helper.equals(adventure.getHelperGoal())) {
+                    adventure.givePoints(10);
+                } else {
+                    adventure.givePoints(5);
+                }
                 return helper;
             }
         }
@@ -84,15 +92,38 @@ public class Action {
                 if (player.getItems().containsKey(helper.getItem().getName())) {
                     player.removeFromBag(helper.getItem());
                     player.getArea().removeHelper(helper);
+                    adventure.takeTurn();
+                    adventure.givePoints(10);
                     return helper.getItem();
                 }
             }
         }
         return null;
     }
-/**
- * Metodi, joka liikuttaa hirviötä, jos pelaaja ei ole samassa ruudussa
- */
+    
+    public Monster hit() {
+        if (player.getArea().getMonster() != null) {
+            Monster monster = player.getArea().getMonster();
+            if (player.getItems().isEmpty()) {
+                monster.hitMonster(1);
+            } else {
+                monster.hitMonster(2);
+            }
+            if (monster.isDead()) {
+                monster.getArea().removeMonster();
+            }
+            adventure.takeTurn();
+            if (monster.isDead()) {
+                adventure.givePoints(20);
+            }
+            return monster;
+        }
+        return null;
+    }
+
+    /**
+     * Metodi, joka liikuttaa hirviötä, jos pelaaja ei ole samassa ruudussa
+     */
     private void moveMonster() {
         if (adventure.getWorld().getMonster().getArea() != adventure.getWorld().getPlayer().getArea()) {
             Area next = adventure.getWorld().getMonster().getArea().randomNeighbor();
@@ -105,6 +136,5 @@ public class Action {
     private boolean thereIsFinding() {
         return !adventure.getWorld().getPlayer().getArea().getFindings().isEmpty();
     }
-    
     
 }

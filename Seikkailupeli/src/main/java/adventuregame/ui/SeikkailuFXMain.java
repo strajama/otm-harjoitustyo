@@ -27,14 +27,17 @@ import adventuregame.dao.Database;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
 import adventuregame.dao.MonsterDao;
+import adventuregame.dao.ScoreDao;
 import adventuregame.domain.Action;
 import adventuregame.domain.Adventure;
 import adventuregame.domain.Direction;
 import adventuregame.domain.Helper;
 import adventuregame.domain.Item;
 import adventuregame.domain.Monster;
+import adventuregame.domain.Score;
 import adventuregame.domain.World;
 import java.util.Iterator;
+import javafx.application.Platform;
 
 public class SeikkailuFXMain extends Application {
 
@@ -46,6 +49,7 @@ public class SeikkailuFXMain extends Application {
     private ItemDao itemDao;
     private HelperDao helperDao;
     private MonsterDao monsterDao;
+    private ScoreDao scoreDao;
     private Database database;
     private String table;
     private ArrayList allList;
@@ -83,6 +87,7 @@ public class SeikkailuFXMain extends Application {
         this.itemDao = new ItemDao(database);
         this.helperDao = new HelperDao(database);
         this.monsterDao = new MonsterDao(database);
+        this.scoreDao = new ScoreDao(database);
     }
 
     @Override
@@ -93,9 +98,9 @@ public class SeikkailuFXMain extends Application {
         VBox loginPane = new VBox(10);
         loginPane.setPadding(new Insets(10, 10, 10, 10));
         loginPane.setAlignment(Pos.CENTER);
+
         Label loginLabel = new Label("Pelaa kirjautumatta randomisti seikkailua");
         Button playButton = new Button("Jee, pelaamaan!");
-
         playButton.setOnAction(e -> {
             try {
                 world = new World(areaDao, itemDao, helperDao, monsterDao);
@@ -103,7 +108,7 @@ public class SeikkailuFXMain extends Application {
                 Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
             }
             adventure = new Adventure(world);
-            adventure.makeAGame(200);
+            adventure.makeAGame();
             primaryStage.setScene(playScene);
         });
         Label createNewLabel = new Label("Tähän tulee uusien juttujen luominen tietokantaan.");
@@ -111,17 +116,20 @@ public class SeikkailuFXMain extends Application {
         createNewButton.setOnAction(e -> {
             primaryStage.setScene(createScene);
         });
+        Label exitLabel = new Label("Testataan sovelluksen sulkemista.");
+        Button exitButton = new Button("Lopeta");
+        exitButton.setOnAction(e -> Platform.exit());
 
-        loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton);
+        loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton, exitLabel, exitButton);
         loginScene = new Scene(loginPane, 1000, 400);
 
-        
         playSceneBorderPaneCreate();
         createMoveButtons();
         createDoButtons();
+        createScoreSave();
 
-        //paluu alkuun*/
-        Button returnLogin = new Button("PALAA VALIKKOON");
+        //paluu alkuun
+        Button returnLogin = new Button("PALUU VALIKKOON");
         returnLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
         });
@@ -155,20 +163,8 @@ public class SeikkailuFXMain extends Application {
         descriptionLabel.setText(world.getPlayer().getArea().getDescription());
         findingLabel.setText(world.getPlayer().getArea().show());
         bagLabel.setText(world.getPlayer().bag());
-        if (adventure.getTimeGoal() < 0) {
-            adventure.getOver();
-            gameLabel.setText("Aika loppui, sinä hävisit!");
-        }
-        if (world.getPlayer().getItems().containsValue(adventure.getItemGoal())) {
-            adventure.getOver();
-            gameLabel.setText("Sinä löysit etsimäsi! Se oli " + adventure.getItemGoal().toString() + ".");
-        }
-        if (world.getPlayer().getHelpers().containsValue(adventure.getHelperGoal())) {
-            adventure.getOver();
-            gameLabel.setText(adventure.getHelperGoal().toString() + ", oli kaipaamasi puhekumppani.");
-        }
         monsterLabel.setText(world.getPlayer().getArea().showMonster());
-        remainingTimeLabel.setText("Vuoroja on jäljellä " + adventure.getTimeGoal() + ".");
+        remainingTimeLabel.setText("Sinulla on pisteitä " + adventure.getPoints() + ".");
     }
 
     private void playSceneBorderPaneCreate() {
@@ -178,6 +174,7 @@ public class SeikkailuFXMain extends Application {
         playBp.setBottom(playDown());
         playBp.setRight(playRight());
     }
+
     /**
      * Playscenen vasemman osan luominen
      *
@@ -193,7 +190,7 @@ public class SeikkailuFXMain extends Application {
         gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
         doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
         monsterLabel = new Label("");
-        remainingTimeLabel = new Label("Tässä näkyy kuinka monta toimintaa ehdit vielä tehdä.");
+        remainingTimeLabel = new Label("Tässä näkyy pisteesi.");
         left.getChildren().add(areaLabel);
         left.getChildren().add(descriptionLabel);
         left.getChildren().add(findingLabel);
@@ -352,7 +349,40 @@ public class SeikkailuFXMain extends Application {
                 doingLabel.setText("Sinulla ei ole mitään sopivaa annettavaa.");
             }
         }));
-        doGrid.add(give, 0, 2);
+        doGrid.add(give, 1, 0);
+
+        Button hit = new Button("LYÖ");
+        hit.setOnAction((event -> {
+            Action a = new Action(adventure);
+            Monster monster = a.hit();
+            actionShow();
+            if (monster != null) {
+                doingLabel.setText("Lyöt hirviötä " + monster.getName() + ", joka ottaa osuman.");
+            } else {
+                doingLabel.setText("Huidot ilmaa niin, että sinulle tulee hiki.");
+            }
+            if (monster.isDead()) {
+                monsterLabel.setText(monster.getName().toUpperCase() + " on kuollut.");
+            }
+        }));
+        doGrid.add(hit, 1, 1);
+    }
+
+    private void createScoreSave() {
+        TextField playerName = new TextField();
+        playerName.setPromptText("Anna uusi nimi.");
+        doGrid.add(playerName, 2, 0);
+        Button saveScore = new Button("TALLENNA PISTEET");
+        saveScore.setOnAction((event) -> {
+            if (!playerName.getText().equals("")) {
+                try {
+                    scoreDao.saveOrUpdate(new Score(playerName.getText(), adventure.getPoints()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        doGrid.add(saveScore, 2, 1);
     }
 
     private void createCreateScene() {
@@ -369,7 +399,7 @@ public class SeikkailuFXMain extends Application {
         createGrid.getChildren().add(cbAll);
 
         cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Alue", "Esine", "Apuri", "Hirviö"));
+        cb.setItems(FXCollections.observableArrayList("Esine", "Apuri", "Hirviö"));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
         findDaos();
@@ -514,6 +544,11 @@ public class SeikkailuFXMain extends Application {
             des.clear();
             label.setText("Tekstikentät tyhjennetty.");
         });
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.out.println("LOPPU!");
     }
 
     /**
