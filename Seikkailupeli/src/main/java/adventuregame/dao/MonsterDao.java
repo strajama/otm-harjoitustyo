@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import adventuregame.domain.Monster;
 
 public class MonsterDao implements Dao<Monster, Integer> {
@@ -32,35 +31,27 @@ public class MonsterDao implements Dao<Monster, Integer> {
 
     @Override
     public ArrayList<Monster> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Monster");
-        ResultSet rs = stmt.executeQuery();
-
-        ArrayList<Monster> monsters = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            Monster newMonster = new Monster(name, description);
-            monsters.add(newMonster);
+        ArrayList<Monster> monsters;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Monster"); ResultSet rs = stmt.executeQuery()) {
+            monsters = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Monster newMonster = new Monster(name, description);
+                monsters.add(newMonster);
+            }
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return monsters;
     }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Monster WHERE key = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Monster WHERE key = ?")) {
+            stmt.setObject(1, key);
 
-        stmt.execute();
-        stmt.close();
-        connection.close();
+            stmt.execute();
+        }
     }
 
     @Override
@@ -70,12 +61,11 @@ public class MonsterDao implements Dao<Monster, Integer> {
                 return null;
             }
 
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Monster (name, description) VALUES(?, ?)");
-            stmt.setString(1, object.getName().toLowerCase());
-            stmt.setString(2, object.getSlogan());
-            stmt.executeUpdate();
-
-            stmt.close();
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Monster (name, description) VALUES(?, ?)")) {
+                stmt.setString(1, object.getName().toLowerCase());
+                stmt.setString(2, object.getSlogan());
+                stmt.executeUpdate();
+            }
         }
 
         return object;
@@ -83,20 +73,17 @@ public class MonsterDao implements Dao<Monster, Integer> {
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Monster WHERE name = ?");
-        stmt.setObject(1, name);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
+        Integer id;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Monster WHERE name = ?")) {
+            stmt.setObject(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                boolean hasOne = rs.next();
+                if (!hasOne) {
+                    return null;
+                }
+                id = rs.getInt("id");
+            }
         }
-
-        Integer id = rs.getInt("id");
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return id;
     }

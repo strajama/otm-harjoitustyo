@@ -26,92 +26,79 @@ public class ScoreDao implements Dao<Score, Integer> {
 
     @Override
     public ArrayList<Score> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score");
-        ResultSet rs = stmt.executeQuery();
-
-        ArrayList<Score> scores = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            int points = rs.getInt("points");
-            Score newScore = new Score(name, points);
-            scores.add(newScore);
+        ArrayList<Score> scores;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score"); ResultSet rs = stmt.executeQuery()) {
+            scores = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int points = rs.getInt("points");
+                Score newScore = new Score(name, points);
+                scores.add(newScore);
+            }
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return scores;
     }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Score WHERE key = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Score WHERE key = ?")) {
+            stmt.setObject(1, key);
 
-        stmt.execute();
-        stmt.close();
-        connection.close();
+            stmt.execute();
+        }
     }
 
     @Override
     public Score saveOrUpdate(Score object) throws SQLException {
-        Connection conn = database.getConnection();
-        if (this.findIdByName(object.getName()) != null) {
-            return null;
+        try (Connection conn = database.getConnection()) {
+            if (this.findIdByName(object.getName()) != null) {
+                try (PreparedStatement stmt = conn.prepareStatement("UPDATE Score SET points=? WHERE name=?")) {
+                    stmt.setInt(1, object.getPoints());
+                    stmt.setString(2, object.getName().toLowerCase());
+                    stmt.executeUpdate();
+                }
+                return null;
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Score (name, points) VALUES(?, ?)")) {
+                stmt.setString(1, object.getName().toLowerCase());
+                stmt.setInt(2, object.getPoints());
+                stmt.executeUpdate();
+            }
         }
-
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Score (name, points) VALUES(?, ?)");
-        stmt.setString(1, object.getName().toLowerCase());
-        stmt.setInt(2, object.getPoints());
-        stmt.executeUpdate();
-
-        stmt.close();
-        conn.close();
 
         return object;
     }
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score WHERE name = ?");
-        stmt.setObject(1, name);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
+        Integer id;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score WHERE name = ?")) {
+            stmt.setObject(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                boolean hasOne = rs.next();
+                if (!hasOne) {
+                    return null;
+                }
+                id = rs.getInt("id");
+            }
         }
-
-        Integer id = rs.getInt("id");
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return id;
     }
 
     public ArrayList<Score> bestScores() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score ORDER BY points DESC LIMIT 5");
-        ResultSet rs = stmt.executeQuery();
-
-        ArrayList<Score> scores = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            int points = rs.getInt("points");
-            Score newScore = new Score(name, points);
-            scores.add(newScore);
+        ArrayList<Score> scores;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Score ORDER BY points DESC LIMIT 5"); ResultSet rs = stmt.executeQuery()) {
+            scores = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int points = rs.getInt("points");
+                Score newScore = new Score(name, points);
+                scores.add(newScore);
+            }
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return scores;
     }

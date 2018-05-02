@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import adventuregame.domain.Helper;
-import adventuregame.domain.Item;
 
 public class HelperDao implements Dao<Helper, Integer> {
 
@@ -37,71 +36,60 @@ public class HelperDao implements Dao<Helper, Integer> {
 
     @Override
     public ArrayList<Helper> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper");
-        ResultSet rs = stmt.executeQuery();
-
-        ArrayList<Helper> helpers = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            Helper newHelper = new Helper(name, description);
-            helpers.add(newHelper);
+        ArrayList<Helper> helpers;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper"); ResultSet rs = stmt.executeQuery()) {
+            helpers = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Helper newHelper = new Helper(name, description);
+                helpers.add(newHelper);
+            }
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return helpers;
     }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Helper WHERE key = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Helper WHERE key = ?")) {
+            stmt.setObject(1, key);
 
-        stmt.execute();
-        stmt.close();
-        connection.close();
+            stmt.execute();
+        }
     }
 
     @Override
     public Helper saveOrUpdate(Helper object) throws SQLException {
-        Connection conn = database.getConnection();
-        if (this.findIdByName(object.getName()) != null) {
-            return null;
+        try (Connection conn = database.getConnection()) {
+            if (this.findIdByName(object.getName()) != null) {
+                conn.close();
+                return null;
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Helper (name, description) VALUES(?, ?)")) {
+                stmt.setString(1, object.getName().toLowerCase());
+                stmt.setString(2, object.getDescription());
+                stmt.executeUpdate();
+            }
         }
-
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Helper (name, description) VALUES(?, ?)");
-        stmt.setString(1, object.getName().toLowerCase());
-        stmt.setString(2, object.getDescription());
-        stmt.executeUpdate();
-
-        stmt.close();
-        conn.close();
 
         return object;
     }
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper WHERE name = ?");
-        stmt.setObject(1, name);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
+        Integer id;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Helper WHERE name = ?")) {
+            stmt.setObject(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                boolean hasOne = rs.next();
+                if (!hasOne) {
+                    return null;
+                }
+                id = rs.getInt("id");
+            }
         }
-
-        Integer id = rs.getInt("id");
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return id;
     }

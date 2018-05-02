@@ -32,9 +32,7 @@ public class AreaDao implements Dao<Area, Integer> {
     @Override
     public ArrayList<Area> findAll() throws SQLException {
         ArrayList<Area> areas;
-        try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area");
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area"); ResultSet rs = stmt.executeQuery()) {
             areas = new ArrayList<>();
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -42,8 +40,6 @@ public class AreaDao implements Dao<Area, Integer> {
                 Area newArea = new Area(name, description);
                 areas.add(newArea);
             }
-            rs.close();
-            stmt.close();
         }
 
         return areas;
@@ -51,50 +47,43 @@ public class AreaDao implements Dao<Area, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Area WHERE key = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Area WHERE key = ?")) {
+            stmt.setObject(1, key);
 
-        stmt.execute();
-        stmt.close();
-        connection.close();
+            stmt.execute();
+        }
     }
 
     @Override
     public Area saveOrUpdate(Area object) throws SQLException {
-        Connection conn = database.getConnection();
+        try (Connection conn = database.getConnection()) {
+            if (this.findIdByName(object.getName()) != null) {;
+                return null;
+            }
 
-        if (this.findIdByName(object.getName()) != null) {
-            return null;
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Area (name, description) VALUES(?, ?)")) {
+                stmt.setString(1, object.getName().toLowerCase());
+                stmt.setString(2, object.getDescription());
+                stmt.executeUpdate();
+            }
         }
-
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Area (name, description) VALUES(?, ?)");
-        stmt.setString(1, object.getName().toLowerCase());
-        stmt.setString(2, object.getDescription());
-        stmt.executeUpdate();
-
-        stmt.close();
-        conn.close();
 
         return object;
     }
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area WHERE name = ?");
-        stmt.setObject(1, name);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
+        Integer id;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area WHERE name = ?")) {
+            stmt.setObject(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                boolean hasOne = rs.next();
+                if (!hasOne) {
+                    return null;
+                }
+                id = rs.getInt("id");
+            }
         }
-
-        Integer id = rs.getInt("id");
-        rs.close();
-        stmt.close();
-        connection.close();
         return id;
     }
 

@@ -15,89 +15,72 @@ public class ItemDao implements Dao<Item, Integer> {
     public ItemDao(Database database) throws SQLException {
         this.database = database;
         ArrayList<String> list = sqlites();
-        Connection conn = database.getConnection();
-        Statement test = conn.createStatement();
-        ResultSet rs = test.executeQuery("SELECT * FROM Item");
-        if (!rs.next()) {
-            Statement st = conn.createStatement();
-            for (String d : list) {
-                st.executeUpdate(d);
+        try (Connection conn = database.getConnection(); Statement test = conn.createStatement(); ResultSet rs = test.executeQuery("SELECT * FROM Item")) {
+            if (!rs.next()) {
+                Statement st = conn.createStatement();
+                for (String d : list) {
+                    st.executeUpdate(d);
+                }
             }
         }
-        rs.close();
-        test.close();
-        conn.close();
 
     }
 
     @Override
     public ArrayList<Item> findAll() throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item");
-        ResultSet rs = stmt.executeQuery();
-
-        ArrayList<Item> items = new ArrayList<>();
-
-        while (rs.next()) {
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            Item newItem = new Item(name, description);
-            items.add(newItem);
+        ArrayList<Item> items;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item"); ResultSet rs = stmt.executeQuery()) {
+            items = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                Item newItem = new Item(name, description);
+                items.add(newItem);
+            }
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return items;
     }
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Item WHERE key = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Item WHERE key = ?")) {
+            stmt.setObject(1, key);
 
-        stmt.execute();
-        stmt.close();
-        connection.close();
+            stmt.execute();
+        }
     }
 
     @Override
     public Item saveOrUpdate(Item object) throws SQLException {
-        Connection conn = database.getConnection();
+        try (Connection conn = database.getConnection()) {
+            if (this.findIdByName(object.getName()) != null) {
+                return null;
+            }
 
-        if (this.findIdByName(object.getName()) != null) {
-            return null;
+            try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Item (name, description) VALUES(?, ?)")) {
+                stmt.setString(1, object.getName().toLowerCase());
+                stmt.setString(2, object.getDescription());
+                stmt.executeUpdate();
+            }
         }
-
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Item (name, description) VALUES(?, ?)");
-        stmt.setString(1, object.getName().toLowerCase());
-        stmt.setString(2, object.getDescription());
-        stmt.executeUpdate();
-
-        stmt.close();
-        conn.close();
 
         return object;
     }
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item WHERE name = ?");
-        stmt.setObject(1, name);
-
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
-            return null;
+        Integer id;
+        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item WHERE name = ?")) {
+            stmt.setObject(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                boolean hasOne = rs.next();
+                if (!hasOne) {
+                    return null;
+                }
+                id = rs.getInt("id");
+            }
         }
-
-        Integer id = rs.getInt("id");
-        rs.close();
-        stmt.close();
-        connection.close();
 
         return id;
     }

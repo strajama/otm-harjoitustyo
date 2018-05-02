@@ -68,8 +68,8 @@ public class SeikkailuFXMain extends Application {
     private TableView scoreTable;
 
     private GridPane createGrid;
-    private TextField name;
-    private TextField des;
+    private TextField nameTextField;
+    private TextField descriptionTextField;
     private Label label;
 
     private VBox center;
@@ -385,9 +385,15 @@ public class SeikkailuFXMain extends Application {
 
         Button saveScore = new Button("TALLENNA PISTEET");
         saveScore.setOnAction((event) -> {
-            if (!playerName.getText().equals("")) {
+            if (!playerName.getText().isEmpty()) {
                 try {
                     scoreDao.saveOrUpdate(new Score(playerName.getText(), adventure.getPoints()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                playerName.clear();
+                try {
+                    updateScoreTable();
                 } catch (SQLException ex) {
                     Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -450,15 +456,15 @@ public class SeikkailuFXMain extends Application {
         createGrid.getChildren().add(cb);
         findDaos();
 
-        name = new TextField();
-        name.setPromptText("Anna uusi nimi.");
-        GridPane.setConstraints(name, 0, 1);
-        createGrid.getChildren().add(name);
+        nameTextField = new TextField();
+        nameTextField.setPromptText("Anna uusi nimi.");
+        GridPane.setConstraints(nameTextField, 0, 1);
+        createGrid.getChildren().add(nameTextField);
 
-        des = new TextField();
-        des.setPromptText("Anna uusi kuvaus.");
-        GridPane.setConstraints(des, 0, 2);
-        createGrid.getChildren().add(des);
+        descriptionTextField = new TextField();
+        descriptionTextField.setPromptText("Anna uusi kuvaus.");
+        GridPane.setConstraints(descriptionTextField, 0, 2);
+        createGrid.getChildren().add(descriptionTextField);
         label = new Label("Tähän tulee viesti");
         GridPane.setConstraints(label, 0, 3);
         GridPane.setColumnSpan(label, 2);
@@ -522,7 +528,7 @@ public class SeikkailuFXMain extends Application {
         GridPane.setConstraints(submit, 1, 1);
         createGrid.getChildren().add(submit);
         submit.setOnAction((ActionEvent e) -> {
-            if ((!name.getText().isEmpty() && !des.getText().isEmpty())) {
+            if ((!nameTextField.getText().isEmpty() && !descriptionTextField.getText().isEmpty())) {
                 if (table.isEmpty()) {
                     label.setText("Valitse taulu.");
                 } else {
@@ -537,7 +543,7 @@ public class SeikkailuFXMain extends Application {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else*/ if ("Item".equals(table)) {
-                        Item newItem = new Item(name.getText(), des.getText());
+                        Item newItem = new Item(nameTextField.getText(), descriptionTextField.getText());
                         try {
                             itemDao.saveOrUpdate(newItem);
                             allList = itemDao.findAll();
@@ -546,7 +552,7 @@ public class SeikkailuFXMain extends Application {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if ("Helper".equals(table)) {
-                        Helper newHelper = new Helper(name.getText(), des.getText());
+                        Helper newHelper = new Helper(nameTextField.getText(), descriptionTextField.getText());
                         try {
                             helperDao.saveOrUpdate(newHelper);
                             allList = helperDao.findAll();
@@ -555,7 +561,7 @@ public class SeikkailuFXMain extends Application {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if ("Monster".equals(table)) {
-                        Monster newMonster = new Monster(name.getText(), des.getText());
+                        Monster newMonster = new Monster(nameTextField.getText(), descriptionTextField.getText());
                         try {
                             monsterDao.saveOrUpdate(newMonster);
                             allList = monsterDao.findAll();
@@ -565,14 +571,14 @@ public class SeikkailuFXMain extends Application {
                         }
                     }
                     label.setText("Uusi " + table + "-taulu lisätty. Paitsi Area.");
-                    name.clear();
-                    des.clear();
+                    nameTextField.clear();
+                    descriptionTextField.clear();
                 }
-            } else if (name.getText().isEmpty() && des.getText().isEmpty()) {
+            } else if (nameTextField.getText().isEmpty() && descriptionTextField.getText().isEmpty()) {
                 label.setText("Anna nimi ja kuvaus.");
-            } else if (des.getText().isEmpty()) {
+            } else if (descriptionTextField.getText().isEmpty()) {
                 label.setText("Anna kuvaus.");
-            } else if (name.getText().isEmpty()) {
+            } else if (nameTextField.getText().isEmpty()) {
                 label.setText("Anna nimi.");
             }
         });
@@ -586,8 +592,8 @@ public class SeikkailuFXMain extends Application {
         GridPane.setConstraints(clear, 1, 2);
         createGrid.getChildren().add(clear);
         clear.setOnAction((ActionEvent e) -> {
-            name.clear();
-            des.clear();
+            nameTextField.clear();
+            descriptionTextField.clear();
             label.setText("Tekstikentät tyhjennetty.");
         });
     }
