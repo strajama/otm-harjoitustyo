@@ -50,7 +50,7 @@ public class MonsterDao implements Dao<Monster, Integer> {
     @Override
     public void delete(Integer key) throws SQLException {
         try (Connection connection = database.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Monster WHERE key = ?")) {
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Monster WHERE id = ?")) {
             stmt.setObject(1, key);
             stmt.execute();
         }

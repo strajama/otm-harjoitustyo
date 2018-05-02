@@ -55,10 +55,6 @@ public class Area {
         return findings;
     }
 
-    public void setFindings(HashMap<String, Finding> findings) {
-        this.findings = findings;
-    }
-
     public HashMap<Direction, Area> getNeighbors() {
         return neighbors;
     }

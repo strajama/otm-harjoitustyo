@@ -37,8 +37,8 @@ public class ItemTest {
     @Test
     public void equalsTestSame() {
         Item n = new Item("testi", "erilainen kuvailu");
-        assertTrue(item.equals(n));
         Item m = new Item("testi1", "eriniminen");
+        assertTrue(item.equals(n));
         assertFalse(item.equals(m));
         assertFalse(item.equals("testi"));
         assertFalse(item.equals(null));

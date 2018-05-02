@@ -48,7 +48,8 @@ public class ItemDao implements Dao<Item, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Item WHERE key = ?")) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Item WHERE id = ?")) {
             stmt.setObject(1, key);
 
             stmt.execute();
@@ -75,7 +76,8 @@ public class ItemDao implements Dao<Item, Integer> {
     @Override
     public Integer findIdByName(String name) throws SQLException {
         Integer id;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item WHERE name = ?")) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Item WHERE name = ?")) {
             stmt.setObject(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean hasOne = rs.next();

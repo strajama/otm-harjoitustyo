@@ -1,41 +1,56 @@
 
+import adventuregame.domain.Area;
+import adventuregame.domain.Helper;
+import adventuregame.domain.Item;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import adventuregame.domain.Player;
+import static org.junit.Assert.assertFalse;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author strajama
- */
 public class PlayerTest {
- 
-    Player p;
-    
+
+    Player player;
+
     @Before
     public void setup() {
-        p = new Player();
+        player = new Player();
     }
-    
+
     @Test
-    public void bag() {
-        assertEquals("Reppusi on tyhjä.",p.bag());
+    public void bagItemsTest() {
+        assertEquals("Reppusi on tyhjä.", player.bag());
+        Item test = new Item("testi", "testing");
+        player.putInBag(test);
+        assertEquals("Repussasi on jotain ", player.bag());
+        player.removeFromBag(test);
+        assertEquals("Reppusi on tyhjä.", player.bag());
     }
-    
+
     @Test
-    public void nullArea() {
-        assertTrue(p.getArea()==null);
+    public void testAreas() {
+        assertTrue(player.getArea() == null);
+        Area test = new Area("testi", "testing");
+        player.setArea(test);
+        assertEquals(test, player.getArea());
     }
-    
+
     @Test
-    public void emptyItems() {
-        assertTrue(p.getItems().isEmpty());
+    public void itemsTest() {
+        assertTrue(player.getItems().isEmpty());
+        Item test = new Item("testi", "testing");
+        player.putInBag(test);
+        assertFalse(player.getItems().isEmpty());
+    }
+
+    @Test
+    public void helpersTest() {
+        assertTrue(player.getHelpers().isEmpty());
+        Helper test = new Helper("testi", "testing");
+        assertFalse(player.spokenWith("testi"));
+        player.speakWith(test);
+        assertTrue(player.spokenWith("testi"));
+        assertFalse(player.getHelpers().isEmpty());
     }
 }

@@ -45,7 +45,7 @@ public class ScoreDao implements Dao<Score, Integer> {
     @Override
     public void delete(Integer key) throws SQLException {
         try (Connection connection = database.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Score WHERE key = ?")) {
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Score WHERE id = ?")) {
             stmt.setObject(1, key);
 
             stmt.execute();

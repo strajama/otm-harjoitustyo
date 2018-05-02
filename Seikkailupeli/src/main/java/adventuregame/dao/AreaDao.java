@@ -17,7 +17,7 @@ public class AreaDao implements Dao<Area, Integer> {
         ArrayList<String> list = sqlites();
         try (Connection conn = database.getConnection()) {
             Statement test = conn.createStatement();
-            ResultSet rs = test.executeQuery("SELECT * FROM Monster");
+            ResultSet rs = test.executeQuery("SELECT * FROM Area");
             if (!rs.next()) {
                 Statement st = conn.createStatement();
                 for (String d : list) {
@@ -25,7 +25,6 @@ public class AreaDao implements Dao<Area, Integer> {
                 }
             }
         } catch (Throwable t) {
-            System.out.println("Error >> " + t.getMessage());
         }
     }
 
@@ -49,7 +48,8 @@ public class AreaDao implements Dao<Area, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("DELETE FROM Area WHERE key = ?")) {
+        try (Connection connection = database.getConnection();
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM Area WHERE id = ?")) {
             stmt.setObject(1, key);
 
             stmt.execute();
@@ -69,14 +69,14 @@ public class AreaDao implements Dao<Area, Integer> {
                 stmt.executeUpdate();
             }
         }
-
         return object;
     }
 
     @Override
     public Integer findIdByName(String name) throws SQLException {
         Integer id;
-        try (Connection connection = database.getConnection(); PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area WHERE name = ?")) {
+        try (Connection connection = database.getConnection(); 
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area WHERE name = ?")) {
             stmt.setObject(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 boolean hasOne = rs.next();
