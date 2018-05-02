@@ -27,3 +27,6 @@ Ylimmästä pääsee pelaamaan, keskimmäisestä lisäämään uusia asioita seu
 
 Valitse ensin valikosta, että minkä uuden tiedon haluat lisätä.
 Kirjoita tämän jälkeen sille tekstikenttiin nimi ja kuvaus ja paina Lisää-nappia.
+Jos haluat tyhjentää kentät, niin paina Pyyhi-nappia.
+Palaa takaisin -nappi vie takaisin valikkoon.
+Jos olet valinnut ylimmästä valikosta tietotyypin, niin alinna olevasta valikosta näet minkälaisia tietoja tietokannassa on ennestään.
