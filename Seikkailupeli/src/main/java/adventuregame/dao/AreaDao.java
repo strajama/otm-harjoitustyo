@@ -8,10 +8,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import adventuregame.domain.Area;
 
+/**
+ * AreaDao-luokkaa käytetään yhteydenpitoon tietokannan kanssa ja se toteuttaa
+ * Dao-rajapinnan
+ *
+ * @author strajama
+ */
 public class AreaDao implements Dao<Area, Integer> {
 
     private Database database;
 
+    /**
+     * Metodi luo uuden AreaDao-olion. Jos tietokannassa ei ole ennestään
+     * Area-taulussa tietoa, niin metodi lisää sinne pelin
+     * perustoiminnallisuuden mahdollistavat tiedot.
+     *
+     * @param database - tietokanta, jota AreaDao käyttää
+     */
     public AreaDao(Database database) {
         this.database = database;
         ArrayList<String> list = sqlites();
@@ -28,6 +41,12 @@ public class AreaDao implements Dao<Area, Integer> {
         }
     }
 
+    /**
+     * Metodi etsii kaikki tietokannassa olevat Area-taulun tiedot
+     *
+     * @return palauttaa listan Area-olioita
+     * @throws SQLException - jos tietokantayhteyden kanssa on häiriöitä
+     */
     @Override
     public ArrayList<Area> findAll() throws SQLException {
         ArrayList<Area> areas;
@@ -46,6 +65,12 @@ public class AreaDao implements Dao<Area, Integer> {
         return areas;
     }
 
+    /**
+     * Metodi poistaa Area-taulusta tiedon
+     *
+     * @param key - id-avain
+     * @throws SQLException - jos tietokantayhteyden kanssa on häiriöitä
+     */
     @Override
     public void delete(Integer key) throws SQLException {
         try (Connection connection = database.getConnection();
@@ -56,6 +81,13 @@ public class AreaDao implements Dao<Area, Integer> {
         }
     }
 
+    /**
+     * Metodi tallentaa uuden tiedon tietokantaan, mutta ei päivitä vanhaa
+     *
+     * @param object - lisättävä tieto
+     * @return - lisätty Area tai null
+     * @throws SQLException - jos tietokantayhteyden kanssa on häiriöitä
+     */
     @Override
     public Area saveOrUpdate(Area object) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -72,10 +104,17 @@ public class AreaDao implements Dao<Area, Integer> {
         return object;
     }
 
+    /**
+     * Metodi etsii Area-taulusta nimellä oikeaa tietoa ja palauttaa id-numeron
+     *
+     * @param name - haettavan tiedon nimi
+     * @return - id-numero
+     * @throws SQLException - jos tietokantayhteyden kanssa on häiriöitä
+     */
     @Override
     public Integer findIdByName(String name) throws SQLException {
         Integer id;
-        try (Connection connection = database.getConnection(); 
+        try (Connection connection = database.getConnection();
                 PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Area WHERE name = ?")) {
             stmt.setObject(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -89,6 +128,12 @@ public class AreaDao implements Dao<Area, Integer> {
         return id;
     }
 
+    /**
+     * Metodi palauttaa listana SQL-käskyt, joissa on pelin toiminnan varmistava
+     * perussisältö
+     *
+     * @return lista SQL-lauseita
+     */
     private ArrayList<String> sqlites() {
         ArrayList<String> list = new ArrayList<>();
         list.add("INSERT INTO Area (name, description) VALUES ('suo', 'Tunnet suopursun voimakkaan tuoksun sieraimissasi. Sinua yskittää.')");
