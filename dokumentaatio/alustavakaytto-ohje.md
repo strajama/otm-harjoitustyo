@@ -34,6 +34,12 @@ Paluu valikkoon -nappi vie takaisin valikkoon.
 
 ### Pisteiden kertyminen
 
+* Yksi onnistunut toiminta (liikkuminen, anna, lyö, puhu, poimi) vie yhden pisteen.
+* Tavallisen apurin kanssa puhuminen tuo 5 pistettä, tavoiteapurin kanssa puhuminen 10 pistettä.
+* Tavallisen esineen poimiminen tuo 5 pistettä, tavoite-esineen poimiminen 10 pistettä.
+* Apurin kaipaaman esineen antaminen hänelle tuo 10 pistettä.
+* Vaeltavan hirviön kukistaminen tuo 20 pistettä.
+
 ## Uusien asioiden lisääminen
 
 Valitse ensin valikosta, että minkä uuden tiedon haluat lisätä.
