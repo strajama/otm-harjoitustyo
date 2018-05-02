@@ -21,7 +21,18 @@ Ylimmästä pääsee pelaamaan, keskimmäisestä lisäämään uusia asioita seu
 
 ## Pelaaminen
 
+Pelinäkymässä vasemmassa ylälaidassa näkyy pelaajan sijainti ja sen alapuolella kuvailua siitä mitä pelaaja näkee, mitä on juuri tapahtunut ja mikä on pelitilanne.
 
+Keskellä näkyy tieto siitä mitä esineitä pelaajalla on repussaan.
+
+Oikeassa reunassa näkyy viisi parasta tallennettua pistemäärää.
+
+Liikkuminen pelissä tapahtuu vasemmassa reunassa olevan neljän näppäimen avulla.
+Pelaajalla on neljä toimintonäppäintä: poimi, anna, puhu ja lyö.
+Tekstikenttään voi kirjoittaa oman pelinimensä ja sen alapuolelta nappia painamalla tallentaa pisteet. Peli tallentaa aina edellisten samalla pelinimellä tehtyjen pisteiden päälle.
+Paluu valikkoon -nappi vie takaisin valikkoon.
+
+### Pisteiden kertyminen
 
 ## Uusien asioiden lisääminen
 
