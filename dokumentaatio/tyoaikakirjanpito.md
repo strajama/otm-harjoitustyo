@@ -14,5 +14,5 @@
 | 25.4.2018 | 3 | käyttöjärjestelmän kaunistamista |
 | 30.4.2018 | 5 | käyttöjärjestelmän kaunistamista ja javadocia |
 | 1.5.2018 | 5 | toiminnallisuuksia lisää ja käyttöjärjestelmän muokkaamista |
-| 2.5.2018 | 1 | käyttöjärjestelmän muokkaamista
-| yht   | 65   | | 
+| 2.5.2018 | 6 | käyttöjärjestelmän muokkaamista
+| yht   | 70   | | 
