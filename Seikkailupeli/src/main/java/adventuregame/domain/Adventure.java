@@ -36,8 +36,16 @@ public class Adventure {
         return itemGoal;
     }
 
+    public void setItemGoal(Item itemGoal) {
+        this.itemGoal = itemGoal;
+    }
+
     public Helper getHelperGoal() {
         return helperGoal;
+    }
+
+    public void setHelperGoal(Helper helperGoal) {
+        this.helperGoal = helperGoal;
     }
 
     public int getPoints() {

@@ -88,12 +88,81 @@ public class ActionTest {
         w.getPlayer().putInBag(item);
         assertEquals(item, action.give());
     }
-    
+
     @Test
     public void hitTesting() {
+        Item item = new Item("testi", "testi");
         Monster monster = w.getMonster();
         assertTrue(action.hit() == null);
-        monster.setArea(w.getHome());
+        assertEquals(0, ad.getPoints());
+        monster.setArea(ad.getWorld().getHome());
+        w.getHome().putMonster(monster);
+        assertEquals(monster, action.hit());
+        assertEquals(4, monster.getLife());
+        assertEquals(-1, ad.getPoints());
+        w.getPlayer().putInBag(item);
+        action.hit();
+        assertEquals(2, monster.getLife());
+        assertEquals(-2, ad.getPoints());
+        action.hit();
+        assertEquals(0, monster.getLife());
+        assertEquals(17, ad.getPoints());
+        assertTrue(monster.isDead());
+        action.move(Direction.NORTH);
+        action.move(Direction.NORTH);
+        assertEquals(w.getHome(), monster.getArea());
     }
 
+    @Test
+    public void testPointsZero() {
+        assertEquals(0, ad.getPoints());
+        action.take();
+        assertEquals(0, ad.getPoints());
+        action.give();
+        assertEquals(0, ad.getPoints());
+        action.hit();
+        assertEquals(0, ad.getPoints());
+        action.speak();
+        assertEquals(0, ad.getPoints());
+        action.move(Direction.SOUTH);
+        assertEquals(0, ad.getPoints());
+    }
+
+    @Test
+    public void pointsTestItemHelper() {
+        Item item = new Item("testi", "testi");
+        Helper helper = new Helper("testi", "toimiiko");
+        helper.setItem(item);
+        w.getPlayer().putInBag(item);
+        action.move(Direction.NORTH);
+        assertEquals(-1, ad.getPoints());
+        action.move(Direction.SOUTH);
+        assertEquals(-2, ad.getPoints());
+        w.getHome().putFinding(item);
+        action.take();
+        assertEquals(2, ad.getPoints());
+        w.getHome().putFinding(helper);
+        action.speak();
+        assertEquals(6, ad.getPoints());
+        action.give();
+        assertEquals(15, ad.getPoints());
+    }
+
+    @Test
+    public void pointsItemHelperGoals() {
+        Item item = new Item("testi", "testi");
+        Helper helper = new Helper("testi", "toimiiko");
+        Monster monster = new Monster("testi", "toimiiko");
+        ad.setHelperGoal(helper);
+        ad.setItemGoal(item);
+        w.getHome().putFinding(item);
+        action.take();
+        assertEquals(9, ad.getPoints());
+        w.getHome().putFinding(helper);
+        action.speak();
+        assertEquals(18, ad.getPoints());
+        monster.hitMonster(10);
+        action.move(Direction.NORTH);
+        assertEquals(17, ad.getPoints());
+    }
 }

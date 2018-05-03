@@ -112,10 +112,10 @@ public class Action {
             if (monster.isDead()) {
                 monster.getArea().removeMonster();
             }
-            adventure.takeTurn();
             if (monster.isDead()) {
                 adventure.givePoints(20);
             }
+            adventure.takeTurn();
             return monster;
         }
         return null;

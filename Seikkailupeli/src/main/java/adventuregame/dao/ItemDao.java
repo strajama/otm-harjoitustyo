@@ -8,10 +8,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import adventuregame.domain.Item;
 
+/**
+ * ItemDao-luokkaa käytetään yhteydenpitoon tietokannan kanssa ja se toteuttaa
+ * Dao-rajapinnan
+ *
+ * @author strajama
+ */
 public class ItemDao implements Dao<Item, Integer> {
 
     private Database database;
 
+    /**
+     * Metodi luo uuden ItemDao-olion. Jos tietokannassa ei ole ennestään
+     * Item-taulussa tietoa, niin metodi lisää sinne pelin
+     * perustoiminnallisuuden mahdollistavat tiedot.
+     *
+     * @param database -tietokanta, jota ItemDao käyttää
+     */
     public ItemDao(Database database) throws SQLException {
         this.database = database;
         ArrayList<String> list = sqlites();
@@ -24,10 +37,17 @@ public class ItemDao implements Dao<Item, Integer> {
                     st.executeUpdate(d);
                 }
             }
+        } catch (Throwable t) {
         }
 
     }
 
+    /**
+     * Metodi etsii kaikki tietokannassa olevat Item-taulun tiedot
+     *
+     * @return lista, joka sisältää Item-olioita
+     * @throws SQLException - jos jotain menee pieleen
+     */
     @Override
     public ArrayList<Item> findAll() throws SQLException {
         ArrayList<Item> items;
@@ -46,6 +66,12 @@ public class ItemDao implements Dao<Item, Integer> {
         return items;
     }
 
+    /**
+     * Metodi poistaa tietokannasta tiedon
+     *
+     * @param key - tiedon yksilöivä id-numero
+     * @throws SQLException - jos jotain menee pieleen
+     */
     @Override
     public void delete(Integer key) throws SQLException {
         try (Connection connection = database.getConnection();
@@ -56,6 +82,13 @@ public class ItemDao implements Dao<Item, Integer> {
         }
     }
 
+    /**
+     * Metodi tallentaa uuden tiedon tietokantaan, mutta ei päivitä vanhaa
+     *
+     * @param object - Item-olio
+     * @return - Item tai null
+     * @throws SQLException - jos jotain menee pieleen
+     */
     @Override
     public Item saveOrUpdate(Item object) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -73,6 +106,13 @@ public class ItemDao implements Dao<Item, Integer> {
         return object;
     }
 
+    /**
+     * Metodi etsii Item-taulusta tiedon nimihaulla
+     *
+     * @param name - nimi, jolla haetaan
+     * @return id-numero, joka yksilöi tiedon
+     * @throws SQLException - jos jotain menee pieleen
+     */
     @Override
     public Integer findIdByName(String name) throws SQLException {
         Integer id;
@@ -91,6 +131,12 @@ public class ItemDao implements Dao<Item, Integer> {
         return id;
     }
 
+    /**
+     * Metodi palauttaa listana SQL-käskyt, joissa on pelin toiminnan varmistava
+     * perussisältö
+     *
+     * @return lista SQL-lauseita
+     */
     private ArrayList<String> sqlites() {
         ArrayList<String> list = new ArrayList<>();
         list.add("INSERT INTO Item (name, description) VALUES ('palantiri', 'kauaksi näkevä kivi')");

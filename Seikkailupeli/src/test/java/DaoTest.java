@@ -1,5 +1,6 @@
 
 import adventuregame.dao.AreaDao;
+import adventuregame.dao.Dao;
 import adventuregame.dao.Database;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
@@ -11,6 +12,7 @@ import adventuregame.domain.Item;
 import adventuregame.domain.Monster;
 import adventuregame.domain.Score;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -48,7 +50,13 @@ public class DaoTest {
     }
 
     @Test
-    public void areaTest() throws SQLException {
+    public void testDatabase() throws SQLException, ClassNotFoundException {
+        Database database = new Database("fake");
+        database.init();
+    }
+
+    @Test
+    public void areaTest() throws SQLException, ClassNotFoundException {
         Area area = new Area("testi", "testing");
         assertFalse(a.findAll().isEmpty());
         assertEquals(13, a.findAll().size());
@@ -58,10 +66,18 @@ public class DaoTest {
         Integer key = a.findIdByName("testi");
         a.delete(key);
         assertEquals(13, a.findAll().size());
+
+        ArrayList<Area> list = a.findAll();
+        for (Area p : list) {
+            Integer id = a.findIdByName(p.getName());
+            a.delete(id);
+        }
+        AreaDao aa = new AreaDao(d);
+        AreaDao aaa = new AreaDao(new Database("fake"));
     }
 
     @Test
-    public void itemTest() throws SQLException {
+    public void itemTest() throws SQLException, ClassNotFoundException {
         Item item = new Item("testi", "testing");
         assertFalse(i.findAll().isEmpty());
         assertEquals(6, i.findAll().size());
@@ -71,10 +87,18 @@ public class DaoTest {
         Integer key = i.findIdByName("testi");
         i.delete(key);
         assertEquals(6, i.findAll().size());
+
+        ArrayList<Item> list = i.findAll();
+        for (Item p : list) {
+            Integer id = i.findIdByName(p.getName());
+            i.delete(id);
+        }
+        ItemDao ii = new ItemDao(d);
+        ItemDao iii = new ItemDao(new Database("fake"));
     }
 
     @Test
-    public void helperTest() throws SQLException {
+    public void helperTest() throws SQLException, ClassNotFoundException {
         Helper helper = new Helper("testi", "testing");
         assertFalse(h.findAll().isEmpty());
         assertEquals(6, h.findAll().size());
@@ -84,10 +108,18 @@ public class DaoTest {
         Integer key = h.findIdByName("testi");
         h.delete(key);
         assertEquals(6, h.findAll().size());
+
+        ArrayList<Helper> list = h.findAll();
+        for (Helper p : list) {
+            Integer id = h.findIdByName(p.getName());
+            h.delete(id);
+        }
+        HelperDao hh = new HelperDao(d);
+        HelperDao hhh = new HelperDao(new Database("fake"));
     }
 
     @Test
-    public void monsterTest() throws SQLException {
+    public void monsterTest() throws SQLException, ClassNotFoundException {
         Monster monster = new Monster("testi", "testing");
         assertFalse(m.findAll().isEmpty());
         assertEquals(1, m.findAll().size());
@@ -97,6 +129,14 @@ public class DaoTest {
         Integer key = m.findIdByName("testi");
         m.delete(key);
         assertEquals(1, m.findAll().size());
+
+        ArrayList<Monster> list = m.findAll();
+        for (Monster p : list) {
+            Integer id = m.findIdByName(p.getName());
+            m.delete(id);
+        }
+        MonsterDao mm = new MonsterDao(d);
+        MonsterDao mmm = new MonsterDao(new Database("fake"));
     }
 
     @Test
@@ -113,5 +153,13 @@ public class DaoTest {
         Integer key = s.findIdByName("testi");
         s.delete(key);
         assertEquals(0, s.findAll().size());
+    }
+
+    private void emptyTable(Dao dao) throws SQLException {
+        ArrayList<String> list = dao.findAll();
+        for (String d : list) {
+            Integer key = dao.findIdByName(d);
+            dao.delete(key);
+        }
     }
 }
