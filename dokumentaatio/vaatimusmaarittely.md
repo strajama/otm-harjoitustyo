@@ -43,3 +43,5 @@ Perusversiosta kehitysideoita
 - mahdollisuus pelata kirjautuneena
 - päivittyvä kartta, josta näkee pelaajan sijainnin
 - kuvien lisääminen tekstikuvailujen sijasta
+- mahdollisuus kirjautua
+- mahdollisuus luoda itse seikkailuja
