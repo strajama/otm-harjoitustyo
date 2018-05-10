@@ -48,13 +48,13 @@ Paluu valikkoon -nappi vie takaisin valikkoon.
 * Apurin kaipaaman esineen antaminen hänelle tuo 10 pistettä.
 * Vaeltavan hirviön kukistaminen tuo 20 pistettä.
 
-## Uusien asioiden lisääminen
+## Uusien asioiden lisääminen ja poistaminen
 
 Valitse ensin valikosta, että minkä uuden tiedon haluat lisätä.
 
 Kirjoita tämän jälkeen sille tekstikenttiin nimi ja kuvaus ja paina Lisää-nappia.
 
-Jos haluat tyhjentää kentät, niin paina Pyyhi-nappia.
+Jos haluat poistaa jonkin tiedon, niin kirjoita sen nimi ja paina Poista-nappia. Jos peli ei enää toimi poistojen jälkeen, niin alkuperäiset taulut saa palautettua poistamalla _adventure.db_ -tiedoston ohjelman kansiosta.
 
 Palaa takaisin -nappi vie takaisin valikkoon.
 
