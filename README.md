@@ -2,13 +2,15 @@
 
 ## Dokumentaatio
 
-[alustava määrittelydokumentti](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/alustavamaarittelydokumentti.md)
+[vaatimmusmäärittely](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/vaatimusmaarittely.md)
 
 [työaikakirjanpito](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/tyoaikakirjanpito.md)
 
 [arkkitehtuuri](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
 
 [kayttöohje](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kayttoohje.md)
+
+[testaus] 
 
 ## Releaset
 
