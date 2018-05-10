@@ -42,7 +42,7 @@ Checkstylen saa katsottua komennolla
 ```
 mvn jxr:jxr checkstyle:checkstyle
 ```
-JavaDoc on luotavissa komennolla
+JavaDoc on luotavissa komennolla 
 
 ```
 mvn javadoc:javadoc
