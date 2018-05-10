@@ -28,7 +28,7 @@ Viisi parasta pistetallennusta näkyy ruudulla.
 
 ### Uusien asioiden lisääminen
 
-Seuraavaa pelikertaa varten tietokantaan voi lisätä uusia
+Seuraavaa pelikertaa varten tietokantaan voi lisätä uusia ja poistaa
 
 - apureita
 - esineitä
