@@ -10,7 +10,7 @@
 
 [kayttöohje](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kayttoohje.md)
 
-[testaus] 
+[testaus](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/testaus.md)
 
 ## Releaset
 
