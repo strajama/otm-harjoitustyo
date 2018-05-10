@@ -17,4 +17,5 @@
 | 2.5.2018 | 12 | käyttöliittymän muokkaamista |
 | 3.5.2018 | 2 | javadocit ja testaukset loppuun |
 | 10.5.2018 | 12 | käyttöliittymän muokkaamista, pieniä muutoksia ohjelmaan |
+| 11.5.2018 | 3 | käyttöliittymän muokkaamista
 | yht   | 76   | | 
