@@ -50,6 +50,8 @@ Kuvataan seuraavaksi sovelluksen toimintalogiikka muutaman päätoiminnallisuude
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Making%20action%20in%20game.png">
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Saving%20new%20data.png">
 
-### Ensimmäinen arkkitehtuurikuvaus
+## Ohjelman rakenteeseen jääneet heikkoudet
 
-<img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/arkkitehtuuri.png">
+Ohjelmaa ei ole kokonaan parametrisoitu kielen puolesta, joten ohjelman kääntäminen toiselle kielelle on vaivalloista.
+
+Käyttöliittymän asettelu on kömpelö.
