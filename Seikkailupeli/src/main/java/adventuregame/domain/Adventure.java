@@ -1,7 +1,9 @@
 package adventuregame.domain;
 
+import adventuregame.ui.SeikkailuFXMain;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Iterator;
+import javafx.scene.control.Label;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
@@ -121,5 +123,27 @@ public class Adventure {
     private void createPlayer() {
         this.player = new Player();
         player.setArea(world.getHome());
+    }
+
+    /**
+     * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen
+     * @param s - käyttöliittymä, joka annetaan parametrina
+     */
+    public void actionShow(SeikkailuFXMain s) {
+
+        s.getAreaLabel().setText(player.getArea().getName().toUpperCase());
+        s.getDescriptionLabel().setText(player.getArea().getDescription());
+        s.getFindingLabel().setText(player.getArea().show());
+        s.getBagLabel().setText(player.bag());
+        s.getMonsterLabel().setText(player.getArea().showMonster());
+        s.getPointsLabel().setText(this.printPoints());
+        s.getDoingLabel().setText(this.getLastAction());
+
+        s.getPlayCenter().getChildren().clear();
+        s.getPlayCenter().getChildren().add(s.getBagLabel());
+        Iterator<String> it = player.getItems().keySet().iterator();
+        while (it.hasNext()) {
+            s.getPlayCenter().getChildren().add(new Label(it.next().toUpperCase()));
+        }
     }
 }

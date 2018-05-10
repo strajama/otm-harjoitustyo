@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adventuregame.ui;
 
 /**
+ * Luokka toteuttaa Language-rajapinnan ja sisältää suomenkieliset nimikkeet
+ * käyttöliittymää varten
  *
  * @author strajama
  */
@@ -44,6 +41,7 @@ public class Finnish implements Language {
     private String message;
     private String nameAndDescription;
     private String newTable;
+    private String deleteTable;
 
     public Finnish() {
         loginLabel = "Pelaa randomisti seikkailua";
@@ -79,6 +77,7 @@ public class Finnish implements Language {
         message = "Tähän tulee viesti";
         nameAndDescription = "Anna nimi ja kuvaus.";
         newTable = "Uusi taulu lisätty.";
+        deleteTable = "Taulu on nyt poistettu.";
     }
 
     public String getNewTable() {
@@ -212,4 +211,10 @@ public class Finnish implements Language {
     public String getSave() {
         return save;
     }
+
+    public String getDeleteTable() {
+        return deleteTable;
+    }
+    
+    
 }
