@@ -14,10 +14,12 @@ Ohjelma käynnistetään komennolla
 java -jar Seikkailupeli-1.0-SNAPSHOT.jar 
 ```
 
-## Kirjautuminen
+## Aloitus
 
 Sovellus käynnistyy valikkonäkymään, jossa on kolme nappia.
-Ylimmästä pääsee pelaamaan, keskimmäisestä lisäämään uusia asioita seuraavaan pelikertaan ja alin sulkee sovelluksen.
+* ylimmästä napista pääsee pelaamaan
+* keskimmäisestä lisäämään uusia asioita seuraavaan pelikertaan
+* alin sulkee sovelluksen.
 
 ## Pelaaminen
 
