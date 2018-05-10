@@ -45,7 +45,7 @@ Komento
 ```
 mvn package
 ```
-generoi hakemistoon _target_ suoritettavan jar-tiedoston
+generoi hakemistoon _target_ suoritettavan jar-tiedoston Seikkailupeli-1.0-SNAPSHOT.jar
 
 ### Checkstyle
 
