@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import adventuregame.dao.AreaDao;
+import adventuregame.dao.DaoService;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
 import adventuregame.dao.MonsterDao;
-import java.sql.SQLException;
 
 /**
  * World-luokka ylläpitää tietoa mitä on missäkin
@@ -21,32 +21,28 @@ public class World {
     private ArrayList<Helper> helpers;
     private ArrayList<Monster> monsters;
     private Monster monster;
-    private Player player;
+//    private Player player;
     private Random random;
     private Area home;
 
     /**
-     * Metodi luo uuden maailman, sille pelaajan ja sijoittaa alueet, esineet,
-     * apurit ja hirviön ja sijoittaa kaiken paikoilleen
+     * Metodi luo uuden maailman ja sijoittaa alueet, esineet, apurit ja hirviön
+     * ja sijoittaa kaiken paikoilleen
      *
-     * @param areaDao - tietokannassa olevat alueet
-     * @param itemDao - tietokannassa olevat esineet
-     * @param helperDao - tietokannassa olevat apurit
-     * @param monsterdao - tietokannassa olevat hirviöt
+     * @param daoService - tietokannoissa olevia tietoja käsittelevä olio
      * @throws Exception - tietokannan käyttämisestä voi tulla virheilmoitus
      */
-    public World(AreaDao areaDao, ItemDao itemDao, HelperDao helperDao, MonsterDao monsterdao) throws Exception {
+    public World(DaoService daoService) throws Exception {
         this.random = new Random();
         this.items = new ArrayList();
         this.areas = new ArrayList();
         this.helpers = new ArrayList();
         this.monsters = new ArrayList();
         this.home = new Area("koti", "Oma koti kullan kallis");
-        this.createAreas(areaDao);
-        this.createItems(itemDao);
-        this.createHelpers(helperDao);
-        this.createMonsters(monsterdao);
-        this.createPlayer();
+        this.createAreas(daoService.getAreaDao());
+        this.createItems(daoService.getItemDao());
+        this.createHelpers(daoService.getHelperDao());
+        this.createMonsters(daoService.getMonsterDao());
     }
 
     public ArrayList<Area> getAreas() {
@@ -66,10 +62,10 @@ public class World {
         return monster;
     }
 
+    /*
     public Player getPlayer() {
         return player;
-    }
-
+    }*/
     public Area getHome() {
         return home;
     }
@@ -154,14 +150,6 @@ public class World {
         Area area = findRandomPlace();
         area.putMonster(monster);
         monster.setArea(area);
-    }
-
-    /**
-     * Metodi luo uuden pelaajan ja sijoittaa hänen alueekseen kodin.
-     */
-    private void createPlayer() {
-        this.player = new Player();
-        player.setArea(home);
     }
 
     /**

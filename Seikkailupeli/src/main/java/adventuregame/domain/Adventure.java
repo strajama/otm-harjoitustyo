@@ -14,14 +14,18 @@ import org.apache.commons.rng.simple.RandomSource;
 public class Adventure {
 
     private World world;
+    private Player player;
     private Item itemGoal;
     private Helper helperGoal;
     private int points;
 //    private Random random;
     private UniformRandomProvider rng;
+    private String lastAction;
 
     /**
-     * Metodi luo uuden Adventure-olion ja asettaa aluksi 0 pistettä.
+     * Metodi luo uuden Adventure-olion, asettaa aluksi 0 pistettä, luo uuden
+     * Player-olion, asettaa viimeiseksi teoksi tyhjän ja luo kirjastosta haetun
+     * satunnaisuuksia antavan olion.
      *
      * @param world - World-olio, jossa seikkailu tapahtuu
      */
@@ -30,6 +34,8 @@ public class Adventure {
         this.points = 0;
 //        this.random = new Random();
         this.rng = RandomSource.create(RandomSource.MT);
+        this.lastAction = "";
+        createPlayer();
     }
 
     public World getWorld() {
@@ -56,8 +62,24 @@ public class Adventure {
         return points;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public String getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(String lastAction) {
+        this.lastAction = lastAction;
+    }
+
     public void givePoints(int points) {
         this.points += points;
+    }
+
+    public String printPoints() {
+        return "Sinulla on pisteitä " + points + ".";
     }
 
     /**
@@ -91,5 +113,13 @@ public class Adventure {
         ArrayList<Helper> helpers = world.getHelpers();
         int r = rng.nextInt(helpers.size());
         this.helperGoal = helpers.get(r);
+    }
+
+    /**
+     * Metodi luo uuden pelaajan ja sijoittaa hänen alueekseen kodin.
+     */
+    private void createPlayer() {
+        this.player = new Player();
+        player.setArea(world.getHome());
     }
 }

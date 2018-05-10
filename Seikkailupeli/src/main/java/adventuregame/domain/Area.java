@@ -95,7 +95,7 @@ public class Area {
      */
     public String showMonster() {
         if (monster == null) {
-            return "Täällä ei ole hirviöitä.";
+            return "";
         }
         return "Edessäsi on hirvittävä " + monster.getName().toUpperCase() + ". Se sanoo: '" + monster.getSlogan() + "'.";
     }
@@ -183,11 +183,12 @@ public class Area {
         }
         return null;
     }
-/**
- * Metodi poistaa alueelta parametrina saatavan apurin.
- * 
- * @param helper - Helper-olio
- */
+
+    /**
+     * Metodi poistaa alueelta parametrina saatavan apurin.
+     *
+     * @param helper - Helper-olio
+     */
     public void removeHelper(Helper helper) {
         if (!findings.isEmpty()) {
             if (findings.containsKey(helper.getName())) {

@@ -15,21 +15,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import adventuregame.dao.AreaDao;
+import adventuregame.dao.DaoService;
 import adventuregame.dao.Database;
-import adventuregame.dao.HelperDao;
-import adventuregame.dao.ItemDao;
-import adventuregame.dao.MonsterDao;
-import adventuregame.dao.ScoreDao;
 import adventuregame.domain.Action;
 import adventuregame.domain.Adventure;
+import adventuregame.domain.Area;
 import adventuregame.domain.Direction;
 import adventuregame.domain.Helper;
 import adventuregame.domain.Item;
@@ -48,23 +43,23 @@ import javafx.scene.shape.Polygon;
 public class SeikkailuFXMain extends Application {
 
     private Scene playScene;
-    private Scene loginScene;
+    private Scene beginScene;
     private Scene createScene;
 
-    private AreaDao areaDao;
-    private ItemDao itemDao;
-    private HelperDao helperDao;
-    private MonsterDao monsterDao;
-    private ScoreDao scoreDao;
-    private Database database;
+    private Stage primaryStage;
+
+    private DaoService daoService;
     private String table;
     private ArrayList allList;
+    
     private World world;
     private Adventure adventure;
+    private Language f;
 
-    private BorderPane playBp;
+//    private BorderPane playBp;
     private GridPane doGrid;
     private GridPane moveGrid;
+    private VBox playCenter;
 
     private VBox scoreVBox;
     private TableView scoreTable;
@@ -72,15 +67,14 @@ public class SeikkailuFXMain extends Application {
     private GridPane createGrid;
     private TextField nameTextField;
     private TextField descriptionTextField;
-    private Label label;
+    private Label createMessageLabel;
 
-    private VBox center;
-//playscenen muutettavat Labelit
+    
+
     private Label areaLabel;
     private Label descriptionLabel;
     private Label findingLabel;
     private Label bagLabel;
-    private Label gameLabel;
     private Label doingLabel;
     private Label monsterLabel;
     private Label pointsLabel;
@@ -90,79 +84,24 @@ public class SeikkailuFXMain extends Application {
 
     @Override
     public void init() throws Exception {
-        this.database = new Database("jdbc:sqlite:adventure.db");
+        Database database = new Database("jdbc:sqlite:adventure.db");
         database.init();
-        this.areaDao = new AreaDao(database);
-        this.itemDao = new ItemDao(database);
-        this.helperDao = new HelperDao(database);
-        this.monsterDao = new MonsterDao(database);
-        this.scoreDao = new ScoreDao(database);
+        daoService = new DaoService(database);
+        this.world = new World(daoService);
+        f = new Finnish();
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
-//        world = new World(areaDao, itemDao, helperDao, monsterDao);
-        //login-scene
-        VBox loginPane = new VBox(10);
-        loginPane.setPadding(new Insets(10, 10, 10, 10));
-        loginPane.setAlignment(Pos.CENTER);
+        this.primaryStage = primaryStage;
 
-        Label loginLabel = new Label("Pelaa kirjautumatta randomisti seikkailua");
-        Button playButton = new Button("Jee, pelaamaan!");
-        playButton.setOnAction(e -> {
-            try {
-                world = new World(areaDao, itemDao, helperDao, monsterDao);
-            } catch (Exception ex) {
-                Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            adventure = new Adventure(world);
-            adventure.makeAGame();
-            primaryStage.setScene(playScene);
-        });
-        Label createNewLabel = new Label("Tähän tulee uusien juttujen luominen tietokantaan.");
-        Button createNewButton = new Button("Sitä tekemään");
-        createNewButton.setOnAction(e -> {
-            primaryStage.setScene(createScene);
-        });
-        Label exitLabel = new Label("Testataan sovelluksen sulkemista.");
-        Button exitButton = new Button("Lopeta");
-        exitButton.setOnAction(e -> Platform.exit());
-
-        loginPane.getChildren().addAll(loginLabel, playButton, createNewLabel, createNewButton, exitLabel, exitButton);
-        loginScene = new Scene(loginPane, 1000, 400);
-
-        playSceneBorderPaneCreate();
-        createMoveButtons();
-        createDoButtons();
-        createScoreSave();
-//        createScoreTable();
-
-        //paluu alkuun
-        Button returnLogin = new Button("PALUU VALIKKOON");
-        returnLogin.setMinSize(60,40);
-        returnLogin.setOnAction((event) -> {
-            primaryStage.setScene(loginScene);
-        });
-        doGrid.add(returnLogin, 2, 2);
-
-        playScene = new Scene(playBp, 1000, 400);
-
+        createBeginScene();
+        createPlayScene();
         createCreateScene();
-        createDaoSubmitButton();
-        createClearButton();
 
-        //Login-buttonilla palataan aloitusnäytölle
-        Button rLogin = new Button("Palaa takaisin");
-        GridPane.setConstraints(rLogin, 1, 3);
-        createGrid.getChildren().add(rLogin);
-        rLogin.setOnAction((event) -> {
-            primaryStage.setScene(loginScene);
-        });
-        createScene = new Scene(createGrid, 1000, 400);
-
-        primaryStage.setTitle("Seikkailu");
-        primaryStage.setScene(loginScene);
+        primaryStage.setTitle(f.getTitle());
+        primaryStage.setScene(beginScene);
         primaryStage.show();
     }
 
@@ -170,22 +109,66 @@ public class SeikkailuFXMain extends Application {
      * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen
      */
     private void actionShow() {
-        areaLabel.setText(world.getPlayer().getArea().getName().toUpperCase());
-        descriptionLabel.setText(world.getPlayer().getArea().getDescription());
-        findingLabel.setText(world.getPlayer().getArea().show());
-        bagLabel.setText(world.getPlayer().bag());
-        monsterLabel.setText(world.getPlayer().getArea().showMonster());
-        pointsLabel.setText("Sinulla on pisteitä " + adventure.getPoints() + ".");
+        areaLabel.setText(adventure.getPlayer().getArea().getName().toUpperCase());
+        descriptionLabel.setText(adventure.getPlayer().getArea().getDescription());
+        findingLabel.setText(adventure.getPlayer().getArea().show());
+        bagLabel.setText(adventure.getPlayer().bag());
+        monsterLabel.setText(adventure.getPlayer().getArea().showMonster());
+        pointsLabel.setText(adventure.printPoints());
+        doingLabel.setText(adventure.getLastAction());
     }
 
-    private void playSceneBorderPaneCreate() throws SQLException {
-        playBp = new BorderPane();
+    /**
+     * Metodi luo alkunäkymän
+     */
+    private void createBeginScene() {
+        VBox beginPane = new VBox(10);
+        beginPane.setPadding(new Insets(10, 10, 10, 10));
+        beginPane.setAlignment(Pos.CENTER);
+
+        Label beginLabel = new Label(f.getLoginLabel());
+        Button playButton = new Button(f.getPlayButton());
+        playButton.setOnAction(e -> {
+            adventure = new Adventure(world);
+            adventure.makeAGame();
+            primaryStage.setScene(playScene);
+        });
+
+        Label createNewLabel = new Label(f.getCreateNewLabel());
+        Button createNewButton = new Button(f.getCreateNewButton());
+        createNewButton.setOnAction(e -> {
+            primaryStage.setScene(createScene);
+        });
+        Label exitLabel = new Label(f.getExitLabel());
+        Button exitButton = new Button(f.getExitButton());
+        exitButton.setOnAction(e -> Platform.exit());
+
+        beginPane.getChildren().addAll(beginLabel, playButton, createNewLabel, createNewButton, exitLabel, exitButton);
+        beginScene = new Scene(beginPane, 1000, 400);
+    }
+
+    /**
+     * Metodi luo pelaamisnäkymän
+     */
+    private void createPlayScene() {
+        BorderPane playBp = new BorderPane();
         playBp.setPadding(new Insets(10, 10, 10, 10));
         playBp.setLeft(playLeft());
         playBp.setBottom(playDown());
-        playBp.setCenter(playRight());
+        playBp.setCenter(playCenter());
         createScoreTable();
         playBp.setRight(updateScoreTable());
+        createMoveButtons();
+        createDoButtons();
+        createScoreSave();
+
+        Button returnLogin = new Button(f.getReturnLogin());
+        returnLogin.setMinSize(60, 40);
+        returnLogin.setOnAction((event) -> {
+            primaryStage.setScene(beginScene);
+        });
+        doGrid.add(returnLogin, 2, 2);
+        playScene = new Scene(playBp, 1000, 400);
     }
 
     /**
@@ -196,19 +179,15 @@ public class SeikkailuFXMain extends Application {
     private VBox playLeft() {
         VBox left = new VBox();
         left.setSpacing(10);
-        areaLabel = new Label("KOTI");
-        descriptionLabel = new Label("Oma koti kullan kallis");
-        findingLabel = new Label("Kotona ei ole mitään mielenkiintoista. Paras lähteä matkaan.");
-//        bagLabel = new Label("Reppusi on tyhjä. Etsi siihen täytettä.");
-//        gameLabel = new Label("Tässä kerrotaan pelitilanteesi.");
-        doingLabel = new Label("Tässä kerrotaan mitä viimeksi teit.");
-        monsterLabel = new Label("");
-        pointsLabel = new Label("Tässä näkyy pisteesi.");
+        areaLabel = new Label(f.getAreaLabel());
+        descriptionLabel = new Label(f.getDescriptionLabel());
+        findingLabel = new Label(f.getFindingLabel());
+        doingLabel = new Label(f.getDoingLabel());
+        monsterLabel = new Label(f.getMonsterLabel());
+        pointsLabel = new Label(f.getPointsLabel());
         left.getChildren().add(areaLabel);
         left.getChildren().add(descriptionLabel);
         left.getChildren().add(findingLabel);
-        //     left.getChildren().add(bagLabel);
-//        left.getChildren().add(gameLabel);
         left.getChildren().add(doingLabel);
         left.getChildren().add(monsterLabel);
         left.getChildren().add(pointsLabel);
@@ -238,14 +217,19 @@ public class SeikkailuFXMain extends Application {
         return down;
     }
 
-    private VBox playRight() {
-        center = new VBox();
-        center.setSpacing(10);
-        center.setAlignment(Pos.TOP_LEFT);
-        center.setPadding(new Insets(20, 20, 20, 20));
-        bagLabel = new Label("Reppusi on tyhjä.");
-        center.getChildren().add(bagLabel);
-        return center;
+    /**
+     * Playscenen keskiosan luominen
+     *
+     * @return - palauttaa itsensä näytölle sijoitettavaksi
+     */
+    private VBox playCenter() {
+        playCenter = new VBox();
+        playCenter.setSpacing(10);
+        playCenter.setAlignment(Pos.TOP_LEFT);
+        playCenter.setPadding(new Insets(20, 20, 20, 20));
+        bagLabel = new Label(f.getBagLabel());
+        playCenter.getChildren().add(bagLabel);
+        return playCenter;
     }
 
     /**
@@ -253,198 +237,165 @@ public class SeikkailuFXMain extends Application {
      */
     private void createMoveButtons() {
 
-        Polygon triangleNorth = new Polygon();        
-        triangleNorth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
-        triangleNorth.setFill(Color.RED);        
-        triangleNorth.setStroke(Color.DARKRED);
-        
-        Polygon triangleEast = new Polygon();        
-        triangleEast.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
-        triangleEast.setFill(Color.RED);        
-        triangleEast.setStroke(Color.DARKRED);
+        Polygon triangleNorth = new Polygon();
+        triangleNorth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
+        triangleNorth.setFill(Color.BLUE);
+        triangleNorth.setStroke(Color.DARKBLUE);
+
+        Polygon triangleEast = new Polygon();
+        triangleEast.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
+        triangleEast.setFill(Color.GREEN);
+        triangleEast.setStroke(Color.DARKGREEN);
         triangleEast.setRotate(90);
-        
-        Polygon triangleSouth = new Polygon();        
-        triangleSouth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
-        triangleSouth.setFill(Color.RED);        
+
+        Polygon triangleSouth = new Polygon();
+        triangleSouth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
+        triangleSouth.setFill(Color.RED);
         triangleSouth.setStroke(Color.DARKRED);
         triangleSouth.setRotate(180);
-        
-        Polygon triangleWest = new Polygon();        
-        triangleWest.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
-        triangleWest.setFill(Color.RED);        
-        triangleWest.setStroke(Color.DARKRED);
+
+        Polygon triangleWest = new Polygon();
+        triangleWest.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
+        triangleWest.setFill(Color.ORANGE);
+        triangleWest.setStroke(Color.DARKORANGE);
         triangleWest.setRotate(270);
-        
-        Image arrowImage = new Image("file:arrow.png");
 
         Button north = new Button();
-        north.setMinSize(50,50);
-        ImageView northView = new ImageView(arrowImage);
+        north.setMinSize(50, 50);
         north.setGraphic(triangleNorth);
         north.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.NORTH);
             actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit pohjoiseen.");
-            } else {
-                doingLabel.setText("Et voi mennä pohjoiseen.");
-            }
+
         });
         moveGrid.add(north, 1, 0);
 
         Button east = new Button();
         east.setMinSize(50, 50);
-        ImageView eastView = new ImageView(arrowImage);
-        eastView.setRotate(90);
         east.setGraphic(triangleEast);
         east.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.EAST);
             actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit itään.");
-            } else {
-                doingLabel.setText("Et voi mennä itään.");
-            }
+
         });
         moveGrid.add(east, 2, 1);
 
         Button west = new Button();
-        west.setMinSize(50,50);
-        ImageView westView = new ImageView(arrowImage);
-        westView.setRotate(270);
+        west.setMinSize(50, 50);
         west.setGraphic(triangleWest);
         west.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.WEST);
             actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit länteen.");
-            } else {
-                doingLabel.setText("Et voi mennä länteen.");
-            }
         });
         moveGrid.add(west, 0, 1);
 
         Button south = new Button();
-        south.setMinSize(50,50);
-        ImageView southView = new ImageView(arrowImage);
-        southView.setRotate(180);
+        south.setMinSize(50, 50);
         south.setGraphic(triangleSouth);
         south.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.SOUTH);
             actionShow();
-            if (move) {
-                doingLabel.setText("Matkasit etelään.");
-            } else {
-                doingLabel.setText("Et voi mennä etelään.");
-            }
         });
         moveGrid.add(south, 1, 2);
     }
 
     /**
-     * Metodi luo napit, joilla tehdään asioita
+     * Metodi luo napit, joilla pelaaja tekee asioita
      */
     private void createDoButtons() {
-        Button pick = new Button("POIMI");
-        pick.setMinSize(60,40);
+        Button pick = new Button(f.getPick());
+        pick.setMinSize(60, 40);
         pick.setOnAction((event) -> {
             Action a = new Action(adventure);
             Item item = a.take();
             actionShow();
             if (item != null) {
-                doingLabel.setText("Poimit esineen " + item + ".");
-                center.getChildren().add(new Label(item.getName().toUpperCase()));
-            } else {
-                doingLabel.setText("Täällä ei ole poimittavaa.");
+                playCenter.getChildren().clear();
+                playCenter.getChildren().add(bagLabel);
+                Iterator<String> it = adventure.getPlayer().getItems().keySet().iterator();
+                while (it.hasNext()) {
+                    playCenter.getChildren().add(new Label(it.next().toUpperCase()));
+                }
             }
         });
         doGrid.add(pick, 0, 0);
 
-        Button speak = new Button("PUHU");
-        speak.setMinSize(60,40);
+        Button speak = new Button(f.getSpeak());
+        speak.setMinSize(60, 40);
         speak.setOnAction((event -> {
             Action a = new Action(adventure);
             Helper helper = a.speak();
             actionShow();
-            if (helper != null) {
-                doingLabel.setText(helper + " puuttuu " + helper.getItem().getDescription() + ".");
-            } else {
-                doingLabel.setText("Täällä ei ole uusia keskusteluja käytävänä.");
-            }
         }));
         doGrid.add(speak, 0, 1);
 
-        Button give = new Button("ANNA");
-        give.setMinSize(60,40);
+        Button give = new Button(f.getGive());
+        give.setMinSize(60, 40);
         give.setOnAction((event -> {
             Action a = new Action(adventure);
             Item item = a.give();
             actionShow();
             if (item != null) {
-                doingLabel.setText("Reppusi on kevyempi, kun sieltä puuttuu " + item.getName() + ".");
-                center.getChildren().clear();
-                center.getChildren().add(bagLabel);
-                Iterator<String> it = world.getPlayer().getItems().keySet().iterator();
+                playCenter.getChildren().clear();
+                playCenter.getChildren().add(bagLabel);
+                Iterator<String> it = adventure.getPlayer().getItems().keySet().iterator();
                 while (it.hasNext()) {
-                    center.getChildren().add(new Label(it.next().toUpperCase()));
+                    playCenter.getChildren().add(new Label(it.next().toUpperCase()));
                 }
-            } else {
-                doingLabel.setText("Sinulla ei ole mitään sopivaa annettavaa.");
             }
         }));
         doGrid.add(give, 1, 0);
 
-        Button hit = new Button("LYÖ");
-        hit.setMinSize(60,40);
+        Button hit = new Button(f.getHit());
+        hit.setMinSize(60, 40);
         hit.setOnAction((event -> {
             Action a = new Action(adventure);
             Monster monster = a.hit();
             actionShow();
             if (monster != null) {
-                doingLabel.setText("Lyöt hirviötä " + monster.getName() + ", joka ottaa osuman.");
-            } else {
-                doingLabel.setText("Huidot ilmaa niin, että sinulle tulee hiki.");
+                if (monster.isDead()) {
+                    monsterLabel.setText("");
+                }
             }
-            if (monster.isDead()) {
-                monsterLabel.setText(monster.getName().toUpperCase() + " on kuollut.");
-            }
+
         }));
         doGrid.add(hit, 1, 1);
     }
 
+    /**
+     * Metodi luo pisteiden tallennusmahdollisuuden
+     */
     private void createScoreSave() {
         TextField playerName = new TextField();
-        playerName.setMinSize(60,40);
-        playerName.setPromptText("Anna uusi nimi.");
+        playerName.setMinSize(60, 40);
+        playerName.setPromptText(f.getNewName());
         doGrid.add(playerName, 2, 0);
 
-        Button saveScore = new Button("TALLENNA PISTEET");
-        saveScore.setMinSize(60,40);
-        saveScore.setOnAction((event) -> {
+        Button saveScoreButton = new Button(f.getSaveScoreButton());
+        saveScoreButton.setMinSize(60, 40);
+        saveScoreButton.setOnAction((event) -> {
             if (!playerName.getText().isEmpty()) {
                 try {
-                    scoreDao.saveOrUpdate(new Score(playerName.getText(), adventure.getPoints()));
+                    daoService.getScoreDao().saveOrUpdate(new Score(playerName.getText(), adventure.getPoints()));
                 } catch (SQLException ex) {
                     Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 playerName.clear();
-                try {
-                    updateScoreTable();
-                } catch (SQLException ex) {
-                    Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                updateScoreTable();
             }
         });
-        doGrid.add(saveScore, 2, 1);
+        doGrid.add(saveScoreButton, 2, 1);
     }
 
-    private void createScoreTable() throws SQLException {
+    /**
+     * Metodi luo top5-pistelistauksen
+     */
+    private void createScoreTable() {
 
-        Label label = new Label("Parhaat pisteet");
+        Label scoreLabel = new Label(f.getScoreLabel());
         scoreTable = new TableView();
-        TableColumn name = new TableColumn("nimi");
-        TableColumn points = new TableColumn("pisteet");
+        TableColumn name = new TableColumn(f.getName());
+        TableColumn points = new TableColumn(f.getPoints());
         scoreTable.getColumns().addAll(name, points);
 
         name.setCellValueFactory(new PropertyValueFactory<Score, String>("name"));
@@ -453,32 +404,40 @@ public class SeikkailuFXMain extends Application {
         scoreVBox = new VBox();
         scoreVBox.setSpacing(5);
         scoreVBox.setPadding(new Insets(20, 20, 20, 20));
-        scoreVBox.getChildren().addAll(label, scoreTable);
+        scoreVBox.getChildren().addAll(scoreLabel, scoreTable);
 
         updateScoreTable();
-
-//        center.getChildren().add(scoreVBox);
     }
 
-    private VBox updateScoreTable() throws SQLException {
-
-        ArrayList<Score> list = scoreDao.bestScores();
-
-        ObservableList<Score> data = FXCollections.observableArrayList(list);
-        scoreTable.setItems(data);
-
-        for (Score s : list) {
-
+    /**
+     * Metodi päivittää pistetaulua
+     *
+     * @return palauttaa päivitetyn itsensä näytölle sijoitettavaksi
+     * @throws SQLException - koska pistetaulu on ajan tasalla
+     */
+    private VBox updateScoreTable() {
+        ArrayList<Score> scoreList = new ArrayList<>();
+        try {
+            scoreList = daoService.getScoreDao().bestScores();
+        } catch (SQLException ex) {
+            Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        ObservableList<Score> data = FXCollections.observableArrayList(scoreList);
+        scoreTable.setItems(data);
 
         return scoreVBox;
     }
 
+    /**
+     * Metodi luo näkymän, jossa voi lisätä uusia asioita tietokantatauluihin
+     */
     private void createCreateScene() {
         createGrid = new GridPane();
         createGrid.setPadding(new Insets(10, 10, 10, 10));
         createGrid.setVgap(5);
         createGrid.setHgap(5);
+        createGrid.setAlignment(Pos.TOP_CENTER);
         table = "";
         allList = new ArrayList();
 
@@ -488,30 +447,40 @@ public class SeikkailuFXMain extends Application {
         createGrid.getChildren().add(cbAll);
 
         cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Alue", "Esine", "Apuri", "Hirviö"));
+        cb.setItems(FXCollections.observableArrayList(f.getTables()));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
         findDaos();
 
         nameTextField = new TextField();
-        nameTextField.setPromptText("Anna uusi nimi.");
+        nameTextField.setPromptText(f.getNewName());
         GridPane.setConstraints(nameTextField, 0, 1);
         createGrid.getChildren().add(nameTextField);
 
         descriptionTextField = new TextField();
-        descriptionTextField.setPromptText("Anna uusi kuvaus.");
+        descriptionTextField.setPromptText(f.getDescriptionTextField());
         GridPane.setConstraints(descriptionTextField, 0, 2);
         createGrid.getChildren().add(descriptionTextField);
-        label = new Label("Tähän tulee viesti");
-        GridPane.setConstraints(label, 0, 3);
-        GridPane.setColumnSpan(label, 2);
-        createGrid.getChildren().add(label);
+        createMessageLabel = new Label(f.getMessage());
+        GridPane.setConstraints(createMessageLabel, 0, 3);
+        GridPane.setColumnSpan(createMessageLabel, 2);
+        createGrid.getChildren().add(createMessageLabel);
 
         cbAll.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov,
                         Number old_val, Number new_val) -> {
                 }
         );
+        //Login-buttonilla palataan aloitusnäytölle
+        Button rLogin = new Button(f.getReturnLogin());
+        GridPane.setConstraints(rLogin, 1, 3);
+        createGrid.getChildren().add(rLogin);
+        rLogin.setOnAction((event) -> {
+            primaryStage.setScene(beginScene);
+        });
+        createDaoSubmitButton();
+        createDeleteButton();
+        createScene = new Scene(createGrid, 1000, 400);
     }
 
     /**
@@ -525,28 +494,28 @@ public class SeikkailuFXMain extends Application {
                     table = daos[new_val.intValue()];
                     if (table.equals("Area")) {
                         try {
-                            allList = areaDao.findAll();
+                            allList = daoService.getAreaDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if (table.equals("Item")) {
                         try {
-                            allList = itemDao.findAll();
+                            allList = daoService.getItemDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if (table.equals("Helper")) {
                         try {
-                            allList = helperDao.findAll();
+                            allList = daoService.getHelperDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else if (table.equals("Monster")) {
                         try {
-                            allList = monsterDao.findAll();
+                            allList = daoService.getMonsterDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -561,29 +530,28 @@ public class SeikkailuFXMain extends Application {
      * Metodi, joka luo napin, jolla voi lisätä tietokantaan uusia tietoja.
      */
     private void createDaoSubmitButton() {
-        Button submit = new Button("Lisää");
+        Button submit = new Button(f.getSave());
         GridPane.setConstraints(submit, 1, 1);
         createGrid.getChildren().add(submit);
         submit.setOnAction((ActionEvent e) -> {
             if ((!nameTextField.getText().isEmpty() && !descriptionTextField.getText().isEmpty())) {
                 if (table.isEmpty()) {
-                    label.setText("Valitse taulu.");
+                    createMessageLabel.setText(f.getTableIsEmpty());
                 } else {
-                    /* Kommentoitu ulos, koska tällä hetkellä ei ole varmaa halutaanko alueita muokata 
                     if (table == "Area") {
-                        Area newArea = new Area(name.getText(), des.getText());
+                        Area newArea = new Area(nameTextField.getText(), descriptionTextField.getText());
                         try {
-                            areaDao.saveOrUpdate(newArea);
-                    allList = areaDao.findAll();
+                            daoService.getAreaDao().saveOrUpdate(newArea);
+                            allList = daoService.getAreaDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else*/ if ("Item".equals(table)) {
+                    } else if ("Item".equals(table)) {
                         Item newItem = new Item(nameTextField.getText(), descriptionTextField.getText());
                         try {
-                            itemDao.saveOrUpdate(newItem);
-                            allList = itemDao.findAll();
+                            daoService.getItemDao().saveOrUpdate(newItem);
+                            allList = daoService.getItemDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -591,8 +559,8 @@ public class SeikkailuFXMain extends Application {
                     } else if ("Helper".equals(table)) {
                         Helper newHelper = new Helper(nameTextField.getText(), descriptionTextField.getText());
                         try {
-                            helperDao.saveOrUpdate(newHelper);
-                            allList = helperDao.findAll();
+                            daoService.getHelperDao().saveOrUpdate(newHelper);
+                            allList = daoService.getHelperDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -600,44 +568,84 @@ public class SeikkailuFXMain extends Application {
                     } else if ("Monster".equals(table)) {
                         Monster newMonster = new Monster(nameTextField.getText(), descriptionTextField.getText());
                         try {
-                            monsterDao.saveOrUpdate(newMonster);
-                            allList = monsterDao.findAll();
+                            daoService.getMonsterDao().saveOrUpdate(newMonster);
+                            allList = daoService.getMonsterDao().findAll();
                             cbAll.setItems(FXCollections.observableArrayList(allList));
                         } catch (SQLException ex) {
                             Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    label.setText("Uusi " + table + "-taulu lisätty. Paitsi Area.");
+                    createMessageLabel.setText(f.getNewTable());
                     nameTextField.clear();
                     descriptionTextField.clear();
                 }
             } else if (nameTextField.getText().isEmpty() && descriptionTextField.getText().isEmpty()) {
-                label.setText("Anna nimi ja kuvaus.");
+                createMessageLabel.setText(f.getNameAndDescription());
             } else if (descriptionTextField.getText().isEmpty()) {
-                label.setText("Anna kuvaus.");
+                createMessageLabel.setText(f.getDescriptionTextField());
             } else if (nameTextField.getText().isEmpty()) {
-                label.setText("Anna nimi.");
+                createMessageLabel.setText(f.getNewName());
             }
         });
     }
 
     /**
-     * Metodi tyhjentää tekstikentät
+     * Metodi luo napin, jolla voi poistaa tietoja tietokannasta
      */
-    private void createClearButton() {
-        Button clear = new Button("Pyyhi");
-        GridPane.setConstraints(clear, 1, 2);
-        createGrid.getChildren().add(clear);
-        clear.setOnAction((ActionEvent e) -> {
-            nameTextField.clear();
-            descriptionTextField.clear();
-            label.setText("Tekstikentät tyhjennetty.");
+    private void createDeleteButton() {
+        Button delete = new Button(f.getDelete());
+        GridPane.setConstraints(delete, 1, 2);
+        createGrid.getChildren().add(delete);
+        delete.setOnAction((ActionEvent e) -> {
+            if (!nameTextField.getText().isEmpty()) {
+                String name = nameTextField.getText();
+                if (table.isEmpty()) {
+                    createMessageLabel.setText(f.getTableIsEmpty());
+                }
+                if (table == "Area") {
+                    try {
+                        Integer key = daoService.getAreaDao().findIdByName(name);
+                        daoService.getAreaDao().delete(key);
+                        allList = daoService.getAreaDao().findAll();
+                        cbAll.setItems(FXCollections.observableArrayList(allList));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if ("Item".equals(table)) {
+                    try {
+                        Integer key = daoService.getItemDao().findIdByName(name);
+                        daoService.getItemDao().delete(key);
+                        allList = daoService.getItemDao().findAll();
+                        cbAll.setItems(FXCollections.observableArrayList(allList));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if ("Helper".equals(table)) {
+                    try {
+                        Integer key = daoService.getHelperDao().findIdByName(name);
+                        daoService.getHelperDao().delete(key);
+                        allList = daoService.getHelperDao().findAll();
+                        cbAll.setItems(FXCollections.observableArrayList(allList));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if ("Monster".equals(table)) {
+                    try {
+                        Integer key = daoService.getMonsterDao().findIdByName(name);
+                        daoService.getMonsterDao().delete(key);
+                        allList = daoService.getMonsterDao().findAll();
+                        cbAll.setItems(FXCollections.observableArrayList(allList));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
         });
     }
 
     @Override
-    public void stop() throws Exception {
-        System.out.println("LOPPU!");
+    public void stop() {
+        System.out.println(f.getTheEnd());
     }
 
     /**
@@ -674,4 +682,16 @@ public class SeikkailuFXMain extends Application {
         Label daoDes = new Label("Uusi kuvaus");
         createvb.getChildren().add(daoDes);
         TextField tfDes = new TextField();
-        createvb.getChildren().add(tfDes);*/
+        createvb.getChildren().add(tfDes);
+
+    private void createClearButton() {
+        Button clear = new Button("Pyyhi");
+        GridPane.setConstraints(clear, 1, 3);
+        createGrid.getChildren().add(clear);
+        clear.setOnAction((ActionEvent e) -> {
+            nameTextField.clear();
+            descriptionTextField.clear();
+            label.setText("Tekstikentät tyhjennetty.");
+        });
+    }
+ */
