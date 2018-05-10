@@ -42,6 +42,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 
 public class SeikkailuFXMain extends Application {
 
@@ -138,6 +140,7 @@ public class SeikkailuFXMain extends Application {
 
         //paluu alkuun
         Button returnLogin = new Button("PALUU VALIKKOON");
+        returnLogin.setMinSize(60,40);
         returnLogin.setOnAction((event) -> {
             primaryStage.setScene(loginScene);
         });
@@ -249,11 +252,36 @@ public class SeikkailuFXMain extends Application {
      * Metodi luo napit, joilla liikkuminen tapahtuu
      */
     private void createMoveButtons() {
+
+        Polygon triangleNorth = new Polygon();        
+        triangleNorth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
+        triangleNorth.setFill(Color.RED);        
+        triangleNorth.setStroke(Color.DARKRED);
+        
+        Polygon triangleEast = new Polygon();        
+        triangleEast.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
+        triangleEast.setFill(Color.RED);        
+        triangleEast.setStroke(Color.DARKRED);
+        triangleEast.setRotate(90);
+        
+        Polygon triangleSouth = new Polygon();        
+        triangleSouth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
+        triangleSouth.setFill(Color.RED);        
+        triangleSouth.setStroke(Color.DARKRED);
+        triangleSouth.setRotate(180);
+        
+        Polygon triangleWest = new Polygon();        
+        triangleWest.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);        
+        triangleWest.setFill(Color.RED);        
+        triangleWest.setStroke(Color.DARKRED);
+        triangleWest.setRotate(270);
+        
         Image arrowImage = new Image("file:arrow.png");
 
-        Button north = new Button("");
+        Button north = new Button();
+        north.setMinSize(50,50);
         ImageView northView = new ImageView(arrowImage);
-        north.setGraphic(northView);
+        north.setGraphic(triangleNorth);
         north.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.NORTH);
             actionShow();
@@ -265,10 +293,11 @@ public class SeikkailuFXMain extends Application {
         });
         moveGrid.add(north, 1, 0);
 
-        Button east = new Button("");
+        Button east = new Button();
+        east.setMinSize(50, 50);
         ImageView eastView = new ImageView(arrowImage);
         eastView.setRotate(90);
-        east.setGraphic(eastView);
+        east.setGraphic(triangleEast);
         east.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.EAST);
             actionShow();
@@ -280,10 +309,11 @@ public class SeikkailuFXMain extends Application {
         });
         moveGrid.add(east, 2, 1);
 
-        Button west = new Button("");
+        Button west = new Button();
+        west.setMinSize(50,50);
         ImageView westView = new ImageView(arrowImage);
         westView.setRotate(270);
-        west.setGraphic(westView);
+        west.setGraphic(triangleWest);
         west.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.WEST);
             actionShow();
@@ -295,10 +325,11 @@ public class SeikkailuFXMain extends Application {
         });
         moveGrid.add(west, 0, 1);
 
-        Button south = new Button("");
+        Button south = new Button();
+        south.setMinSize(50,50);
         ImageView southView = new ImageView(arrowImage);
         southView.setRotate(180);
-        south.setGraphic(southView);
+        south.setGraphic(triangleSouth);
         south.setOnAction((event) -> {
             boolean move = new Action(adventure).move(Direction.SOUTH);
             actionShow();
@@ -316,6 +347,7 @@ public class SeikkailuFXMain extends Application {
      */
     private void createDoButtons() {
         Button pick = new Button("POIMI");
+        pick.setMinSize(60,40);
         pick.setOnAction((event) -> {
             Action a = new Action(adventure);
             Item item = a.take();
@@ -330,6 +362,7 @@ public class SeikkailuFXMain extends Application {
         doGrid.add(pick, 0, 0);
 
         Button speak = new Button("PUHU");
+        speak.setMinSize(60,40);
         speak.setOnAction((event -> {
             Action a = new Action(adventure);
             Helper helper = a.speak();
@@ -343,6 +376,7 @@ public class SeikkailuFXMain extends Application {
         doGrid.add(speak, 0, 1);
 
         Button give = new Button("ANNA");
+        give.setMinSize(60,40);
         give.setOnAction((event -> {
             Action a = new Action(adventure);
             Item item = a.give();
@@ -362,6 +396,7 @@ public class SeikkailuFXMain extends Application {
         doGrid.add(give, 1, 0);
 
         Button hit = new Button("LYÖ");
+        hit.setMinSize(60,40);
         hit.setOnAction((event -> {
             Action a = new Action(adventure);
             Monster monster = a.hit();
@@ -380,10 +415,12 @@ public class SeikkailuFXMain extends Application {
 
     private void createScoreSave() {
         TextField playerName = new TextField();
+        playerName.setMinSize(60,40);
         playerName.setPromptText("Anna uusi nimi.");
         doGrid.add(playerName, 2, 0);
 
         Button saveScore = new Button("TALLENNA PISTEET");
+        saveScore.setMinSize(60,40);
         saveScore.setOnAction((event) -> {
             if (!playerName.getText().isEmpty()) {
                 try {
@@ -451,7 +488,7 @@ public class SeikkailuFXMain extends Application {
         createGrid.getChildren().add(cbAll);
 
         cb = new ChoiceBox();
-        cb.setItems(FXCollections.observableArrayList("Alue","Esine", "Apuri", "Hirviö"));
+        cb.setItems(FXCollections.observableArrayList("Alue", "Esine", "Apuri", "Hirviö"));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
         findDaos();

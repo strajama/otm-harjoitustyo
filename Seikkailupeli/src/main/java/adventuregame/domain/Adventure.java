@@ -2,6 +2,8 @@ package adventuregame.domain;
 
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja
@@ -15,7 +17,8 @@ public class Adventure {
     private Item itemGoal;
     private Helper helperGoal;
     private int points;
-    private Random random;
+//    private Random random;
+    private UniformRandomProvider rng;
 
     /**
      * Metodi luo uuden Adventure-olion ja asettaa aluksi 0 pistettä.
@@ -25,7 +28,8 @@ public class Adventure {
     public Adventure(World world) {
         this.world = world;
         this.points = 0;
-        this.random = new Random();
+//        this.random = new Random();
+        this.rng = RandomSource.create(RandomSource.MT);
     }
 
     public World getWorld() {
@@ -76,7 +80,7 @@ public class Adventure {
      */
     private void randomItemGoal() {
         ArrayList<Item> items = world.getItems();
-        int r = random.nextInt(items.size());
+        int r = rng.nextInt(items.size());
         this.itemGoal = items.get(r);
     }
 
@@ -85,7 +89,7 @@ public class Adventure {
      */
     private void randomHelperGoal() {
         ArrayList<Helper> helpers = world.getHelpers();
-        int r = random.nextInt(helpers.size());
+        int r = rng.nextInt(helpers.size());
         this.helperGoal = helpers.get(r);
     }
 }
