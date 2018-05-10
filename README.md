@@ -8,9 +8,13 @@
 
 [arkkitehtuuri](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
 
-[alustava kayttöohje](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/alustavakaytto-ohje.md)
+[kayttöohje](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kayttoohje.md)
 
-[github release](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko6)
+## Releaset
+
+[viikko 6](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko6)
+
+[viikko 5](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko5)
 
 ## Komentorivitoiminnot
 
