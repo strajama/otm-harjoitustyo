@@ -2,7 +2,7 @@
 
 ## Dokumentaatio
 
-[vaatimmusmäärittely](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/vaatimusmaarittely.md)
+[vaatimusmäärittely](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/vaatimusmaarittely.md)
 
 [työaikakirjanpito](https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/tyoaikakirjanpito.md)
 
