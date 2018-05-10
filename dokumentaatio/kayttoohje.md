@@ -29,9 +29,15 @@ Keskellä näkyy tieto siitä mitä esineitä pelaajalla on repussaan.
 
 Oikeassa reunassa näkyy viisi parasta tallennettua pistemäärää.
 
-Liikkuminen pelissä tapahtuu vasemmassa reunassa olevan neljän näppäimen avulla.
-Pelaajalla on neljä toimintonäppäintä: poimi, anna, puhu ja lyö.
+Liikkuminen pelissä tapahtuu vasemmassa reunassa olevan neljän nuolinäppäimen avulla.
+Pelaajalla on neljä toimintonäppäintä:
+* poimi
+* anna
+* puhu
+* lyö
+
 Tekstikenttään voi kirjoittaa oman pelinimensä ja sen alapuolelta nappia painamalla tallentaa pisteet. Peli tallentaa aina edellisten samalla pelinimellä tehtyjen pisteiden päälle.
+
 Paluu valikkoon -nappi vie takaisin valikkoon.
 
 ### Pisteiden kertyminen
@@ -45,7 +51,11 @@ Paluu valikkoon -nappi vie takaisin valikkoon.
 ## Uusien asioiden lisääminen
 
 Valitse ensin valikosta, että minkä uuden tiedon haluat lisätä.
+
 Kirjoita tämän jälkeen sille tekstikenttiin nimi ja kuvaus ja paina Lisää-nappia.
+
 Jos haluat tyhjentää kentät, niin paina Pyyhi-nappia.
+
 Palaa takaisin -nappi vie takaisin valikkoon.
+
 Jos olet valinnut ylimmästä valikosta tietotyypin, niin alinna olevasta valikosta näet minkälaisia tietoja tietokannassa on ennestään.
