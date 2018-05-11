@@ -16,6 +16,13 @@ Tietokannan testaamista varten luotiin erillinen _testi.db_-tietokanta, jotta so
 
 ### Testauskattavuus
 
+Käyttöliittymäkerrosta lukuunottamatta sovelluksen testauksen rivikattavuus on 84% ja haarautumakattavuus 74%. Automaattisen testauksen alhaisuus johtuu siitä, että Action- ja DaoService-luokissa osa toiminnoista oli käyttöliittymän päivittämistä, jonka toiminta testattiin manuaalisesti.
+
+### Asennus ja kanfigurointi
+
+Sovellus on haettu ja sitä on testattu käyttöohjeen kuvaamalla tavalla sekä Microsoft, OSX- että Linux-ympäristössä.
+
+Sovellusta on testattu sekä tilanteissa, joissa käyttäjät ja työt tallettavat tiedostot ovat olleet olemassa ja joissa niitä ei ole ollut jolloin ohjelma on luonut ne itse.
 
 ### Toiminnallisuudet
 
