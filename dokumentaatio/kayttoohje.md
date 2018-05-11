@@ -40,6 +40,12 @@ Tekstikenttään voi kirjoittaa oman pelinimensä ja sen alapuolelta nappia pain
 
 Paluu valikkoon -nappi vie takaisin valikkoon.
 
+### Kartta
+
+Pelissä liikutaan alla olevalla kartalla, jonka alueiden sijainti arvotaan peliä rakennettaessa. Aloituspaikka on nimetty "KOTI".
+
+<img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/map.png">
+
 ### Pisteiden kertyminen
 
 * Yksi onnistunut toiminta (liikkuminen, anna, lyö, puhu, poimi) vie yhden pisteen.
