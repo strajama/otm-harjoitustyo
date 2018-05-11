@@ -18,7 +18,7 @@
 
 [viikko 5](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko5)
 
-[loppupalautus](https://github.com/strajama/otm-harjoitustyo/releases/tag/loppudeadline)
+[loppupalautus](https://github.com/strajama/otm-harjoitustyo/releases/tag/loppupalautus)
 
 ## Komentorivitoiminnot
 
