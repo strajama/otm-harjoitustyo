@@ -18,6 +18,8 @@
 
 [viikko 5](https://github.com/strajama/otm-harjoitustyo/releases/tag/viikko5)
 
+[loppupalautus](https://github.com/strajama/otm-harjoitustyo/releases/tag/loppudeadline)
+
 ## Komentorivitoiminnot
 
 Avaa sovellus komennolla mvn compile exec:java -Dexec.mainClass=seikkailupeli.ui.SeikkailuFXMain
