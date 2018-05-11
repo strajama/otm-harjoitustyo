@@ -16,22 +16,29 @@ Käyttöliittymä sisältää kolme erillistä näkymää
 - pelitilanne
 - uusien asioiden lisääminen pelimuuttujiksi
 
-
 jokainen näistä on toteutettu omana Scene-oliona. Näkymistä yksi kerrallaan on näkyvänä eli sijoitettuna sovelluksen Stageen. Käyttöliittymä on rakennettu ohjelmallisesti luokassa [adventuregame.ui.SeikkailuFXMain.java](https://github.com/strajama/otm-harjoitustyo/blob/master/Seikkailupeli/src/main/java/adventuregame/ui/SeikkailuFXMain.java).
 
 Käyttöliittymä on pyritty eristämään täysin sovelluslogiikasta. Ohjelma luo Adventure-olion, joka pitää kirjaa pelin tilanteesta ja Action-olioita, joiden metodit muuttavat pelin tilannetta. Tietokannan ja käyttöliittymän välillä toimii DaoService-olio.
 
 ## Sovelluslogiikka
 
+Sovelluslogiikassa on kaksi erillistä osa-aluetta: itse peli ja tietokannat. Pelilogiikan toteutuminen ja pelinäkymän päivittäminen tapahtuu Action-luokan avulla. Tietokantoihin liittyvät tapahtumat päivittyvät DaoService-luokan avulla.
+
+### Domain-paketti
 * World-luokka ylläpitää tietoa mitä on missäkin.
 * Adventure-luokan tarkoitus on ylläpitää tietoa seikkailun tavoitteista ja niiden toteutumisesta.
-* Action-luokkaa käytetään pelimuutosten tekemiseen
+* Action-luokkaa käytetään pelimuutosten tekemiseen ja käyttöliittymän päivittämiseen.
 * Area-luokka ylläpitää tietoa siitä mitä yksittäisellä alueella on.
-* Helper-luokka on tarkoitettu pelaajan tapaamien apureiden ylläpitämiseen ja toteuttaa abstraktin luokan Finding.
+* Helper-luokka on tarkoitettu pelaajan tapaamien apureiden ylläpitämiseen.
 * Item-luokka on tarkoitettu esineiden ylläpitämiseen.
 * Monster-luokka ylläpitää hirviön tietoja.
 * Player-luokka ylläpitää tietoa siitä mitä pelaaja on tehnyt.
 * Score-luokka on pisteiden tallentamista ja hallinnointia varten.
+
+### DaoService
+* Database-luokka ottaa yhteyden tietokantaan
+* Dao-rajapinnan toteuttavat luokat tallentavat ja ylläpitävät tietoa oikein.
+* DaoService-luokka kutsuu Dao-rajapinnan toteuttavia luokkia ja päivittää käyttöliittymää
 
 ## Tietojen pysyväistallennus
 
