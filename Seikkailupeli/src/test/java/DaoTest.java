@@ -30,12 +30,12 @@ import org.junit.Test;
  */
 public class DaoTest {
 
-    Database d;
-    AreaDao a;
-    ItemDao i;
-    HelperDao h;
-    MonsterDao m;
-    ScoreDao s;
+    private Database d;
+    private AreaDao a;
+    private ItemDao i;
+    private HelperDao h;
+    private MonsterDao m;
+    private ScoreDao s;
 
     @Before
     public void setUp() throws Exception {

@@ -1,6 +1,7 @@
 package adventuregame.domain;
 
 import adventuregame.ui.SeikkailuFXMain;
+import adventuregame.ui.UI;
 import java.util.Iterator;
 import javafx.scene.control.Label;
 
@@ -12,7 +13,7 @@ import javafx.scene.control.Label;
 public class Action {
 
     private Adventure adventure;
-    private SeikkailuFXMain s;
+    private UI s;
 
     /**
      * Metodi luo uuden Action-olion
@@ -20,7 +21,7 @@ public class Action {
      * @param adventure - seikkailu, jota pelataan
      * @param s - käyttöliittymä, jonka tekstejä päivitetään
      */
-    public Action(Adventure adventure, SeikkailuFXMain s) {
+    public Action(Adventure adventure, UI s) {
         this.adventure = adventure;
         this.s = s;
     }
@@ -32,29 +33,27 @@ public class Action {
      * @param direction - suunta johon pelaajan halutaan liikkuvan
      * @return - tieto siitä, että onnistuiko liikkuminen
      */
-    public boolean move(Direction direction) {
+    public void move(Direction direction) {
         Area now = adventure.getPlayer().getArea();
         if (now.getNeighbors().get(direction) != null) {
-            Area next = now.getNeighbors().get(direction);
-            adventure.getPlayer().setArea(next);
+            adventure.getPlayer().setArea(now.getNeighbors().get(direction));
             adventure.takeTurn();
-            adventure.setLastAction("Matkustit " + giveFinnish(direction));
+            updateLastAction("Matkustit " + giveFinnish(direction));
             moveMonster();
             actionShow();
-            return true;
+            return;
         }
-        adventure.setLastAction("Et voi mennä " + giveFinnish(direction));
+        updateLastAction("Et voi mennä " + giveFinnish(direction));
         actionShow();
-        return false;
+        return;
     }
 
     /**
      * Metodin avulla pelaaja poimii esineen. Poimimisen onnistuessa tehdään
      * yksi vuoro.
      *
-     * @return - Esine, joka poimittiin tai null
      */
-    public Item take() {
+    public void take() {
         if (thereIsFinding()) {
             Item item = (Item) adventure.getPlayer().getArea().giveSomeItem();
             if (item != null) {
@@ -62,27 +61,24 @@ public class Action {
                 adventure.takeTurn();
                 if (item.equals(adventure.getItemGoal())) {
                     adventure.givePoints(10);
-                    adventure.setLastAction("Poimit tavoite-esineen " + item.getName().toUpperCase());
+                    updateLastAction("Poimit tavoite-esineen " + item.getName().toUpperCase());
                 } else {
                     adventure.givePoints(5);
-                    adventure.setLastAction("Poimit esineen " + item.getName().toUpperCase() + ".");
+                    updateLastAction("Poimit esineen " + item.getName().toUpperCase() + ".");
                 }
                 actionShow();
-                return item;
+                return;
             }
         }
-        adventure.setLastAction("Täällä ei ole mitään poimittavaa.");
+        updateLastAction("Täällä ei ole mitään poimittavaa.");
         actionShow();
-        return null;
     }
 
     /**
      * Metodia käytetään apurien kanssa puhumiseen. Puhumisen onnistuessa
      * tehdään yksi vuoro.
-     *
-     * @return - apuri, jonka kanssa puhuttiin tai null
      */
-    public Helper speak() {
+    public void speak() {
         if (thereIsFinding()) {
             Helper helper = adventure.getPlayer().getArea().speakWithNewHelper(adventure.getPlayer());
             if (helper != null) {
@@ -90,28 +86,25 @@ public class Action {
                 adventure.takeTurn();
                 if (helper.equals(adventure.getHelperGoal())) {
                     adventure.givePoints(10);
-                    adventure.setLastAction("Etsimäsi " + helper.getName().toUpperCase() + " kaipaa: " + helper.getItem().getDescription() + ".");
+                    updateLastAction("Etsimäsi " + helper.getName().toUpperCase() + " kaipaa: " + helper.getItem().getDescription() + ".");
                 } else {
                     adventure.givePoints(5);
-                    adventure.setLastAction(helper.getName().toUpperCase() + " kaipaa: " + helper.getItem().getDescription() + ".");
+                    updateLastAction(helper.getName().toUpperCase() + " kaipaa: " + helper.getItem().getDescription() + ".");
                 }
                 actionShow();
-                return helper;
+                return;
             }
         }
-        adventure.setLastAction("Täällä ei ole uusia keskusteluja käytävänä.");
+        updateLastAction("Täällä ei ole uusia keskusteluja käytävänä.");
         actionShow();
-        return null;
     }
 
     /**
      * Metodia käytetään, kun annetaan apurille esine. Antaminen onnistuu, kun
      * alueella on apuri ja pelaajalla on repussa esine, jota apuri kaipaa.
      * Onnistuessa tehdään yksi vuoro, esine poistuu repusta ja apuri alueelta.
-     *
-     * @return null tai Item - esine, joka annetaan apurille
      */
-    public Item give() {
+    public void give() {
         if (thereIsFinding()) {
             Helper helper = adventure.getPlayer().getArea().findHelper();
             if (helper != null) {
@@ -120,49 +113,41 @@ public class Action {
                     adventure.getPlayer().getArea().removeHelper(helper);
                     adventure.takeTurn();
                     adventure.givePoints(10);
-                    adventure.setLastAction("Reppusi on kevyempi, kun sieltä puuttuu " + helper.getItem().getName() + ".");
+                    updateLastAction("Reppusi on kevyempi, kun sieltä puuttuu " + helper.getItem().getName() + ".");
                     actionShow();
-                    return helper.getItem();
+                    return;
                 }
             }
         }
-        adventure.setLastAction("Sinulla ei ole mitään sopivaa annettavaa.");
+        updateLastAction("Sinulla ei ole mitään sopivaa annettavaa.");
         actionShow();
-        return null;
     }
 
     /**
      * Metodi lyö hirviötä, jos alueella on sellainen ja tekee silloin yhden
      * vuoron. Jos hirviö kuolee, se poistetaan alueelta.
-     *
-     * @return null tai Monster
      */
-    public Monster hit() {
+    public void hit() {
         if (monsterIsHere() && !adventure.getMonster().isDead()) {
-            Monster monster = adventure.getMonster();
             if (adventure.getPlayer().getItems().isEmpty()) {
-                monster.hitMonster(1);
-                adventure.setLastAction("Lyöt hirviötä " + monster.getName() + ", joka ottaa osuman.");
-                if (monster.isDead()) {
-                    adventure.givePoints(20);
-                    adventure.setLastAction(monster.getName().toUpperCase() + " on kukistettu.");
-                }
+                adventure.getMonster().hitMonster(1);
+                updateLastAction("Lyöt hirviötä " + adventure.getMonster().getName() + ", joka ottaa osuman.");
             } else {
-                monster.hitMonster(2);
-                adventure.setLastAction("Lyöt hirviötä " + monster.getName() + ", joka ottaa kovan osuman.");
-                if (monster.isDead()) {
-                    adventure.givePoints(20);
-                    adventure.setLastAction(monster.getName().toUpperCase() + " on kukistettu.");
-                }
+                adventure.getMonster().hitMonster(2);
+                updateLastAction("Lyöt hirviötä " + adventure.getMonster().getName() + ", joka ottaa kovan osuman.");
+
+            }
+            if (adventure.getMonster().isDead()) {
+                adventure.givePoints(20);
+                updateLastAction(adventure.getMonster().getName().toUpperCase() + " on kukistettu.");
             }
 
             adventure.takeTurn();
             actionShow();
-            return monster;
+            return;
         }
-        adventure.setLastAction("Huidot ilmaa niin, että sinulle tulee hiki.");
+        updateLastAction("Huidot ilmaa niin, että sinulle tulee hiki.");
         actionShow();
-        return null;
     }
 
     /**
@@ -214,25 +199,26 @@ public class Action {
     }
 
     /**
-     * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen
+     * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen.
+     * Testaukseen tehtyä käyttöliittymää ei päivitetä
      *
      * @param s - käyttöliittymä, joka annetaan parametrina
      */
     private void actionShow() {
-
-        s.getAreaLabel().setText(adventure.getPlayer().getArea().getName().toUpperCase());
-        s.getDescriptionLabel().setText(adventure.getPlayer().getArea().getDescription());
-        s.getFindingLabel().setText(adventure.getPlayer().getArea().show());
-        s.getBagLabel().setText(adventure.getPlayer().bag());
-        s.getMonsterLabel().setText(showMonster());
-        s.getPointsLabel().setText(adventure.printPoints());
-        s.getDoingLabel().setText(adventure.getLastAction());
-
-        s.getPlayCenter().getChildren().clear();
-        s.getPlayCenter().getChildren().add(s.getBagLabel());
-        Iterator<String> it = adventure.getPlayer().getItems().keySet().iterator();
-        while (it.hasNext()) {
-            s.getPlayCenter().getChildren().add(new Label(it.next().toUpperCase()));
+        if (!s.isTestUI()) {
+            s.getAreaLabel().setText(adventure.getPlayer().getArea().getName().toUpperCase());
+            s.getDescriptionLabel().setText(adventure.getPlayer().getArea().getDescription());
+            s.getFindingLabel().setText(adventure.getPlayer().getArea().show());
+            s.getBagLabel().setText(adventure.getPlayer().bag());
+            s.getMonsterLabel().setText(showMonster());
+            s.getPointsLabel().setText(adventure.printPoints());
+            s.getDoingLabel().setText(adventure.getLastAction());
+            s.getPlayCenter().getChildren().clear();
+            s.getPlayCenter().getChildren().add(s.getBagLabel());
+            Iterator<String> it = adventure.getPlayer().getItems().keySet().iterator();
+            while (it.hasNext()) {
+                s.getPlayCenter().getChildren().add(new Label(it.next().toUpperCase()));
+            }
         }
     }
 
@@ -247,5 +233,17 @@ public class Action {
             return "";
         }
         return "Edessäsi on hirvittävä " + adventure.getMonster().getName().toUpperCase() + ". Se sanoo: '" + adventure.getMonster().getSlogan() + "'.";
+    }
+
+    /**
+     * Metodi päivittää seikkailun viimeisintä näkymää. Testaukseen tehtyä
+     * käyttöliittymää ei päivitetä
+     *
+     * @param r
+     */
+    private void updateLastAction(String r) {
+        if (!s.isTestUI()) {
+            adventure.setLastAction(r);
+        }
     }
 }

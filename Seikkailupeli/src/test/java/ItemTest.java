@@ -8,7 +8,7 @@ import adventuregame.domain.Item;
 
 public class ItemTest {
 
-    Item item;
+    private Item item;
 
     @Before
     public void setup() {

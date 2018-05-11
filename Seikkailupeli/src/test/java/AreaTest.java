@@ -8,12 +8,11 @@ import adventuregame.domain.Area;
 import adventuregame.domain.Direction;
 import adventuregame.domain.Helper;
 import adventuregame.domain.Item;
-import adventuregame.domain.Monster;
 import adventuregame.domain.Player;
 
 public class AreaTest {
 
-    Area area;
+    private Area area;
 
     public AreaTest() {
     }
@@ -29,7 +28,6 @@ public class AreaTest {
         assertEquals("kokeillaan nyt toimiiko", area.getDescription());
         assertTrue(area.getFindings().isEmpty());
         assertEquals(4, area.getNeighbors().size());
-        assertTrue(area.getMonster() == null);
     }
 
     @Test
@@ -57,19 +55,6 @@ public class AreaTest {
         area.putFinding(item);
         area.putFinding(helper);
         assertEquals("Näet jotain mielenkiintoista: ITEM, HELPER.", area.show());
-    }
-
-    @Test
-    public void testMonster() {
-        assertTrue(area.getMonster() == null);
-        assertEquals("Täällä ei ole hirviöitä.", area.showMonster());
-        Monster test = new Monster("testi", "kokeillaan nyt toimiiko");
-        area.setMonster(test);
-        assertFalse(area.getMonster() == null);
-        assertEquals("Edessäsi on hirvittävä TESTI. Se sanoo: 'kokeillaan nyt toimiiko'.", area.showMonster());
-        area.removeMonster();
-        assertTrue(area.getMonster() == null);
-        assertEquals("Täällä ei ole hirviöitä.", area.showMonster());
     }
 
     @Test

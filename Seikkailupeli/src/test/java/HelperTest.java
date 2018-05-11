@@ -9,7 +9,7 @@ import adventuregame.domain.Item;
 
 public class HelperTest {
 
-    Helper helper;
+    private Helper helper;
 
     @Before
     public void setup() {

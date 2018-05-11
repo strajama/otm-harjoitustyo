@@ -2,6 +2,7 @@
 import org.junit.Before;
 import org.junit.Test;
 import adventuregame.dao.AreaDao;
+import adventuregame.dao.DaoService;
 import adventuregame.dao.Database;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
@@ -13,13 +14,10 @@ import static org.junit.Assert.assertFalse;
 
 public class WorldTest {
 
-    World world;
+    private World world;
 
+    DaoService dao;
     Database d;
-    AreaDao a;
-    ItemDao i;
-    HelperDao h;
-    MonsterDao m;
 
     public WorldTest() {
     }
@@ -29,11 +27,8 @@ public class WorldTest {
 
         d = new Database("jdbc:sqlite:test.db");
         d.init();
-        a = new AreaDao(d);
-        i = new ItemDao(d);
-        h = new HelperDao(d);
-        m = new MonsterDao(d);
-        world = new World(a, i, h, m);
+        dao = new DaoService(d);
+        world = new World(dao);
     }
 
     @Test
@@ -43,7 +38,6 @@ public class WorldTest {
         assertFalse(world.getItems().isEmpty());
         assertFalse(world.getHelpers().isEmpty());
         assertFalse(world.getMonster() == null);
-        assertFalse(world.getPlayer() == null);
         assertEquals(home, world.getHome());
     }
 

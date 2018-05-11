@@ -5,44 +5,53 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import adventuregame.dao.AreaDao;
+import adventuregame.dao.DaoService;
 import adventuregame.dao.Database;
 import adventuregame.dao.HelperDao;
 import adventuregame.dao.ItemDao;
 import adventuregame.dao.MonsterDao;
 import adventuregame.domain.Adventure;
 import adventuregame.domain.World;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdventureTest {
 
-    Adventure adventure;
-
-    World w;
-    Database d;
-    AreaDao a;
-    ItemDao i;
-    HelperDao h;
-    MonsterDao m;
+    private Adventure adventure;
+    private Database d;
+    private DaoService dao;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
-        d = new Database("jdbc:sqlite:test.db");
+        try {
+            d = new Database("jdbc:sqlite:test.db");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AdventureTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         d.init();
-        a = new AreaDao(d);
-        i = new ItemDao(d);
-        h = new HelperDao(d);
-        m = new MonsterDao(d);
-        w = new World(a, i, h, m);
-
-        adventure = new Adventure(w);
+        try {
+            dao = new DaoService(d);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdventureTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            adventure = new Adventure(new World(dao));
+        } catch (Exception ex) {
+            Logger.getLogger(AdventureTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Test
     public void gettersWork() {
-        assertEquals(w, adventure.getWorld());
+        assertFalse(adventure.getWorld() == null);
         assertTrue(adventure.getItemGoal() == null);
         assertTrue(adventure.getHelperGoal() == null);
         assertEquals(0, adventure.getPoints());
+        assertEquals("", adventure.getLastAction());
+        assertFalse(adventure.getMonster() == null);
+        assertFalse(adventure.getPlayer() == null);
     }
 
     @Test
@@ -52,21 +61,18 @@ public class AdventureTest {
     }
 
     @Test
-    public void givePoints() {
+    public void givePrintPoints() {
+        assertEquals("Sinulla on pisteitä 0.", adventure.printPoints());
         adventure.givePoints(10);
         assertEquals(10, adventure.getPoints());
+        assertEquals("Sinulla on pisteitä 10.", adventure.printPoints());
     }
 
     @Test
-    public void makeAGameItemNull() {
+    public void makeAGameItemHelperPlayerNotNull() {
         adventure.makeAGame();
         assertFalse(adventure.getHelperGoal() == null);
         assertFalse(adventure.getItemGoal() == null);
     }
 
-    @Test
-    public void makeAGameHelperNull() {
-        adventure.makeAGame();
-        assertFalse(adventure.getItemGoal() == null);
-    }
 }

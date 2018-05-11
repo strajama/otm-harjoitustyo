@@ -17,7 +17,6 @@ public class Adventure {
     private Item itemGoal;
     private Helper helperGoal;
     private int points;
-//    private Random random;
     private UniformRandomProvider rng;
     private String lastAction;
     private Monster monster;
@@ -32,7 +31,6 @@ public class Adventure {
     public Adventure(World world) {
         this.world = world;
         this.points = 0;
-//        this.random = new Random();
         this.rng = RandomSource.create(RandomSource.MT);
         this.lastAction = "";
         this.monster = world.getMonster();

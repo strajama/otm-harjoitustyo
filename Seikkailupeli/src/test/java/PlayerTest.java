@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 
 public class PlayerTest {
 
-    Player player;
+    private Player player;
 
     @Before
     public void setup() {
@@ -42,6 +42,8 @@ public class PlayerTest {
         Item test = new Item("testi", "testing");
         player.putInBag(test);
         assertFalse(player.getItems().isEmpty());
+        player.removeFromBag(test);
+        assertTrue(player.getItems().isEmpty());
     }
 
     @Test

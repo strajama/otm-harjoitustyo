@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class MonsterTest {
 
-    Monster monster;
+    private Monster monster;
 
     @Before
     public void setup() {

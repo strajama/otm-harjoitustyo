@@ -1,7 +1,6 @@
 package adventuregame.domain;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Player-luokka ylläpitää tietoa siitä mitä pelaaja on tehnyt
@@ -48,17 +47,8 @@ public class Player {
         if (items.isEmpty()) {
             return "Reppusi on tyhjä.";
         }
-        Iterator<String> itemirator = items.keySet().iterator();
-        StringBuilder builder = new StringBuilder();
-        builder.append("Repussasi on jotain ");
-        /*        while (itemirator.hasNext()) {
-            builder.append(itemirator.next().toUpperCase());
-            if (itemirator.hasNext()) {
-                builder.append(", ");
-            }
-        }
-        builder.append(".");*/
-        return builder.toString();
+
+        return "Repussasi on jotain ";
     }
 
     /**

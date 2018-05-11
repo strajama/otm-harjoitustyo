@@ -124,19 +124,17 @@ public class DaoService {
      */
     public void submit(SeikkailuFXMain s, Language f) throws SQLException {
         if (checkSubmit(s, f)) {
-            String name = s.getNameTextField().getText();
-            String description = s.getDescriptionTextField().getText();
             if (s.getTable().equals("Area")) {
-                areaDao.saveOrUpdate(new Area(name, description));
+                areaDao.saveOrUpdate(new Area(s.getNameTextField().getText(), s.getDescriptionTextField().getText()));
                 allDaos(s);
             } else if (s.getTable().equals("Item")) {
-                itemDao.saveOrUpdate(new Item(name, description));
+                itemDao.saveOrUpdate(new Item(s.getNameTextField().getText(), s.getDescriptionTextField().getText()));
                 allDaos(s);
             } else if (s.getTable().equals("Helper")) {
-                helperDao.saveOrUpdate(new Helper(name, description));
+                helperDao.saveOrUpdate(new Helper(s.getNameTextField().getText(), s.getDescriptionTextField().getText()));
                 allDaos(s);
             } else if (s.getTable().equals("Monster")) {
-                monsterDao.saveOrUpdate(new Monster(name, description));
+                monsterDao.saveOrUpdate(new Monster(s.getNameTextField().getText(), s.getDescriptionTextField().getText()));
                 allDaos(s);
             }
             s.getCreateMessageLabel().setText(f.getNewTable());
@@ -179,18 +177,17 @@ public class DaoService {
      */
     public void delete(SeikkailuFXMain s, Language f) throws SQLException {
         if (checkDelete(s, f)) {
-            String name = s.getNameTextField().getText();
             if (s.getTable().equals("Area")) {
-                Integer key = areaDao.findIdByName(name);
+                Integer key = areaDao.findIdByName(s.getNameTextField().getText());
                 areaDao.delete(key);
             } else if (s.getTable().equals("Item")) {
-                Integer key = itemDao.findIdByName(name);
+                Integer key = itemDao.findIdByName(s.getNameTextField().getText());
                 itemDao.delete(key);
             } else if (s.getTable().equals("Helper")) {
-                Integer key = helperDao.findIdByName(name);
+                Integer key = helperDao.findIdByName(s.getNameTextField().getText());
                 helperDao.delete(key);
             } else if (s.getTable().equals("Monster")) {
-                Integer key = monsterDao.findIdByName(name);
+                Integer key = monsterDao.findIdByName(s.getNameTextField().getText());
                 monsterDao.delete(key);
             }
             s.getCreateMessageLabel().setText("Taulu poistettu.");

@@ -35,7 +35,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class SeikkailuFXMain extends Application {
+public class SeikkailuFXMain extends Application implements UI {
 
     private Scene playScene;
     private Scene beginScene;
@@ -87,7 +87,7 @@ public class SeikkailuFXMain extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start (Stage primaryStage) {
 
         this.primaryStage = primaryStage;
         createBeginScene();
@@ -98,6 +98,12 @@ public class SeikkailuFXMain extends Application {
         primaryStage.setScene(beginScene);
         primaryStage.show();
     }
+
+    @Override
+    public boolean isTestUI() {
+        return false;
+    }
+    
 
     public Label getAreaLabel() {
         return areaLabel;
