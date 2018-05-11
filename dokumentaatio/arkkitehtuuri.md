@@ -54,11 +54,18 @@ Sovelluslogiikan testauksessa käytetään erillistä tietokantatiedostoa _test.
 
 Kuvataan seuraavaksi sovelluksen toimintalogiikka muutaman päätoiminnallisuuden osalta sekvenssikaaviona.
 
+Käyttäjä klikkaa käyttöliittymän POIMI-nappia pelinäkymässä, joka kutsuu Action-oliota, joka tekee muutoksia Player-olion reppuun. Player-olio antaa Action-oliolle tiedon, että mitä käyttöliittymän tekstikenttiä kuuluu päivittää.
+
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Making%20action%20in%20game.png">
+
+Käyttäjä klikkaa käyttöliittymän LISÄÄ-nappia luomisnäkymässä, joka kutsuu DaoService-luokkaa, joka tekee lisäyksen tietokantaan ja päivittää käyttöliittymän näkymää.
+
 <img src="https://github.com/strajama/otm-harjoitustyo/blob/master/dokumentaatio/kuvat/Saving%20new%20data.png">
 
 ## Ohjelman rakenteeseen jääneet heikkoudet
 
 Ohjelmaa ei ole kokonaan parametrisoitu kielen puolesta, joten ohjelman kääntäminen toiselle kielelle on vaivalloista.
+
+Yhteyden sovelluslogiikan ja käyttöliittymän välillä sisältää kehittämisen varaa.
 
 Käyttöliittymän asettelu on kömpelö.
