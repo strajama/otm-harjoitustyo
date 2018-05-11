@@ -1,9 +1,6 @@
 package adventuregame.domain;
 
-import adventuregame.ui.SeikkailuFXMain;
 import java.util.ArrayList;
-import java.util.Iterator;
-import javafx.scene.control.Label;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
@@ -23,6 +20,7 @@ public class Adventure {
 //    private Random random;
     private UniformRandomProvider rng;
     private String lastAction;
+    private Monster monster;
 
     /**
      * Metodi luo uuden Adventure-olion, asettaa aluksi 0 pistettä, luo uuden
@@ -37,6 +35,7 @@ public class Adventure {
 //        this.random = new Random();
         this.rng = RandomSource.create(RandomSource.MT);
         this.lastAction = "";
+        this.monster = world.getMonster();
         createPlayer();
     }
 
@@ -74,6 +73,10 @@ public class Adventure {
 
     public void setLastAction(String lastAction) {
         this.lastAction = lastAction;
+    }
+
+    public Monster getMonster() {
+        return monster;
     }
 
     public void givePoints(int points) {
@@ -125,25 +128,4 @@ public class Adventure {
         player.setArea(world.getHome());
     }
 
-    /**
-     * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen
-     * @param s - käyttöliittymä, joka annetaan parametrina
-     */
-    public void actionShow(SeikkailuFXMain s) {
-
-        s.getAreaLabel().setText(player.getArea().getName().toUpperCase());
-        s.getDescriptionLabel().setText(player.getArea().getDescription());
-        s.getFindingLabel().setText(player.getArea().show());
-        s.getBagLabel().setText(player.bag());
-        s.getMonsterLabel().setText(player.getArea().showMonster());
-        s.getPointsLabel().setText(this.printPoints());
-        s.getDoingLabel().setText(this.getLastAction());
-
-        s.getPlayCenter().getChildren().clear();
-        s.getPlayCenter().getChildren().add(s.getBagLabel());
-        Iterator<String> it = player.getItems().keySet().iterator();
-        while (it.hasNext()) {
-            s.getPlayCenter().getChildren().add(new Label(it.next().toUpperCase()));
-        }
-    }
 }

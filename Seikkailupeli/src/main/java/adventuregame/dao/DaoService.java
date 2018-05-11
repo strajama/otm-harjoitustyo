@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adventuregame.dao;
 
 import adventuregame.domain.Adventure;
@@ -21,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ * Luokka toimii tietokantataulujen ja käyttöliittymän välissä
  *
  * @author strajama
  */
@@ -33,6 +29,13 @@ public class DaoService {
     private ScoreDao scoreDao;
     private Database database;
 
+    /**
+     * Metodi luo uuden DataService-olion, jolla on AreaDao, ItemDao, HelperDao,
+     * MonsterDao ja ScoreDao
+     *
+     * @param database - tietokanta parametrina
+     * @throws SQLException - jos jotain menee pieleen
+     */
     public DaoService(Database database) throws SQLException {
         this.database = database;
         this.areaDao = new AreaDao(database);
@@ -167,6 +170,13 @@ public class DaoService {
         return true;
     }
 
+    /**
+     * Metodi poistaa tietokantataulusta tiedon
+     *
+     * @param s - käyttöliittymä
+     * @param f - kieli
+     * @throws SQLException
+     */
     public void delete(SeikkailuFXMain s, Language f) throws SQLException {
         if (checkDelete(s, f)) {
             String name = s.getNameTextField().getText();

@@ -96,7 +96,7 @@ public class ActionTest {
         assertTrue(action.hit() == null);
         assertEquals(0, ad.getPoints());
         monster.setArea(ad.getWorld().getHome());
-        w.getHome().putMonster(monster);
+        w.getHome().setMonster(monster);
         assertEquals(monster, action.hit());
         assertEquals(4, monster.getLife());
         assertEquals(-1, ad.getPoints());

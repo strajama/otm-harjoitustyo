@@ -36,36 +36,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class SeikkailuFXMain extends Application {
-    
+
     private Scene playScene;
     private Scene beginScene;
     private Scene createScene;
-    
+
     private Stage primaryStage;
-    
+
     private DaoService daoService;
     private String table;
     private ArrayList allList;
     private ChoiceBox cb;
     private ChoiceBox cbAll;
-    
-    private World world;
+
     private Adventure adventure;
     private Language f;
-    
+
     private GridPane doGrid;
     private GridPane moveGrid;
     private VBox playCenter;
-    
+
     private VBox scoreVBox;
     private TableView scoreTable;
     private ArrayList<Score> scoreList;
-    
+
     private GridPane createGrid;
     private TextField nameTextField;
     private TextField descriptionTextField;
     private Label createMessageLabel;
-    
+
     private Label areaLabel;
     private Label descriptionLabel;
     private Label findingLabel;
@@ -73,89 +72,89 @@ public class SeikkailuFXMain extends Application {
     private Label doingLabel;
     private Label monsterLabel;
     private Label pointsLabel;
-    
+
     private TextField playerName;
-    
+
     @Override
     public void init() throws Exception {
         Database database = new Database("jdbc:sqlite:adventure.db");
         database.init();
         daoService = new DaoService(database);
-        this.world = new World(daoService);
+        adventure = new Adventure(new World(daoService));
+        adventure.makeAGame();
         f = new Finnish();
         this.scoreList = daoService.getScoreDao().bestScores();
     }
-    
+
     @Override
     public void start(Stage primaryStage) {
-        
+
         this.primaryStage = primaryStage;
-        
         createBeginScene();
         createPlayScene();
         createCreateScene();
-        
+
         primaryStage.setTitle(f.getTitle());
         primaryStage.setScene(beginScene);
         primaryStage.show();
     }
-    
+
     public Label getAreaLabel() {
         return areaLabel;
     }
-    
+
     public Label getDescriptionLabel() {
         return descriptionLabel;
     }
-    
+
     public Label getFindingLabel() {
         return findingLabel;
     }
-    
+
     public Label getBagLabel() {
         return bagLabel;
     }
-    
+
     public Label getMonsterLabel() {
         return monsterLabel;
     }
-    
+
     public Label getPointsLabel() {
         return pointsLabel;
     }
-    
+
     public Label getDoingLabel() {
         return doingLabel;
     }
-    
+
     public VBox getPlayCenter() {
         return playCenter;
     }
-    
+
     public TextField getPlayerName() {
         return playerName;
     }
-    
+
     public TableView getScoreTable() {
         return scoreTable;
     }
-    
+
     public ChoiceBox getCbAll() {
         return cbAll;
     }
-    
+
     public String getTable() {
         return table;
     }
-    
+
     public TextField getNameTextField() {
         return nameTextField;
     }
-    
+
     public TextField getDescriptionTextField() {
         return descriptionTextField;
     }
-    
+
     public Label getCreateMessageLabel() {
         return createMessageLabel;
     }
@@ -167,15 +166,13 @@ public class SeikkailuFXMain extends Application {
         VBox beginPane = new VBox(10);
         beginPane.setPadding(new Insets(10, 10, 10, 10));
         beginPane.setAlignment(Pos.CENTER);
-        
+
         Label beginLabel = new Label(f.getLoginLabel());
         Button playButton = new Button(f.getPlayButton());
         playButton.setOnAction(e -> {
-            adventure = new Adventure(world);
-            adventure.makeAGame();
             primaryStage.setScene(playScene);
         });
-        
+
         Label createNewLabel = new Label(f.getCreateNewLabel());
         Button createNewButton = new Button(f.getCreateNewButton());
         createNewButton.setOnAction(e -> {
@@ -184,7 +181,7 @@ public class SeikkailuFXMain extends Application {
         Label exitLabel = new Label(f.getExitLabel());
         Button exitButton = new Button(f.getExitButton());
         exitButton.setOnAction(e -> Platform.exit());
-        
+
         beginPane.getChildren().addAll(beginLabel, playButton, createNewLabel, createNewButton, exitLabel, exitButton);
         beginScene = new Scene(beginPane, 1000, 400);
     }
@@ -198,12 +195,12 @@ public class SeikkailuFXMain extends Application {
         playBp.setLeft(playLeft());
         playBp.setBottom(playDown());
         playBp.setCenter(playCenter());
-        
+
         playBp.setRight(createScoreTable());
         createMoveButtons();
         createDoButtons();
         createScoreSave();
-        
+
         Button returnLogin = new Button(f.getReturnLogin());
         returnLogin.setMinSize(60, 40);
         returnLogin.setOnAction((event) -> {
@@ -233,7 +230,7 @@ public class SeikkailuFXMain extends Application {
         left.getChildren().add(doingLabel);
         left.getChildren().add(monsterLabel);
         left.getChildren().add(pointsLabel);
-        
+
         return left;
     }
 
@@ -254,7 +251,7 @@ public class SeikkailuFXMain extends Application {
         moveGrid.setHgap(5);
         down.getChildren().add(moveGrid);
         down.getChildren().add(doGrid);
-        
+
         return down;
     }
 
@@ -277,63 +274,59 @@ public class SeikkailuFXMain extends Application {
      * Metodi luo napit, joilla liikkuminen tapahtuu
      */
     private void createMoveButtons() {
-        
+
         Polygon triangleNorth = new Polygon();
         triangleNorth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
         triangleNorth.setFill(Color.BLUE);
         triangleNorth.setStroke(Color.DARKBLUE);
-        
+
         Polygon triangleEast = new Polygon();
         triangleEast.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
         triangleEast.setFill(Color.GREEN);
         triangleEast.setStroke(Color.DARKGREEN);
         triangleEast.setRotate(90);
-        
+
         Polygon triangleSouth = new Polygon();
         triangleSouth.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
         triangleSouth.setFill(Color.RED);
         triangleSouth.setStroke(Color.DARKRED);
         triangleSouth.setRotate(180);
-        
+
         Polygon triangleWest = new Polygon();
         triangleWest.getPoints().addAll(20.0, 0.0, 0.0, 20.0, 40.0, 20.0);
         triangleWest.setFill(Color.ORANGE);
         triangleWest.setStroke(Color.DARKORANGE);
         triangleWest.setRotate(270);
-        
+
         Button north = new Button();
         north.setMinSize(50, 50);
         north.setGraphic(triangleNorth);
         north.setOnAction((event) -> {
-            new Action(adventure).move(Direction.NORTH);
-            adventure.actionShow(this);
+            new Action(adventure, this).move(Direction.NORTH);
         });
         moveGrid.add(north, 1, 0);
-        
+
         Button east = new Button();
         east.setMinSize(50, 50);
         east.setGraphic(triangleEast);
         east.setOnAction((event) -> {
-            new Action(adventure).move(Direction.EAST);
-            adventure.actionShow(this);
+            new Action(adventure, this).move(Direction.EAST);
         });
         moveGrid.add(east, 2, 1);
-        
+
         Button west = new Button();
         west.setMinSize(50, 50);
         west.setGraphic(triangleWest);
         west.setOnAction((event) -> {
-            new Action(adventure).move(Direction.WEST);
-            adventure.actionShow(this);
+            new Action(adventure, this).move(Direction.WEST);
         });
         moveGrid.add(west, 0, 1);
-        
+
         Button south = new Button();
         south.setMinSize(50, 50);
         south.setGraphic(triangleSouth);
         south.setOnAction((event) -> {
-            new Action(adventure).move(Direction.SOUTH);
-            adventure.actionShow(this);
+            new Action(adventure, this).move(Direction.SOUTH);
         });
         moveGrid.add(south, 1, 2);
     }
@@ -345,33 +338,29 @@ public class SeikkailuFXMain extends Application {
         Button pick = new Button(f.getPick());
         pick.setMinSize(60, 40);
         pick.setOnAction((event) -> {
-            new Action(adventure).take();
-            adventure.actionShow(this);
+            new Action(adventure, this).take();
         });
         doGrid.add(pick, 0, 0);
-        
+
         Button speak = new Button(f.getSpeak());
         speak.setMinSize(60, 40);
         speak.setOnAction((event -> {
-            new Action(adventure).speak();
-            adventure.actionShow(this);
+            new Action(adventure, this).speak();
         }));
         doGrid.add(speak, 0, 1);
-        
+
         Button give = new Button(f.getGive());
         give.setMinSize(60, 40);
         give.setOnAction((event -> {
-            new Action(adventure).give();
-            adventure.actionShow(this);
+            new Action(adventure, this).give();
         }));
         doGrid.add(give, 1, 0);
-        
+
         Button hit = new Button(f.getHit());
         hit.setMinSize(60, 40);
         hit.setOnAction((event -> {
-            new Action(adventure).hit();
-            adventure.actionShow(this);
-            
+            new Action(adventure, this).hit();
+
         }));
         doGrid.add(hit, 1, 1);
     }
@@ -384,7 +373,7 @@ public class SeikkailuFXMain extends Application {
         playerName.setMinSize(60, 40);
         playerName.setPromptText(f.getNewName());
         doGrid.add(playerName, 2, 0);
-        
+
         Button saveScoreButton = new Button(f.getSaveScoreButton());
         saveScoreButton.setMinSize(60, 40);
         saveScoreButton.setOnAction((event) -> {
@@ -399,16 +388,16 @@ public class SeikkailuFXMain extends Application {
      * Metodi luo top5-pistelistauksen
      */
     private VBox createScoreTable() {
-        
+
         Label scoreLabel = new Label(f.getScoreLabel());
         scoreTable = new TableView();
         TableColumn name = new TableColumn(f.getName());
         TableColumn points = new TableColumn(f.getPoints());
         scoreTable.getColumns().addAll(name, points);
-        
+
         name.setCellValueFactory(new PropertyValueFactory<Score, String>("name"));
         points.setCellValueFactory(new PropertyValueFactory<Score, Integer>("points"));
-        
+
         ObservableList<Score> data = FXCollections.observableArrayList(scoreList);
         scoreTable.setItems(data);
         scoreVBox = new VBox();
@@ -429,23 +418,23 @@ public class SeikkailuFXMain extends Application {
         createGrid.setAlignment(Pos.TOP_CENTER);
         table = "";
         allList = new ArrayList();
-        
+
         cbAll = new ChoiceBox();
         cbAll.setItems(FXCollections.observableArrayList(allList));
         GridPane.setConstraints(cbAll, 0, 4);
         createGrid.getChildren().add(cbAll);
-        
+
         cb = new ChoiceBox();
         cb.setItems(FXCollections.observableArrayList(f.getTables()));
         GridPane.setConstraints(cb, 0, 0);
         createGrid.getChildren().add(cb);
         findDaos();
-        
+
         nameTextField = new TextField();
         nameTextField.setPromptText(f.getNewName());
         GridPane.setConstraints(nameTextField, 0, 1);
         createGrid.getChildren().add(nameTextField);
-        
+
         descriptionTextField = new TextField();
         descriptionTextField.setPromptText(f.getDescriptionTextField());
         GridPane.setConstraints(descriptionTextField, 0, 2);
@@ -476,11 +465,11 @@ public class SeikkailuFXMain extends Application {
                 (ObservableValue<? extends Number> ov,
                         Number old_val, Number new_val) -> {
                     table = daos[new_val.intValue()];
-            try {
-                daoService.allDaos(this);
-            } catch (SQLException ex) {
-                Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    try {
+                        daoService.allDaos(this);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
         );
     }
@@ -509,21 +498,21 @@ public class SeikkailuFXMain extends Application {
         GridPane.setConstraints(delete, 1, 2);
         createGrid.getChildren().add(delete);
         delete.setOnAction((ActionEvent e) -> {
-            try {            
+            try {
                 daoService.delete(this, f);
             } catch (SQLException ex) {
                 Logger.getLogger(SeikkailuFXMain.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
-    
+
     @Override
     public void stop() {
         System.out.println(f.getTheEnd());
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

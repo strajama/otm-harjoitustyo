@@ -62,10 +62,6 @@ public class World {
         return monster;
     }
 
-    /*
-    public Player getPlayer() {
-        return player;
-    }*/
     public Area getHome() {
         return home;
     }
@@ -148,7 +144,7 @@ public class World {
         Collections.shuffle(monsters);
         this.monster = monsters.get(0);
         Area area = findRandomPlace();
-        area.putMonster(monster);
+//        area.setMonster(monster);
         monster.setArea(area);
     }
 

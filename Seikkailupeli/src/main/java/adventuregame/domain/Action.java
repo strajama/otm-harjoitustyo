@@ -1,22 +1,28 @@
 package adventuregame.domain;
 
+import adventuregame.ui.SeikkailuFXMain;
+import java.util.Iterator;
+import javafx.scene.control.Label;
+
 /**
  * Luokkaa käytetään pelin edistämiseen ja muutosten tekemiseen
  *
  * @author strajama
  */
 public class Action {
-    
+
     private Adventure adventure;
-//    private Player player;
+    private SeikkailuFXMain s;
 
     /**
      * Metodi luo uuden Action-olion
      *
      * @param adventure - seikkailu, jota pelataan
+     * @param s - käyttöliittymä, jonka tekstejä päivitetään
      */
-    public Action(Adventure adventure) {
+    public Action(Adventure adventure, SeikkailuFXMain s) {
         this.adventure = adventure;
+        this.s = s;
     }
 
     /**
@@ -34,9 +40,11 @@ public class Action {
             adventure.takeTurn();
             adventure.setLastAction("Matkustit " + giveFinnish(direction));
             moveMonster();
+            actionShow();
             return true;
         }
         adventure.setLastAction("Et voi mennä " + giveFinnish(direction));
+        actionShow();
         return false;
     }
 
@@ -59,10 +67,12 @@ public class Action {
                     adventure.givePoints(5);
                     adventure.setLastAction("Poimit esineen " + item.getName().toUpperCase() + ".");
                 }
+                actionShow();
                 return item;
             }
         }
         adventure.setLastAction("Täällä ei ole mitään poimittavaa.");
+        actionShow();
         return null;
     }
 
@@ -85,10 +95,12 @@ public class Action {
                     adventure.givePoints(5);
                     adventure.setLastAction(helper.getName().toUpperCase() + " kaipaa: " + helper.getItem().getDescription() + ".");
                 }
+                actionShow();
                 return helper;
             }
         }
         adventure.setLastAction("Täällä ei ole uusia keskusteluja käytävänä.");
+        actionShow();
         return null;
     }
 
@@ -109,11 +121,13 @@ public class Action {
                     adventure.takeTurn();
                     adventure.givePoints(10);
                     adventure.setLastAction("Reppusi on kevyempi, kun sieltä puuttuu " + helper.getItem().getName() + ".");
+                    actionShow();
                     return helper.getItem();
                 }
             }
         }
         adventure.setLastAction("Sinulla ei ole mitään sopivaa annettavaa.");
+        actionShow();
         return null;
     }
 
@@ -124,24 +138,30 @@ public class Action {
      * @return null tai Monster
      */
     public Monster hit() {
-        if (adventure.getPlayer().getArea().getMonster() != null) {
-            Monster monster = adventure.getPlayer().getArea().getMonster();
+        if (monsterIsHere() && !adventure.getMonster().isDead()) {
+            Monster monster = adventure.getMonster();
             if (adventure.getPlayer().getItems().isEmpty()) {
                 monster.hitMonster(1);
                 adventure.setLastAction("Lyöt hirviötä " + monster.getName() + ", joka ottaa osuman.");
+                if (monster.isDead()) {
+                    adventure.givePoints(20);
+                    adventure.setLastAction(monster.getName().toUpperCase() + " on kukistettu.");
+                }
             } else {
                 monster.hitMonster(2);
                 adventure.setLastAction("Lyöt hirviötä " + monster.getName() + ", joka ottaa kovan osuman.");
+                if (monster.isDead()) {
+                    adventure.givePoints(20);
+                    adventure.setLastAction(monster.getName().toUpperCase() + " on kukistettu.");
+                }
             }
-            if (monster.isDead()) {
-                monster.getArea().removeMonster();
-                adventure.givePoints(20);
-                adventure.setLastAction(monster.getName().toUpperCase() + " on kukistettu.");
-            }
+
             adventure.takeTurn();
+            actionShow();
             return monster;
         }
         adventure.setLastAction("Huidot ilmaa niin, että sinulle tulee hiki.");
+        actionShow();
         return null;
     }
 
@@ -149,12 +169,10 @@ public class Action {
      * Metodi, joka liikuttaa hirviötä, jos pelaaja ei ole samassa ruudussa
      */
     private void moveMonster() {
-        if (!adventure.getWorld().getMonster().isDead()) {
-            if (adventure.getWorld().getMonster().getArea() != adventure.getPlayer().getArea()) {
-                Area next = adventure.getWorld().getMonster().getArea().randomNeighbor();
-                adventure.getWorld().getMonster().getArea().removeMonster();
-                adventure.getWorld().getMonster().setArea(next);
-                next.putMonster(adventure.getWorld().getMonster());
+        if (!adventure.getMonster().isDead()) {
+            if (!monsterIsHere()) {
+                Area next = adventure.getMonster().getArea().randomNeighbor();
+                adventure.getMonster().setArea(next);
             }
         }
     }
@@ -167,6 +185,15 @@ public class Action {
      */
     private boolean thereIsFinding() {
         return !adventure.getPlayer().getArea().getFindings().isEmpty();
+    }
+
+    /**
+     * Metodi kertoo ovatko pelaaja ja hirviö samalla alueella
+     *
+     * @return true tai false
+     */
+    private boolean monsterIsHere() {
+        return adventure.getPlayer().getArea().equals(adventure.getMonster().getArea());
     }
 
     /**
@@ -184,5 +211,41 @@ public class Action {
             return "etelään.";
         }
         return "länteen.";
+    }
+
+    /**
+     * Metodia käytetään käyttöliittymän playscenen tekstien päivittämiseen
+     *
+     * @param s - käyttöliittymä, joka annetaan parametrina
+     */
+    private void actionShow() {
+
+        s.getAreaLabel().setText(adventure.getPlayer().getArea().getName().toUpperCase());
+        s.getDescriptionLabel().setText(adventure.getPlayer().getArea().getDescription());
+        s.getFindingLabel().setText(adventure.getPlayer().getArea().show());
+        s.getBagLabel().setText(adventure.getPlayer().bag());
+        s.getMonsterLabel().setText(showMonster());
+        s.getPointsLabel().setText(adventure.printPoints());
+        s.getDoingLabel().setText(adventure.getLastAction());
+
+        s.getPlayCenter().getChildren().clear();
+        s.getPlayCenter().getChildren().add(s.getBagLabel());
+        Iterator<String> it = adventure.getPlayer().getItems().keySet().iterator();
+        while (it.hasNext()) {
+            s.getPlayCenter().getChildren().add(new Label(it.next().toUpperCase()));
+        }
+    }
+
+    /**
+     * Metodi kertoo käyttäjälle onko alueella hirviötä. Tätä käytetään
+     * käyttöliittymän päivittämisessä.
+     *
+     * @return - String (kuvailu hirviöistä)
+     */
+    private String showMonster() {
+        if (!monsterIsHere() || adventure.getMonster().isDead()) {
+            return "";
+        }
+        return "Edessäsi on hirvittävä " + adventure.getMonster().getName().toUpperCase() + ". Se sanoo: '" + adventure.getMonster().getSlogan() + "'.";
     }
 }

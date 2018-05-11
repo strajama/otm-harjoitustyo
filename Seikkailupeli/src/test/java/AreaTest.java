@@ -64,7 +64,7 @@ public class AreaTest {
         assertTrue(area.getMonster() == null);
         assertEquals("Täällä ei ole hirviöitä.", area.showMonster());
         Monster test = new Monster("testi", "kokeillaan nyt toimiiko");
-        area.putMonster(test);
+        area.setMonster(test);
         assertFalse(area.getMonster() == null);
         assertEquals("Edessäsi on hirvittävä TESTI. Se sanoo: 'kokeillaan nyt toimiiko'.", area.showMonster());
         area.removeMonster();

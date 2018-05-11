@@ -19,7 +19,6 @@ public class Area {
     private HashMap<String, Finding> findings;
     private HashMap<Direction, Area> neighbors;
     private ArrayList<Direction> directions;
-    private Monster monster;
 
     /**
      * Metodi luo uuden Area-olion ja asettaa sille joka ilmansuuntaan
@@ -32,8 +31,7 @@ public class Area {
         this.name = name;
         this.description = description;
         this.findings = new HashMap<>();
-        this.neighbors = new HashMap<>();
-        this.monster = null;
+        this.neighbors = new HashMap<>();;
         directions = new ArrayList();
         directions.add(Direction.WEST);
         directions.add(Direction.EAST);
@@ -60,10 +58,6 @@ public class Area {
         return neighbors;
     }
 
-    public Monster getMonster() {
-        return monster;
-    }
-
     /**
      * Kertoo käyttäjälle mitä hän alueella näkee. Tätä käytetään
      * käyttöliittymän päivittämisessä.
@@ -85,35 +79,6 @@ public class Area {
             return builder.toString();
         }
         return "Täällä ei ole mitään mielenkiintoista.";
-    }
-
-    /**
-     * Metodi kertoo käyttäjälle onko alueella hirviötä. Tätä käytetään
-     * käyttöliittymän päivittämisessä.
-     *
-     * @return - String (kuvailu hirviöistä)
-     */
-    public String showMonster() {
-        if (monster == null) {
-            return "";
-        }
-        return "Edessäsi on hirvittävä " + monster.getName().toUpperCase() + ". Se sanoo: '" + monster.getSlogan() + "'.";
-    }
-
-    /**
-     * Metodi laittaa alueelle hirviön, jonka saa parametrina
-     *
-     * @param monster - parametrina annetaan hirviö
-     */
-    public void putMonster(Monster monster) {
-        this.monster = monster;
-    }
-
-    /**
-     * Metodi poistaa alueella olevan hirviön
-     */
-    public void removeMonster() {
-        this.monster = null;
     }
 
     /**

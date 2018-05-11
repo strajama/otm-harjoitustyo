@@ -69,5 +69,7 @@ public class Monster {
     public boolean isDead() {
         return life <= 0;
     }
+    
+    
 
 }
